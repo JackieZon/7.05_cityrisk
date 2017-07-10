@@ -4,9 +4,10 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
-import routerConfig from './../config/router.config'
+import routerConfig from './router.config'
 import {store} from './../src/store/store'
 import './../config/components.config'
+import './assets/css/animate.css';
 
 Vue.use(VueRouter);
 
