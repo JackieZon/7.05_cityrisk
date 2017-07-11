@@ -1,5 +1,4 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
 import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
@@ -7,7 +6,8 @@ import App from './App'
 import routerConfig from './router.config'
 import {store} from './../src/store/store'
 import './../config/components.config'
-import './assets/css/animate.css';
+import './assets/css/animate.css'
+// import './../src/assets/risk-icon/iconfont'
 
 Vue.use(VueRouter);
 

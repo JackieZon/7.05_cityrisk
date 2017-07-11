@@ -6,11 +6,14 @@
             </div>
             <div class="account">
                 <x-input title="账号" :is-type="be2333" placeholder="账号">
-                    <img slot="label" style="padding-right:10px;display:block;" src="http://dn-placeholder.qbox.me/110x110/FF2D55/000" width="24" height="24">
+                    <img slot="label" style="padding-right:10px;display:block;" src="./../../assets/icon/account.svg" width="24" height="24">
                 </x-input>
-                <x-input title="密码" :is-type="be2333" placeholder="密码">
-                    <img slot="label" style="padding-right:10px;display:block;" src="http://dn-placeholder.qbox.me/110x110/FF2D55/000" width="24" height="24">
+                <x-input title="密码" type="password" placeholder="密码">
+                    <img slot="label" style="padding-right:10px;display:block;" src="./../../assets/icon/unlock.svg" width="24" height="24">
                 </x-input>
+            </div>
+            <div class="in">
+                <x-button class="loginBtn">登录</x-button>
             </div>
         </div>
     </div>
@@ -26,7 +29,13 @@
         },
         data(){
             return {
-                logo:''
+                logo:'',
+                be2333: function (value) {
+                    return {
+                    valid: (!/^0{0,1}(13|15|18|14|17)[0-9]{9}$/.test(value)?false:true),
+                    msg: '请输入账号'
+                    }
+                },
             }
         },
         created(){
@@ -64,6 +73,16 @@
                 width:100%;
                 padding: 0 2rem;
                 box-sizing: border-box;
+            }
+        }
+        .in{
+            padding: 2rem 3rem;
+        }
+        .loginBtn{
+            background: #44bb99;
+            color: #fff;
+            &:active{
+                background:#32ac8e
             }
         }
     }
