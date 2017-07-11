@@ -7,9 +7,15 @@ import routerConfig from './router.config'
 import {store} from './../src/store/store'
 import './../config/components.config'
 import './assets/css/animate.css'
-// import './../src/assets/risk-icon/iconfont'
+import AMap from 'vue-amap'
 
+Vue.use(AMap);
 Vue.use(VueRouter);
+
+AMap.initAMapApiLoader({
+  key: '82bdc74ed1bc8b1fd9630d9b0d076bfc',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+});
 
 const router = new VueRouter(routerConfig)
 

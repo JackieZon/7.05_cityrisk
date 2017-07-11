@@ -1,5 +1,6 @@
 const Home = resolve => require(['./router/Home/Home.vue'], resolve)
 const AddRisk = resolve => require(['./router/Home/addRisk/Index.vue'], resolve)
+const RiskMap = resolve => require(['./router/Home/riskMap/Index.vue'], resolve)
 // const 
 
 export default {
@@ -21,6 +22,11 @@ export default {
       //     path:''
       //   },
       // ]
+    },
+    {
+      path:'/Home/AddRisk/RiskMap',
+      name:'riskMap',
+      component: RiskMap
     },
   ]
 }

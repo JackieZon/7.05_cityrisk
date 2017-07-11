@@ -1,6 +1,6 @@
 <template>
     <div class="heads">
-        <x-header class="headsTitle" :left-options="{backText: '',showBack:backState}">{{title?title:'头部'}}</x-header>
+        <x-header class="headsTitle" :left-options="{backText: '',showBack:backState}">{{title?title:'头部'}}<div @click="goMap" v-if="isMapState" class="map" slot="right">风险地图</div></x-header>
     </div>
 </template>
 <script>
@@ -11,14 +11,21 @@
             Actionsheet,
             TransferDom
         },
-        props:['title','back'],
+        props:['title','back','isMap'],
         data(){
             return{
-                backState:true
+                backState:true,
+                isMapState:true
             }
         },
         created(){
             this.backState = (this.back==false?false:true)
+            this.isMapState = (this.isMap==true?true:false)
+        },
+        methods:{
+            goMap(){
+                this.$router.push({name:'riskMap'});
+            }
         }
     }
 </script>
@@ -27,6 +34,9 @@
         .headsTitle{
             background:#33CC99;
             color:#fff;
+        }
+        .map{
+            color: #fff;
         }
     }
 </style>

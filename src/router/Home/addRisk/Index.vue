@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Heads :back="false" :title="'新增风险源'"></Heads>
+        <Heads :back="false" :title="'新增风险源'" :isMap="true"></Heads>
         <div>
             <tab :line-width=2 active-color='#33CC99' v-model="index">
                 <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
