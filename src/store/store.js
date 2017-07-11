@@ -1,10 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import regExp from './../utils/regExp'
+
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({});
+export const store = new Vuex.Store({
+  state:{
+    regExp,
+  }
+});
 store.registerModule('main', {
   state: {
+    regExp,
     isLoading: false
   },
   mutations: {

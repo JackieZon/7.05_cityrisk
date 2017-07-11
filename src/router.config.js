@@ -1,20 +1,26 @@
-const Home = resolve => require(['./components/HelloFromVux'], resolve)
-const Login = resolve => require(['./router/login/Login.vue'], resolve)
-const AddRisk = resolve => require(['./router/login/addRisk/AddRisk.vue'], resolve)
+const Home = resolve => require(['./router/Home/Home.vue'], resolve)
+const AddRisk = resolve => require(['./router/Home/addRisk/Index.vue'], resolve)
+// const 
+
 export default {
   routes: [{
       path: '/',
-      component: Login
+      component: Home
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login,
+      path: '/Home',
+      name: 'Home',
+      component: Home,
     },
     {
-      path:'/login/AddRisk',
+      path:'/Home/AddRisk',
       name:'addRisk',
-      component: AddRisk
+      component: AddRisk,
+      // children:[
+      //   {
+      //     path:''
+      //   },
+      // ]
     },
   ]
 }

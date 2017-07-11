@@ -62,4 +62,17 @@ body {
     fill: currentColor;
     overflow: hidden;
 }
+.vux-header .vux-header-left .left-arrow:before{
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-left: 1px solid #fff!important;
+    border-top: 1px solid #fff!important;
+    border-width: 1px 0 0 1px;
+    -webkit-transform: rotate(315deg);
+    transform: rotate(315deg);
+    top: 8px;
+    left: 7px;
+}
 </style>

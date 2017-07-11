@@ -5,7 +5,7 @@
                 <img src="./../../assets/logo/risk_logo.png" alt="logo">
             </div>
             <div class="account">
-                <x-input title="账号" :is-type="be2333" placeholder="账号">
+                <x-input title="账号" :is-type="regExp.typePhone" placeholder="账号">
                     <img slot="label" style="padding-right:10px;display:block;" src="./../../assets/icon/account.svg" width="24" height="24">
                 </x-input>
                 <x-input title="密码" type="password" placeholder="密码">
@@ -13,43 +13,44 @@
                 </x-input>
             </div>
             <div class="in">
-                <x-button class="loginBtn">登录</x-button>
+                <x-button class="loginBtn" @click.native="go" >登录</x-button>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import { XInput, Group, XButton, Cell } from 'vux'
-    export default {
-        components:{
-            XInput,
-            Group,
-            XButton,
-            Cell
-        },
-        data(){
-            return {
-                logo:'',
-                be2333: function (value) {
-                    return {
-                    valid: (!/^0{0,1}(13|15|18|14|17)[0-9]{9}$/.test(value)?false:true),
-                    msg: '请输入账号'
-                    }
-                },
-            }
-        },
-        created(){
-            console.log(this.$router);
-        },
-        methods:{
-            go(){
-                this.$router.push({name:'addRisk'})
-            }
+import {mapState} from 'vuex'
+import { XInput, Group, XButton, Cell } from 'vux'
+export default {
+    components:{
+        XInput,
+        Group,
+        XButton,
+        Cell
+    },
+    data(){
+        return {
+            logo:'',
+        }
+    },
+    computed: {
+        ...mapState({
+            'regExp': state => state.regExp,
+        })
+    },
+    created(){
+        console.log(this.$store);
+    },
+    methods:{
+        go(){
+            this.$router.push({name:'addRisk'})
         }
     }
+}
 </script>
 <style lang="less" scoped>
     #login{
+        background:#fff;
         width:100%;
         height:100%;
         display: flex;
@@ -79,10 +80,10 @@
             padding: 2rem 3rem;
         }
         .loginBtn{
-            background: #44bb99;
+            background: #33CC99;
             color: #fff;
             &:active{
-                background:#32ac8e
+                background:#22bb88;
             }
         }
     }
