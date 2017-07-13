@@ -1,63 +1,105 @@
-const Home = resolve => require(['./router/Home/Home.vue'], resolve)
-const AddRisk = resolve => require(['./router/Home/addRisk/Index.vue'], resolve)
-const RiskMap = resolve => require(['./router/Home/riskMap/Index.vue'], resolve)
-const BasicInfoA = resolve => require(['./router/Home/addRisk/children/BasicInfoA.vue'], resolve)
-const BasicInfoB = resolve => require(['./router/Home/addRisk/children/BasicInfoB.vue'], resolve)
-const BasicInfoC = resolve => require(['./router/Home/addRisk/children/BasicInfoC.vue'], resolve)
-const BasicInfoD = resolve => require(['./router/Home/addRisk/children/BasicInfoD.vue'], resolve)
-const Evaluation = resolve => require(['./router/Home/addRisk/children/Evaluation.vue'], resolve)
+
+const Home = resolve => require(['./router/home/Index.vue'], resolve)
+
+const Login = resolve => require(['./router/login/Login.vue'], resolve)
+const Index = resolve => require(['./router/index/Index.vue'], resolve)
+const RiskList = resolve => require(['./router/riskList/Index.vue'], resolve)
+const My = resolve => require(['./router/my/Index.vue'], resolve)
+const MyInfo =  resolve => require(['./router/my/MyInfo.vue'], resolve)
+
+const RiskAdd = resolve => require(['./router/risk/add/Index.vue'], resolve)
+const RiskMap = resolve => require(['./router/riskMap/Index.vue'], resolve)
+const BasicInfoA = resolve => require(['./router/risk/add/BasicInfoA.vue'], resolve)
+const BasicInfoB = resolve => require(['./router/risk/add/BasicInfoB.vue'], resolve)
+const BasicInfoB_Evaluation = resolve => require(['./router/risk/add/BasicInfoB_Evaluation.vue'], resolve)
+const BasicInfoC = resolve => require(['./router/risk/add/BasicInfoC.vue'], resolve)
+const BasicInfoD = resolve => require(['./router/risk/add/BasicInfoD.vue'], resolve)
+
+
+// RiskList
 // const 
 
 export default {
   routes: [{
       path: '/',
-      component: Home
+      component: Login
     },
     {
-      path: '/Home',
-      name: 'Home',
-      component: Home,
+      path: '/Login',
+      name: 'login',
+      component: Login,
     },
     {
-      path:'/Home/AddRisk',
-      name:'addRisk',
-      component: AddRisk,
+      path: '/Index',
+      name : 'index',
+      component: Index,
       children:[
         {
-          path:'/',
-          component: BasicInfoA,
+          path: '/',
+          component: RiskAdd,
         },
         {
-          path:'/addRisk/BasicInfoA',
-          name: 'basicInfoA',
-          component: BasicInfoA,
+          path:'/Index/RiskAdd',
+          name:'riskAdd',
+          component: RiskAdd,
+          children:[
+            {
+              path:'/',
+              component: BasicInfoA,
+            },
+            {
+              path:'/Index/RiskAdd/BasicInfoA',
+              name: 'basicInfoA',
+              component: BasicInfoA,
+            },
+            {
+              path:'/Index/RiskAdd/BasicInfoB',
+              name: 'basicInfoB',
+              component: BasicInfoB,
+            },
+            {
+              path:'/Index/RiskAdd/BasicInfoC',
+              name: 'basicInfoC',
+              component: BasicInfoC,
+            },
+            {
+              path:'/Index/RiskAdd/BasicInfoD',
+              name: 'basicInfoD',
+              component: BasicInfoD,
+            },
+            {
+              path:'/Index/RiskAdd/Evaluation',
+              name: 'BasicInfoB_Evaluation',
+              component: BasicInfoB_Evaluation,
+            },
+          ]
         },
         {
-          path:'/addRisk/BasicInfoB',
-          name: 'basicInfoB',
-          component: BasicInfoB,
+          path:'/Index/RiskList',
+          name: 'riskList',
+          component: RiskList
         },
         {
-          path:'/addRisk/BasicInfoC',
-          name: 'basicInfoC',
-          component: BasicInfoC,
-        },
-        {
-          path:'/addRisk/BasicInfoD',
-          name: 'basicInfoD',
-          component: BasicInfoD,
-        },
-        {
-          path:'/addRisk/Evaluation',
-          name: 'evaluation',
-          component: Evaluation,
-        },
+          path:'/Index/My',
+          name: 'my',
+          component: My
+        }
       ]
     },
     {
-      path:'/Home/AddRisk/RiskMap',
+      path:'/Login/Risk/RiskMap',
       name:'riskMap',
       component: RiskMap
+    },
+    {
+      path:'/Home',
+      name:'home',
+      component: Home
+    },
+    {
+      path:'/Index/My/MyInfo',
+      name: 'myInfo',
+      component: MyInfo
     },
   ]
 }

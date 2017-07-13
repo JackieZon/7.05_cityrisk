@@ -8,6 +8,11 @@ import {store} from './../src/store/store'
 import './../config/components.config'
 import './assets/css/animate.css'
 import AMap from 'vue-amap'
+import BaiduMap from 'vue-baidu-map'
+
+Vue.use(BaiduMap, {
+  ak: 'fTznLHvlDdp9ysB1b6xrbh0upjxx3C89'
+})
 
 Vue.use(AMap);
 Vue.use(VueRouter);

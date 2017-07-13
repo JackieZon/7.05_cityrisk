@@ -54,5 +54,8 @@
             box-sizing: border-box;
             padding:3rem 15px 0;
         }
+        .weui-label{
+            width: 5em!important;
+        }
     }
 </style>

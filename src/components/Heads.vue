@@ -1,6 +1,11 @@
 <template>
     <div class="heads">
-        <x-header class="headsTitle" :left-options="{backText: '',showBack:backState}">{{title?title:'头部'}}<div @click="goMap" v-if="isMapState" class="map" slot="right">风险地图</div></x-header>
+        <x-header class="headsTitle" :left-options="{backText: '',showBack:backState}">
+            {{title?title:'头部'}}
+            <div @click="goPages('riskMap')" v-if="isMapState" class="map" slot="right">风险地图</div>
+            <div @click="goPages('index')" v-if="isRiskAddState" class="map" slot="right">新增风险源</div>
+            <div v-if="isRightTitleState" class="map" slot="right">{{rightTitle}}</div>
+        </x-header>
     </div>
 </template>
 <script>
@@ -11,20 +16,24 @@
             Actionsheet,
             TransferDom
         },
-        props:['title','back','isMap'],
+        props:['title','back','isMap','isRiskAdd','isRightTitle','rightTitle'],
         data(){
             return{
                 backState:true,
-                isMapState:true
+                isMapState:false,
+                isRiskAddState:false,
+                isRightTitleState: false
             }
         },
         created(){
             this.backState = (this.back==false?false:true)
             this.isMapState = (this.isMap==true?true:false)
+            this.isRiskAddState = (this.isRiskAdd==true?true:false)
+            this.isRightTitleState = (this.isRightTitle==true?true:false)
         },
         methods:{
-            goMap(){
-                this.$router.push({name:'riskMap'});
+            goPages(name){
+                this.$router.push({name:name});
             }
         }
     }

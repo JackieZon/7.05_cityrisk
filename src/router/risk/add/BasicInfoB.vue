@@ -32,7 +32,7 @@
                 this.$router.push({name:'basicInfoC'})
             },
             enter(){
-                this.$router.push({name:'evaluation'})
+                this.$router.push({name:'BasicInfoB_Evaluation'})
             }
         },
     }
@@ -49,6 +49,9 @@
             border-top: 1px solid #f1f1f1;
             box-sizing: border-box;
             padding: 15px 15px 0;
+        }
+        .weui-label{
+            width: 5em!important;
         }
     }
 </style>
