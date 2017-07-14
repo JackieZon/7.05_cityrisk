@@ -12,18 +12,24 @@
         <div class="next">
             <x-button @click.native="next">下一步</x-button>
         </div>
-        <popup v-model="evaluation" :hide-on-blur="false" :height="'80%'">
+        <popup v-model="evaluation" :hide-on-blur="false">
             <div class="evaluation">
-                我是评估信息
+                <selector title="风险类型" :options="riskData" v-model="riskType"></selector>
+                <selector title="频繁程度" :options="frequently" v-model="frequentlyVal"></selector>
+                <selector title="事故后果" :options="frequently" v-model="frequentlyVal"></selector>
+                <selector title="可能性" :options="possibility" v-model="possibilityVal"></selector>
+                <x-input title="风险等级" :disabled="true" value="高" placeholder="等级"></x-input>
+                <x-input title="风险分值" :disabled="true" value="200" placeholder="分值"></x-input>
                 <div class="next">
                     <x-button @click.native="evaluation = false">新增</x-button>
+                    <x-button @click.native="evaluation = false">提交</x-button>
                 </div>
             </div>
         </popup>
     </div>
 </template>
 <script>
-    import { XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton, Value2nameFilter as value2name, XTextarea,Popup } from 'vux'
+    import { XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton, Value2nameFilter as value2name, XTextarea,Popup, Selector} from 'vux'
 
     export default {
         components:{
@@ -34,7 +40,8 @@
             ChinaAddressV3Data,
             XButton,
             XTextarea,
-            Popup
+            Popup,
+            Selector
         },
         methods:{
             next(){
@@ -46,7 +53,15 @@
         },
         data(){
             return{
-                evaluation: false
+                evaluation: false,
+                riskData:['火灾','爆炸','中毒','触电'],
+                riskType:'火灾',
+                frequently:['可能性小','可能性大'],
+                frequentlyVal:'可能性小',
+                result:['可能性小','可能性大'],
+                resultVal:'可能性小',
+                possibility:['可能性小','可能性大'],
+                possibilityVal:'可能性小'
             }
         }
     }
@@ -66,6 +81,12 @@
         }
         .weui-label{
             width: 5em!important;
+        }
+        .evaluation{
+            width:100%;
+            background:#fff;
+            padding-bottom: 20px;
+            box-sizing: border-box;
         }
     }
 </style>
