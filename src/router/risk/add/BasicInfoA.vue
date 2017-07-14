@@ -4,7 +4,7 @@
         <selector title="风险类别" :options="riskData" v-model="riskType"></selector>
         <x-input title="类别名称" placeholder="类别名称"></x-input>
         <selector title="对象类型" :options="objData" v-model="objType"></selector>
-        <x-address :title="'省市区'" v-model="addressValue" raw-value :list="addressData" value-text-align="right"></x-address>
+        <x-address :title="'省市区'" v-model="addressValue" raw-value :list="addressData" value-text-align="left"></x-address>
         <x-input placeholder="详细地址"></x-input>
         <x-input :disabled="true" :value="latAndLon" title="经度/纬度" placeholder="经度/纬度">
             <x-button slot="right" mini plain>地图</x-button>

@@ -1,7 +1,7 @@
 <template>
   <div class="footers">
     <tabbar>
-        <tabbar-item :selected="tabData[0] == tabStatus" @click.native="goPages('index')">
+        <tabbar-item :selected="tabData[0] == tabStatus" @click.native="goPages('basicInfoA')">
             <img slot="icon" src="./../assets/icon/home-icon.svg">
             <span slot="label">首页</span>
         </tabbar-item>
@@ -34,7 +34,15 @@
                 tabStatus:0
             }
         },
-        created(){
+        watch:{
+        '$route' (to, from) {
+            const path = this.$route.path.split('/')[2]
+            if(this.tabPath.indexOf(path)!=-1){
+                this.tabStatus = this.tabPath.indexOf(path);
+            }
+        }
+        },
+        mounted(){
             const path = this.$route.path.split('/')[2]
             if(this.tabPath.indexOf(path)!=-1){
                 this.tabStatus = this.tabPath.indexOf(path);
@@ -48,8 +56,5 @@
     }
 </script>
 <style lang="less">
-    .footers{
-        width:100%;
-        height: 100%;
-    }
+    .footers{}
 </style>

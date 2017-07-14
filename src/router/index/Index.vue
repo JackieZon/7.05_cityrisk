@@ -22,10 +22,10 @@
 </script>
 <style lang="less">
     .index{
-        widht:100%;
+        width:100%;
         height: 100%;
         box-sizing: border-box;
-        padding-bottom: 60px;
-        background: #fff;
+        padding-bottom: 45px;
+        overflow-y: auto;
     }
 </style>

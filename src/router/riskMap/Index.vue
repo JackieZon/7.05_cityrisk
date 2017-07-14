@@ -1,16 +1,11 @@
 <template>
     <div class="amap">
         <div class="map-heads">
-            <Heads :title="'风险地图'"></Heads>
-            <search></search>
-            <!-- 查看 vux 文档 搜索方法 -->
+            <Heads :title="'风险地图'" :isRiskList="true"></Heads>
+            <search :autoFixed="false"></search>
             <div class="msg">
                 <MsgToast></MsgToast>
-                <!--<div class="msgInfo">
-                    <img src="./../../../assets/icon/msg-icon.svg" width="25" alt="">
-                    <div class="msgs">您收到一条福田区雷电预警，点击查看详情</div>
-                </div>-->
-                <div class="riskBtn" @click="goBack">
+                <div class="riskBtn" @click="goRiskAdd">
                     <x-button mini plain>新增风险源</x-button>
                 </div>
             </div>
@@ -64,8 +59,8 @@
             console.log(this)
         },
         methods:{
-            goBack(){
-                this.$router.go(-1);
+            goRiskAdd(){
+                this.$router.push({name:'riskAdd'});
             },
             markerIn(){
                 console.log(1)

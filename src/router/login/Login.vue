@@ -43,7 +43,7 @@ export default {
     },
     methods:{
         go(){
-            this.$router.push({name:'index'})
+            this.$router.push({name:'riskAdd'})
         }
     }
 }

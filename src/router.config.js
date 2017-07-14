@@ -1,9 +1,11 @@
 
-const Home = resolve => require(['./router/home/Index.vue'], resolve)
+// const Home = resolve => require(['./router/home/Index.vue'], resolve)
 
 const Login = resolve => require(['./router/login/Login.vue'], resolve)
 const Index = resolve => require(['./router/index/Index.vue'], resolve)
 const RiskList = resolve => require(['./router/riskList/Index.vue'], resolve)
+const RiskInfo = resolve => require(['./router/riskList/RiskInfo.vue'], resolve)
+const RiskDanger = resolve => require(['./router/riskList/RiskDanger.vue'], resolve)
 const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo =  resolve => require(['./router/my/MyInfo.vue'], resolve)
 
@@ -31,22 +33,14 @@ export default {
     },
     {
       path: '/Index',
-      name : 'index',
+      name: 'index',
       component: Index,
       children:[
-        {
-          path: '/',
-          component: RiskAdd,
-        },
         {
           path:'/Index/RiskAdd',
           name:'riskAdd',
           component: RiskAdd,
           children:[
-            {
-              path:'/',
-              component: BasicInfoA,
-            },
             {
               path:'/Index/RiskAdd/BasicInfoA',
               name: 'basicInfoA',
@@ -87,15 +81,25 @@ export default {
       ]
     },
     {
+      path:'/Index/RiskList/RiskInfo/:id',
+      name: 'riskInfo',
+      component: RiskInfo
+    },
+    {
+      path:'/Index/RiskList/RiskInfo/RiskDanger/:id',
+      name: 'riskDanger',
+      component: RiskDanger
+    },
+    {
       path:'/Login/Risk/RiskMap',
       name:'riskMap',
       component: RiskMap
     },
-    {
-      path:'/Home',
-      name:'home',
-      component: Home
-    },
+    // {
+    //   path:'/Home',
+    //   name:'home',
+    //   component: Home
+    // },
     {
       path:'/Index/My/MyInfo',
       name: 'myInfo',

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-cloak>
     <transition v-bind:enter-active-class="animated +' '+'animated'">
       <router-view></router-view>
     </transition>
@@ -43,11 +43,11 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
+[v-cloak]{ display: none;}
 html,body{
   width:100%;
   height:100%;
   #app{
-    overflow: hidden;
     width:100%;
     height:100%;
   }
