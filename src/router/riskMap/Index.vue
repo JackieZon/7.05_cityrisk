@@ -15,8 +15,8 @@
                 </div>
             </div>
         </div>
-        <div class="map" :style="{'height':availHeight-132+'px'}">
-            <baidu-map class="bm-view" :zoom="zoom" :center="center">
+        <div class="map" style="flex:1" v-show="mapShow">
+            <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="mapShow=true">
             
                 <!--<bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
                 <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
@@ -56,7 +56,8 @@
             return {
                 availHeight:window.screen.availHeight,
                 zoom: 10,
-                center: {lng: 116.404, lat: 39.915}
+                center: {lng: 116.404, lat: 39.915},
+                mapShow:false
             }
         },
         mounted(){
@@ -77,6 +78,8 @@
         width: 100%;
         height: 100%;
         background: #fff;
+        display: flex;
+        flex-direction: column;
         .msg{
             border-bottom: 1px solid #eee;
             background:#fff;
@@ -121,7 +124,5 @@
         width: 100%;
         height: 100%;
     }
-    .map{
-        height: 400px;
-    }
+    .map{}
 </style>

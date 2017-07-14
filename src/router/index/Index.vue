@@ -24,5 +24,8 @@
     .index{
         widht:100%;
         height: 100%;
+        box-sizing: border-box;
+        padding-bottom: 60px;
+        background: #fff;
     }
 </style>
