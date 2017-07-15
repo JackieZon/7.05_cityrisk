@@ -1,5 +1,6 @@
 <template>
   <div class="addrisk">
+    <Heads :title="'预警列表'"></Heads>
     <tab :line-width=2 active-color='#33CC99' v-model="index">
       <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
     </tab>
@@ -11,8 +12,9 @@
   </div>
 </template>
 <script>
+import Heads from './../../components/Heads.vue'
 import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from "vux"
-const list = () => ['风险预警', '风险告警'];
+const list = () => ['风险预警', '风险事故'];
 export default {
     components:{
       Tab,
@@ -21,7 +23,8 @@ export default {
       Divider,
       XButton,
       Swiper,
-      SwiperItem
+      SwiperItem,
+      Heads
     },
     watch:{
       index(val,old){

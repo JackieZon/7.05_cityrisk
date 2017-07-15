@@ -45,10 +45,10 @@
         },
         methods:{
             next(){
-                this.$router.push({name:'basicInfoC'})
+                this.$router.push({name:'basicInfoC'});
             },
             enter(){
-                this.$router.push({name:'BasicInfoB_Evaluation'})
+                this.$router.push({name:'BasicInfoB_Evaluation'});
             }
         },
         data(){

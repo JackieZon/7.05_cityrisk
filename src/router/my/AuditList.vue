@@ -1,6 +1,7 @@
 <template>
   <div id="audit">
-    <tab>
+    <Heads :title="'审核列表'"></Heads>
+    <tab :line-width=2 active-color='#33CC99'>
       <tab-item selected @on-item-click="tab(5)">全部审核</tab-item>
       <tab-item  @on-item-click="tab(1)">待审核</tab-item>
       <tab-item @on-item-click="tab(2)">审核中</tab-item>
@@ -27,7 +28,7 @@
 
       <div class="content">
         <img src="../../assets/icon/state.svg" alt="">目前状态&nbsp;:
-        <span style="color: #8B8AEE" v-if="item.state === 1">待审核</span>
+        <span style="color: #8B8AEE;" v-if="item.state === 1">待审核</span>
         <span style="color: #ffef7d;" v-if="item.state === 2">审核中</span>
         <span style="color: #ff3b3b;" v-if="item.state === 3">审核失败</span>
         <span style="color: #33CC99;" v-if="item.state === 4">审核通过</span>
@@ -41,8 +42,16 @@
   </div>
 </template>
 <script>
+  import Heads from './../../components/Heads.vue'
   import { Group, XButton, Tab, TabItem } from "vux"
   export default {
+    components:{
+      Group,
+      XButton,
+      Tab,
+      TabItem,
+      Heads
+    },
       data(){
           return {
               searchList:[],
@@ -78,16 +87,9 @@
               ]
           }
       },
-    components:{
-      Group,
-      XButton,
-      Tab,
-      TabItem
-    },
     created (){
-
-          this.searchList = this.resList
-  },
+      this.searchList = this.resList
+    },
     methods:{
           tab (state,state1){
 
@@ -116,8 +118,8 @@
 <style>
   .vux-tab .vux-tab-item.vux-tab-selected { color: #33CC99 !important; }
   .vux-tab-ink-bar { background-color: #33CC99 !important; }
-  #audit .header { height: 35px; width: 100%; text-align: center; background-color:#33CC99; }
-    #audit .header p { color: white; line-height: 35px; font-size: 18px; }
+  #audit .header {height: 45px;width: 100%;text-align: center;border-bottom: 2px solid #33CC99; }
+    #audit .header p {color: #333;line-height: 45px;font-size: 18px; }
 
   #audit .content { margin: 16px 15px 16px 15px; display: flex; align-items: center; }
     .content img { width: 24px; height: 24px; margin-right: 6px; }

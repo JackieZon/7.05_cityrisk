@@ -1,5 +1,5 @@
 <template>
-    <div class="msgInfo">
+    <div class="msgInfo" @click.native="goPage">
         <img src="./../../assets/icon/msg-icon.svg" width="25" alt="">
         <div class="msgs">您收到一条福田区雷电预警，点击查看详情</div>
     </div>
@@ -8,6 +8,12 @@
     export default {
         data(){
             return {}
+        },
+        methods:{
+            goPage(){
+                console.log(this.$router)
+                this.$router.push({name:'warningList'})
+            }
         }
     }
 </script>
@@ -27,5 +33,6 @@
         box-sizing: border-box;
         padding-left:5px;
     }
+
 }
 </style>

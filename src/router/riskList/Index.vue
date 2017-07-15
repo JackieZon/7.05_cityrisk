@@ -4,7 +4,7 @@
 		<div class="search-box">
 			<search :autoFixed="false"></search>
 			<div class="msg">
-				<MsgToast></MsgToast>
+				<MsgToast @click.native="goPage('warningList')"></MsgToast>
 				<div class="riskBtn" @click="goRiskAdd">
 					<x-button mini plain>新增风险源</x-button>
 				</div>
@@ -42,13 +42,16 @@
             },
 			goPage(name){
 				this.$router.push({name:name,params:{id:123}})
-			}
+			},
+            goPage(name){
+                this.$router.push({name:name})
+            }
 		}
 	}
 </script>
 <style lang="less">
 	.riskListPage{
-		margin-bottom:20px;
+		// margin-bottom:20px;
 	}
 	.riskList{
 		margin-top:10px;

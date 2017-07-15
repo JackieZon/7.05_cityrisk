@@ -4,7 +4,7 @@
             <Heads :title="'风险地图'" :isRiskList="true"></Heads>
             <search :autoFixed="false"></search>
             <div class="msg">
-                <MsgToast></MsgToast>
+                <MsgToast @click.native="goPage('warningList')"></MsgToast>
                 <div class="riskBtn" @click="goRiskAdd">
                     <x-button mini plain>新增风险源</x-button>
                 </div>
@@ -64,6 +64,9 @@
             },
             markerIn(){
                 console.log(1)
+            },
+            goPage(name){
+                this.$router.push({name:name})
             }
         }
     }

@@ -8,6 +8,11 @@ const RiskInfo = resolve => require(['./router/riskList/RiskInfo.vue'], resolve)
 const RiskDanger = resolve => require(['./router/riskList/RiskDanger.vue'], resolve)
 const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo =  resolve => require(['./router/my/MyInfo.vue'], resolve)
+const AuditList = resolve => require(['./router/my/AuditList.vue'], resolve)
+const MyAuditList = resolve => require(['./router/my/MyAuditList.vue'], resolve)
+const WarningList = resolve => require(['./router/warning/Index'],resolve)
+const Alarm = resolve => require(['./router/warning/Alarm'],resolve)
+const Warning = resolve => require(['./router/warning/RiskWarning'], resolve)
 
 const RiskAdd = resolve => require(['./router/risk/add/Index.vue'], resolve)
 const RiskMap = resolve => require(['./router/riskMap/Index.vue'], resolve)
@@ -105,5 +110,32 @@ export default {
       name: 'myInfo',
       component: MyInfo
     },
+    {
+      path:'/Index/My/AuditList',
+      name: 'auditList',
+      component: AuditList
+    },
+    {
+      path:'/Index/My/MyAuditList',
+      name: 'myAuditList',
+      component: MyAuditList
+    },
+    {
+      path:"/Login/Risk/RiskMap/warningList",
+      name:"warningList",
+      component: WarningList,
+      children:[
+        {
+          path:'/warningList/warning',
+          name: 'warning',
+          component: Warning
+        },
+        {
+          path:"/warningList/alarm",
+          name: 'alarm',
+          component: Alarm
+        }
+        ]
+    }
   ]
 }
