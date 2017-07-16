@@ -13,13 +13,14 @@
                 </x-input>
             </div>
             <div class="in">
-                <x-button class="loginBtn" @click.native="go" >登录</x-button>
+                <x-button class="loginBtn" @click.native="getText" >登录</x-button>
             </div>
         </div>
     </div>
 </template>
 <script>
-import {mapState} from 'vuex'
+import axios from 'axios'
+import {mapState, mapGetters, mapActions} from 'vuex'
 import { XInput, Group, XButton, Cell } from 'vux'
 export default {
     components:{
@@ -39,11 +40,19 @@ export default {
         })
     },
     created(){
-        console.log(this.$store);
     },
     methods:{
         go(){
             this.$router.push({name:'riskAdd'})
+        },
+        getText(){
+            axios.get('https://api.github.com/users/JackieZon')
+            .then((res)=>{
+                console.log(res);
+            }).catch((res)=>{
+                console.log(res);
+            })
+            
         }
     }
 }

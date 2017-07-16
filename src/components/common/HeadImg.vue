@@ -20,7 +20,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .headImg{
         color:#fff;
         box-sizing: border-box;

@@ -3,7 +3,7 @@
         <x-input title="评估人" :disabled="true" value="Jackie" placeholder="评估人"></x-input>
         <x-input title="联系电话" :disabled="true" value="火灾" placeholder="联系电话"></x-input>
         <x-input title="评估时间" :disabled="true" value="2017/7/12" placeholder="评估时间"></x-input>
-        <x-textarea title="风险描述" placeholder="风险描述" :show-counter="false" :rows="3"></x-textarea>
+        <x-textarea title="风险描述" placeholder="风险描述" :show-counter="false"></x-textarea>
         <x-input title="风险等级" :disabled="true" value="高" placeholder="风险等级"></x-input>
         <x-input title="风险分值" :disabled="true" value="200" placeholder="风险分值"></x-input>
         <div class="enter">

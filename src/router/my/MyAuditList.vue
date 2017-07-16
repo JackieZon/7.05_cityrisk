@@ -129,7 +129,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .vux-tab .vux-tab-item.vux-tab-selected { color: #33CC99 !important; }
   .vux-tab-ink-bar { background-color: #33CC99 !important; }
   #myAudit .header { height: 35px; width: 100%; text-align: center; background-color:#33CC99; }

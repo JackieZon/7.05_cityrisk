@@ -86,7 +86,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .riskDanger{
         background: #f1f1f1;
         box-sizing: border-box;

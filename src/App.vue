@@ -21,6 +21,7 @@ export default {
     Loading
   },
   created(){
+    console.log('App 初始化');
   },
   computed: {
     ...mapState({
@@ -37,6 +38,8 @@ export default {
         this.animated = toDepth < fromDepth ? 'fadeInLeft' : 'fadeInRight';
       }
     }
+  },
+  methods:{
   }
 }
 </script>
@@ -78,4 +81,13 @@ body {
 .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon, .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon > i, .weui-tabbar__item.weui-bar__item_on .weui-tabbar__label{
   color: #33CC99!important;
 }
+.weui-textarea{
+  border: 1px solid #dbdbdb!important;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+.weui-search-bar__cancel-btn{
+  color:#33CC99!important;
+}
+
 </style>

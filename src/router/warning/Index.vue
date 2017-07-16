@@ -50,7 +50,7 @@ export default {
 }
 
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .addrisk{
     height: 100%;
     .vux-slider{

@@ -42,16 +42,15 @@
             },
 			goPage(name){
 				this.$router.push({name:name,params:{id:123}})
-			},
-            goPage(name){
-                this.$router.push({name:name})
-            }
+			}
 		}
 	}
 </script>
-<style lang="less">
+<style lang="less" scoped>
 	.riskListPage{
 		// margin-bottom:20px;
+		background: #EFEFF4;
+		.weui-cells{margin-top:0px!important;}
 	}
 	.riskList{
 		margin-top:10px;

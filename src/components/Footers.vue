@@ -55,6 +55,6 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .footers{}
 </style>

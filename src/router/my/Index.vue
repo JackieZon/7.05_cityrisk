@@ -53,7 +53,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @import '~vux/src/styles/1px.less';
     .my{
         height:100%;

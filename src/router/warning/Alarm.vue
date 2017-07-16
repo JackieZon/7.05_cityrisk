@@ -63,7 +63,7 @@
 
   }
 </script>
-<style>
+<style scoped>
     img { width: 20px; height: 20px; margin-right: 10px; }
     span { font-size: 15px; }
   #alarm .header { width: 100%; height: 35px; background-color:#33CC99; text-align: center; color: white; }

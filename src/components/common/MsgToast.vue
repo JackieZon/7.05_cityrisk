@@ -17,7 +17,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .msgInfo{
     width: 75%;
     box-sizing: border-box;
