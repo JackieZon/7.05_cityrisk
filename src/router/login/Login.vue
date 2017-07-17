@@ -20,8 +20,10 @@
 </template>
 <script>
 import axios from 'axios'
+import {getJackieZon,getRiskObjectType} from './../../servers/api.js'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import { XInput, Group, XButton, Cell } from 'vux'
+
 export default {
     components:{
         XInput,
@@ -43,16 +45,13 @@ export default {
     },
     methods:{
         go(){
-            this.$router.push({name:'riskAdd'})
+            
         },
         getText(){
-            axios.get('https://api.github.com/users/JackieZon')
-            .then((res)=>{
-                console.log(res);
-            }).catch((res)=>{
-                console.log(res);
-            })
-            
+            // getRiskObjectType().then((res)=>{
+            //     console.log(res);
+            // });
+            this.$router.push({name:'riskAdd'})
         }
     }
 }

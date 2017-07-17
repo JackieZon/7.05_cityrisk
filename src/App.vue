@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoading: state => state.main.isLoading
+      isLoading: state => state.isLoading
     })
   },
   watch:{

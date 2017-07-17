@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+    import { mapActions } from 'vuex'
     import Footers from './../../components/Footers.vue'
 
     export default {
@@ -17,6 +18,14 @@
             return {
 
             }
+        },
+        created(){
+            this.getRiskBaseType();
+        },
+        methods:{
+            ...mapActions([
+                'getRiskBaseType' // 映射 this.increment() 为 this.$store.dispatch('increment')
+            ]),
         }
     }
 </script>
