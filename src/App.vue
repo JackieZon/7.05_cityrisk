@@ -9,7 +9,7 @@
 
 <script>
 import {Loading} from 'vux'
-import {mapState} from 'vuex'
+import {mapState,mapActions,mapGetters} from 'vuex'
 export default {
   name: 'app',
   data(){
@@ -21,7 +21,7 @@ export default {
     Loading
   },
   created(){
-    console.log('App 初始化');
+    // this.getRiskBaseType();
   },
   computed: {
     ...mapState({
@@ -40,6 +40,9 @@ export default {
     }
   },
   methods:{
+    ...mapActions([
+      'getRiskBaseType',
+    ]),
   }
 }
 </script>
@@ -60,7 +63,7 @@ body {
 }
 .icon {
     width: 1em;
-     height: 1em;
+    height: 1em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;

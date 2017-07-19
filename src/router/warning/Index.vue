@@ -4,7 +4,7 @@
     <tab :line-width=2 active-color='#33CC99' v-model="index">
       <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
     </tab>
-    <swiper v-model="index" :show-dots="false">
+    <swiper v-model="index" :show-dots="false" :height="'100%'">
       <transition v-bind:enter-active-class="'fadeIn animated'">
         <router-view></router-view>
       </transition>

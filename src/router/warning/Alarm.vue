@@ -1,6 +1,6 @@
 <template>
     <div id="alarm">
-      <group v-for="item in searchList">
+      <group v-for="(item,index) in searchList" :key="index">
         <div class="header">
           <p>{{ item.riskZone }}</p>
         </div>

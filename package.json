@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "fastclick": "^1.0.6",
+    "qs": "^6.5.0",
     "vue": "^2.2.2",
     "vue-amap": "^0.2.8",
     "vue-baidu-map": "^0.11.2",

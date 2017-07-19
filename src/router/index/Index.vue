@@ -20,13 +20,10 @@
             }
         },
         created(){
-            this.getRiskBaseType();
+            // this.getRiskBaseType();
+            // this.postRiskAdd();
         },
-        methods:{
-            ...mapActions([
-                'getRiskBaseType' // 映射 this.increment() 为 this.$store.dispatch('increment')
-            ]),
-        }
+        methods:{}
     }
 </script>
 <style lang="less" scoped>
