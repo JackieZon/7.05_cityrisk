@@ -1,26 +1,63 @@
 <template>
     <div class="basicInfoA">
-        <x-input @on-change="(e)=>{upRiskAdd({RiskName:e})}" :value="postRiskAdd.RiskName" :required="true" title="险源名称" placeholder="险源名称"></x-input>
-        <selector title="风险类别" :options="riskType" v-model="riskTypeChoose"></selector>
-        <x-input :required="true" title="类别名称" placeholder="类别名称"></x-input>
+
+        <x-input 
+            title="险源名称" 
+            placeholder="请输入"
+            @on-change="(e)=>{upRiskAdd({RiskName:e})}"
+            :value="postRiskAdd.RiskName"
+            :required="true"
+        ></x-input>
+
+        <selector 
+            title="风险类别"
+            placeholder="请选择"
+            :options="riskType"
+            :value="riskTypeVal"
+            @on-change="riskTypeChoose"
+        ></selector>
+
+        <x-input 
+            title="类别名称" 
+            placeholder="请输入"  
+            :required="true" 
+            @on-change="(e)=>{upRiskAdd({RiskCategoryName:e})}" 
+            :value="postRiskAdd.RiskCategoryName"
+        ></x-input>
 
         <selector 
             title="对象类型"
-            :options="riskObjectType" 
-            v-model="riskObjectTypeChoose"
+            placeholder="请选择"
+            :options="riskObjectType"
+            :value="riskObjectTypeVal"
+            @on-change="riskObjectTypeChoose"
         ></selector>
 
-        <selector 
-
+        <selector
+            v-if="JSON.stringify(riskObjectTypeChild)!=='[]'"
             title="子类型" 
-            v-if="riskObjectTypeChoose" 
-            :options="riskObjectTypeChild" 
-            v-model="riskObjectTypeChildChoose"
-
+            placeholder="请选择"
+            :options="riskObjectTypeChild"
+            :value="riskObjectTypeChildVal"
+            @on-change="riskObjectTypeChildChoose"
         ></selector>
 
-        <x-address :title="'省市区'" v-model="addressValue" raw-value :list="addressData" value-text-align="left"></x-address>
-        <x-input :required="true" placeholder="详细地址"></x-input>
+        <x-address 
+            :title="'省市区'" 
+            raw-value
+            v-model="addressValue"
+            :list="addressData" 
+            value-text-align="left"
+        ></x-address>
+
+        <x-input
+            :title="'详细地址'" 
+            placeholder="请输入"
+            :required="true" 
+            @on-change="(e)=>{upRiskAdd({RiskAddress:e})}"
+            :value="postRiskAdd.RiskAddress"
+        ></x-input>
+
         <x-input :disabled="true" :value="latAndLon" title="经度/纬度" placeholder="经度/纬度">
             <x-button :style="{'display':'none'}" slot="right" mini plain>地图</x-button>
         </x-input>
@@ -45,38 +82,59 @@
         },
         data(){
             return {
-                addressValue: ['广东省', '深圳市', '南山区'],
+                addressValue: [],
                 addressData: ChinaAddressV3Data,
-                latAndLon:'已设置默认',
-                riskTypeChoose:'',
-                riskObjectTypeChoose: this.$store.state.tiskAdd.RiskObjectTypeID1,
+                latAndLon:'已设置默认值',
+                riskTypeVal:'',
+                riskObjectTypeVal: '',
+                riskObjectTypeChildVal:'',
                 riskObjectTypeChild:[],
-                riskObjectTypeChildChoose:''
             }
         },
-        
+        watch:{
+            addressValue(val){
+                let addres = value2name(val, ChinaAddressV3Data).split(' ');
+                console.log(addres);
+                this.upRiskAdd({RiskArea1: addres[0],RiskArea2: addres[1],RiskArea3:addres[2]});
+            }
+        },
+        mounted(){
+            const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
+            if(postRiskAdd.RiskObjectTypeID1){
+                this.riskObjectTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID1;
+            }
+            if(postRiskAdd.RiskObjectTypeID1){
+                this.riskObjectTypeChildVal = this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID2;
+            }
+            if(postRiskAdd.RiskCategory){
+                this.riskTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskCategory;
+            }
+            this.addressValue = [postRiskAdd.RiskArea1,postRiskAdd.RiskArea2,postRiskAdd.RiskArea3]
+        },
         computed: {
             ...mapState({
                 postRiskAdd: state => {
                     if(state.tiskAdd.postRiskAdd.RiskObjectTypeID1){
-                        this.riskObjectTypeChoose = state.tiskAdd.postRiskAdd.RiskObjectTypeID1;
+                        this.riskObjectTypeVal = state.tiskAdd.postRiskAdd.RiskObjectTypeID1;
                     }
                     if(state.tiskAdd.postRiskAdd.RiskObjectTypeID2){
-                        this.riskObjectTypeChildChoose = state.tiskAdd.postRiskAdd.RiskObjectTypeID2;
+                        this.riskObjectTypeChildVal = state.tiskAdd.postRiskAdd.RiskObjectTypeID2;
                     }
                     return state.tiskAdd.postRiskAdd
                 },
                 riskType: state => {
                     let riskData=[];
 
-                    if(state.tiskAdd.RiskType.length != 0){
+                    if( JSON.stringify(state.tiskAdd.RiskType) != '[]'){
                         for(let item in state.tiskAdd.RiskType[0].detail_BaseDataList){
                             riskData.push({
-                                key:state.tiskAdd.RiskType[0].detail_BaseDataList[item].BaseName.ID,
+                                key:state.tiskAdd.RiskType[0].detail_BaseDataList[item].ID,
                                 value:state.tiskAdd.RiskType[0].detail_BaseDataList[item].BaseName
                             });
                         }
                     }
+
+                    console.log(riskData);
 
                     return riskData;
                 },
@@ -97,18 +155,15 @@
             }),
 
         },
-        mounted(){
-            console.log(this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID1);
-            if(this.$store.state.tiskAdd.RiskObjectTypeID1){
-                this.riskObjectTypeChoose = this.$store.state.tiskAdd.RiskObjectTypeID1;
-            }
-        },
-        watch:{
-            RiskType(val,vals){
-                console.log(val);
+        methods:{
+            ...mapMutations([
+                'upRiskAdd'
+            ]),
+            next(){
+                this.$router.push({name:'basicInfoB'})
             },
-            riskObjectTypeChoose(val,vals){
-
+            riskObjectTypeChoose(val){
+                
                 let riskObjectType = this.$store.state.tiskAdd.riskObjectType;
                 for(let item in riskObjectType){
 
@@ -126,15 +181,13 @@
                             });
 
                         }
+                        this.riskObjectTypeChildVal = '';
                         this.riskObjectTypeChild = riskObjectTypeChild;
                     }
                 }
 
             },
-            riskObjectTypeChildChoose(val, vals){
-
-                console.log(val)
-                console.log(this.riskObjectTypeChild)
+            riskObjectTypeChildChoose(val){
 
                 for(let items in this.riskObjectTypeChild){
                     
@@ -145,14 +198,12 @@
                 }
 
             },
-        },
-        methods:{
-            ...mapMutations([
-                'upRiskAdd'
-            ]),
-            next(){
-                this.$router.push({name:'basicInfoB'})
+            riskTypeChoose(val){
+                this.upRiskAdd({RiskCategory:val})
             },
+            changeFun(val){
+                console.log(val);
+            }
         },
     }
 </script>
@@ -167,6 +218,10 @@
         }
         .weui-label{
             width: 5em!important;
+        }
+        .weui-cells{margin: 0!important;}
+        .weui-select{
+            color:#333!important;
         }
     }
 </style>

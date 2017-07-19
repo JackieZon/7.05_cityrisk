@@ -1,11 +1,18 @@
 <template>
     <div class="basicInfoB">
-        <x-input title="评估人" :disabled="true" value="Jackie" placeholder="评估人"></x-input>
-        <x-input title="联系电话" :disabled="true" value="火灾" placeholder="联系电话"></x-input>
-        <x-input title="评估时间" :disabled="true" value="2017/7/12" placeholder="评估时间"></x-input>
-        <x-textarea title="风险描述" placeholder="风险描述" :show-counter="false"></x-textarea>
-        <x-input title="风险等级" :disabled="true" value="高" placeholder="风险等级"></x-input>
-        <x-input title="风险分值" :disabled="true" value="200" placeholder="风险分值"></x-input>
+        <x-input title="评估人" :disabled="true" value="JackieZon（系统默认值）" placeholder="评估人"></x-input>
+        <x-input title="联系电话" :disabled="true" value="15070713710（系统默认值）" placeholder="联系电话"></x-input>
+        <x-input title="评估时间" :disabled="true" :value="nuwData" placeholder="评估时间"></x-input>
+
+        <x-textarea title="风险描述" 
+            placeholder="风险描述" 
+            :show-counter="false"
+            :value="riskIntro"
+            @on-change="changeRiskIntro"
+        ></x-textarea>
+
+        <x-input title="风险等级" :disabled="true" value="(待设置)" placeholder="风险等级"></x-input>
+        <x-input title="风险分值" :disabled="true" value="(待设置)" placeholder="风险分值"></x-input>
         <div class="enter">
             <x-button @click.native="evaluation = true">输入评估信息</x-button>
         </div>
@@ -30,7 +37,7 @@
 </template>
 <script>
     import { XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton, Value2nameFilter as value2name, XTextarea,Popup, Selector} from 'vux'
-
+    import {mapMutations} from 'vuex'
     export default {
         components:{
             XInput,
@@ -44,11 +51,27 @@
             Selector
         },
         methods:{
+            ...mapMutations([
+                'upRiskAdd'
+            ]),
+            changeRiskIntro(e){
+                this.upRiskAdd({RiskIntro:e})
+            },
             next(){
                 this.$router.push({name:'basicInfoC'});
             },
             enter(){
                 this.$router.push({name:'BasicInfoB_Evaluation'});
+            }
+        },
+        mounted(){
+            const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
+            this.riskIntro = postRiskAdd.RiskIntro
+        },
+        computed:{
+            nuwData(){
+                let now = new Date();
+                return `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}`
             }
         },
         data(){
@@ -61,7 +84,8 @@
                 result:['可能性小','可能性大'],
                 resultVal:'可能性小',
                 possibility:['可能性小','可能性大'],
-                possibilityVal:'可能性小'
+                possibilityVal:'可能性小',
+                riskIntro:''
             }
         }
     }
