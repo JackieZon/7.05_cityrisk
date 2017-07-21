@@ -10,54 +10,110 @@ const state = {
     postRiskAdd:{
         "ListRiskAssess": [
             {
-                "ListRiskAssessDetail":[],
-                "ID":0,
-                "RiskID":0,
-                "RiskAgencyID":0,
-                "RiskAssessTypeIDs":"string",
-                "RiskAssessTypeNames":"string",
-                "RiskAssessLv":0,
-                "RiskAssessScore":0,
-                "RiskAssessManID":0,
-                "RiskAssessManName":"string",
-                "RiskAssessManNameTel":"string",
-                "RiskAssessDate":"2017-07-18T07:29:49.680Z",
-                "RiskAssessStatus":0,
-                "RiskAssessAuditIntro":"string",
-                "RiskAssessAuditMan":0,
-                "RiskAssessAuditManName":"string",
-                "RiskAssessAuditDate":"2017-07-18T07:29:49.680Z"
+            "ListRiskAssessDetail": [
+                {
+                "ID": 0,
+                "RiskID": 0,
+                "RiskAssessID": 0,
+                "RiskAssessTypeID": 0,
+                "RiskAssessTypeName": "",
+                "RiskAssessLID": 0,
+                "RiskAssessLName": "",
+                "RiskAssessLScore": 0,
+                "RiskAssessEID": 0,
+                "RiskAssessEName": "",
+                "RiskAssessEScore": 0,
+                "RiskAssessCID": 0,
+                "RiskAssessCName": "",
+                "RiskAssessCScore": 0,
+                "RiskAssessDetailLv": 0,
+                "RiskAssessDetailScore": 0
+                }
+            ],
+            "ID": 0,
+            "RiskID": 0,
+            "RiskAgencyID": 0,
+            "RiskAssessTypeIDs": "",
+            "RiskAssessTypeNames": "",
+            "RiskAssessLv": 0,
+            "RiskAssessScore": 0,
+            "RiskAssessManID": 0,
+            "RiskAssessManName": "",
+            "RiskAssessManNameTel": "",
+            "RiskAssessDate": "2017-07-21T02:40:24.200Z",
+            "RiskAssessStatus": 0,
+            "RiskAssessAuditIntro": "",
+            "RiskAssessAuditMan": 0,
+            "RiskAssessAuditManName": "",
+            "RiskAssessAuditDate": "2017-07-21T02:40:24.200Z"
             }
         ],
+        "ListRiskRegulatory":[
+            {
+                // "ID":0,
+                // "RiskID":0,
+                // "RiskRegulatoryName":"",
+                // "RiskRegulatoryContactMan":"",
+                // "RiskRegulatoryContactTel":"",
+                // "RiskRegulatoryArea1":"",
+                // "RiskRegulatoryArea2":"",
+                // "RiskRegulatoryArea3":"",
+                // "RiskRegulatoryArea4":"",
+                // "RiskRegulatoryArea5":"",
+                // "RiskRegulatoryAddress":"",
+                // "RiskRegulatoryAddMan":"",
+                // "RiskRegulatoryAddDate":"2017-07-21T03:50:54.813Z"
+            }
+        ],
+        "ListRiskDuty": [
+            // {
+            // "ID": 0,
+            // "RiskID": 0,
+            // "RiskDutyName": "string",
+            // "RiskDutyContactMan": "string",
+            // "RiskDutyContactTel": "string",
+            // "RiskDutyArea1": "string",
+            // "RiskDutyArea2": "string",
+            // "RiskDutyArea3": "string",
+            // "RiskDutyArea4": "string",
+            // "RiskDutyArea5": "string",
+            // "RiskDutyAddress": "string",
+            // "RiskDutyAddMan": "string",
+            // "RiskDutyAddDate": "2017-07-21T02:40:24.201Z"
+            // }
+        ],
+        "RiskObjectTypeIDsArray": [
+            0
+        ],
+        "RiskStatusName": "",
+        "RiskLvName": "",
         "ID": 0,
         "RiskName": "",
-        "RiskIntro": "string",
+        "RiskIntro": "",
         "RiskLv": 0,
         "RiskScore": 0,
-        "riskObjectTypeChoose":"",
-        "riskObjectTypeChildChoose":"",
-        "RiskCategory":0,
-        "RiskCategoryName":"",
         "RiskObjectTypeID1": 0,
         "RiskObjectTypeID2": 0,
         "RiskArea1": "广东省",
         "RiskArea2": "深圳市",
-        "RiskArea3": "福田区",
-        "RiskArea4": "string",
-        "RiskArea5": "string",
-        "RiskAddress": "string",
-        "RiskLng": "string",
-        "RiskLat": "string",
-        "RiskDutyIDs": "string",
-        "RiskRegulatoryIDs": "string",
+        "RiskArea3": "南山区",
+        "RiskArea4": "",
+        "RiskArea5": "",
+        "RiskAddress": "",
+        "RiskLng": "",
+        "RiskLat": "",
+        "RiskDutyIDs": "",
+        "RiskRegulatoryIDs": "",
         "RiskAddMan": 0,
-        "RiskAddManName": "string",
-        "RiskAddDate": "2017-07-18T07:43:02.272Z",
+        "RiskAddManName": "",
+        "RiskAddDate": "2017-07-21T02:40:24.201Z",
         "RiskStatus": 0,
-        "RiskAuditIntro": "string",
+        "RiskAuditIntro": "",
         "RiskAuditMan": 0,
-        "RiskAuditManName": "string",
-        "RiskAuditDate": "2017-07-18T07:43:02.272Z"
+        "RiskAuditManName": "",
+        "RiskAuditDate": "2017-07-21T02:40:24.201Z",
+        "ObjectTypeName1": "",
+        "ObjectTypeName2": ""
     }
 }
 
@@ -99,7 +155,6 @@ const mutations = {
     saveData: (state, payload) => {
         state = {...state, ...payload}
     },
-
     saveAccidentPossibility: (state, payload) => {
         state.AccidentPossibility = payload;
     },
@@ -115,10 +170,27 @@ const mutations = {
     saveRiskObjectType: (state, payload) =>{
         state.riskObjectType = payload;
     },
-
     upRiskAdd: (state, payload) => {
-        console.log(payload)
+        // console.log(payload)
         state.postRiskAdd = {...state.postRiskAdd, ...payload}
+    },
+    pushListRiskDuty: (state, payload)=>{
+
+        console.log(payload);
+
+        state.postRiskAdd.ListRiskDuty.push(payload);
+
+        console.log(state.postRiskAdd.ListRiskDuty);
+
+    },
+    deleteListRiskDuty: (state, payload)=>{
+        state.postRiskAdd.ListRiskDuty.splice(payload.index,1);
+    },
+    editListRiskDuty: (state, payload)=>{
+        
+        console.log(payload);
+        state.postRiskAdd.ListRiskDuty[payload.index] = payload.list;
+
     }
 }
 

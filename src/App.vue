@@ -4,28 +4,42 @@
       <router-view></router-view>
     </transition>
     <loading v-model="isLoading"></loading>
+    <toast v-model="toastState" type="text" :time="1500" is-show-mask :text="toastValue" position="bottom">{{ toastValue }}</toast>     
+    <confirm v-model="confirmState"
+        :title="'温馨提示'"
+        @on-confirm="confirmControl">
+            <p style="text-align:center;">{{ confirmMsg }}</p>
+    </confirm>
   </div>
 </template>
 
 <script>
-import {Loading} from 'vux'
+import {Loading,Toast} from 'vux'
 import {mapState,mapActions,mapGetters} from 'vuex'
 export default {
   name: 'app',
   data(){
     return {
-      animated: 'fadeInRight'
+      animated: 'fadeInRight',
     }
   },
   components:{
-    Loading
+    Loading,
+    Toast
   },
   created(){
     // this.getRiskBaseType();
   },
   computed: {
     ...mapState({
-      isLoading: state => state.isLoading
+      isLoading: state => state.isLoading,
+      toastState: state => state.toast.toastState,
+      toastValue: state => state.toast.toastValue,
+      confirmState: state => state.confirm.state,
+      confirmMsg: state => state.confirm.msg,
+      confirmControl: state => {
+        return state.confirm.control
+      },
     })
   },
   watch:{

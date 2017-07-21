@@ -1,66 +1,67 @@
 <template>
     <div class="basicInfoA">
+        <div class="enterInfo">
+            <x-input 
+                title="险源名称" 
+                placeholder="请输入"
+                @on-change="(e)=>{upRiskAdd({RiskName:e})}"
+                :value="postRiskAdd.RiskName"
+                :required="true"
+            ></x-input>
 
-        <x-input 
-            title="险源名称" 
-            placeholder="请输入"
-            @on-change="(e)=>{upRiskAdd({RiskName:e})}"
-            :value="postRiskAdd.RiskName"
-            :required="true"
-        ></x-input>
+            <!--<selector 
+                title="风险类别"
+                placeholder="请选择"
+                :options="riskType"
+                :value="riskTypeVal"
+                @on-change="riskTypeChoose"
+            ></selector>
 
-        <selector 
-            title="风险类别"
-            placeholder="请选择"
-            :options="riskType"
-            :value="riskTypeVal"
-            @on-change="riskTypeChoose"
-        ></selector>
+            <x-input 
+                title="类别名称" 
+                placeholder="请输入"  
+                :required="true" 
+                @on-change="(e)=>{upRiskAdd({RiskCategoryName:e})}" 
+                :value="postRiskAdd.RiskCategoryName"
+            ></x-input>-->
 
-        <x-input 
-            title="类别名称" 
-            placeholder="请输入"  
-            :required="true" 
-            @on-change="(e)=>{upRiskAdd({RiskCategoryName:e})}" 
-            :value="postRiskAdd.RiskCategoryName"
-        ></x-input>
+            <selector 
+                title="对象类型"
+                placeholder="请选择"
+                :options="riskObjectType"
+                :value="riskObjectTypeVal"
+                @on-change="riskObjectTypeChoose"
+            ></selector>
 
-        <selector 
-            title="对象类型"
-            placeholder="请选择"
-            :options="riskObjectType"
-            :value="riskObjectTypeVal"
-            @on-change="riskObjectTypeChoose"
-        ></selector>
+            <selector
+                v-if="JSON.stringify(riskObjectTypeChild)!=='[]'"
+                title="子类型" 
+                placeholder="请选择"
+                :options="riskObjectTypeChild"
+                :value="riskObjectTypeChildVal"
+                @on-change="riskObjectTypeChildChoose"
+            ></selector>
 
-        <selector
-            v-if="JSON.stringify(riskObjectTypeChild)!=='[]'"
-            title="子类型" 
-            placeholder="请选择"
-            :options="riskObjectTypeChild"
-            :value="riskObjectTypeChildVal"
-            @on-change="riskObjectTypeChildChoose"
-        ></selector>
+            <x-address 
+                :title="'省市区'" 
+                raw-value
+                v-model="addressValue"
+                :list="addressData" 
+                value-text-align="left"
+            ></x-address>
 
-        <x-address 
-            :title="'省市区'" 
-            raw-value
-            v-model="addressValue"
-            :list="addressData" 
-            value-text-align="left"
-        ></x-address>
+            <x-input
+                :title="'详细地址'" 
+                placeholder="请输入"
+                :required="true" 
+                @on-change="(e)=>{upRiskAdd({RiskAddress:e})}"
+                :value="postRiskAdd.RiskAddress"
+            ></x-input>
 
-        <x-input
-            :title="'详细地址'" 
-            placeholder="请输入"
-            :required="true" 
-            @on-change="(e)=>{upRiskAdd({RiskAddress:e})}"
-            :value="postRiskAdd.RiskAddress"
-        ></x-input>
-
-        <x-input :disabled="true" :value="latAndLon" title="经度/纬度" placeholder="经度/纬度">
-            <x-button :style="{'display':'none'}" slot="right" mini plain>地图</x-button>
-        </x-input>
+            <x-input :disabled="true" :value="latAndLon" title="经度/纬度" placeholder="经度/纬度">
+                <x-button :style="{'display':'none'}" slot="right" mini plain>地图</x-button>
+            </x-input>
+        </div>
         <div class="next">
             <x-button @click.native="next">下一步</x-button>
         </div>
@@ -210,11 +211,19 @@
 <style lang="less">
     .basicInfoA{
         height:100%;
-        background:#fff;
+        background:#fbf9fe;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow-y: scroll;
+        .enterInfo{
+            margin-top: 10px;
+            background:#fff;
+            overflow: hidden;
+        }
         .next{
-            border-top: 1px solid #f1f1f1;
             box-sizing: border-box;
-            padding:3rem 15px 0;
+            padding:2rem 15px 15px;
         }
         .weui-label{
             width: 5em!important;

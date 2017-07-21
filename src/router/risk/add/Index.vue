@@ -52,6 +52,8 @@
 </script>
 <style lang="less" scoped>
     .addrisk{
+        display: flex;
+        flex-direction: column;
         height: 100%;
         .vux-slider{
             height: 100%;

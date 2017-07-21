@@ -31,7 +31,7 @@
         width:100%;
         height: 100%;
         box-sizing: border-box;
-        padding-bottom: 45px;
+        padding-bottom: 50px;
         overflow-y: auto;
     }
 </style>
