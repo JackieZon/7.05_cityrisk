@@ -92,12 +92,6 @@
             ...mapMutations([
                 'upRiskAdd'
             ]),
-
-
-
-
-
-
             changeRiskIntro(e){
                 this.upRiskAdd({RiskIntro:e})
             },

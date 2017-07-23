@@ -96,7 +96,6 @@
         watch:{
             addressValue(val){
                 let addres = value2name(val, ChinaAddressV3Data).split(' ');
-                console.log(addres);
                 this.defaultDuty.RiskDutyArea1 = addres[0];
                 this.defaultDuty.RiskDutyArea2 = addres[1];
                 this.defaultDuty.RiskDutyArea3 = addres[2];
@@ -183,11 +182,8 @@
                     this.actionToast({toastState:true,toastValue:'请输输入详细地址'})
                     return;
                 }
-                console.log(this.defaultDutyIndex!=='')
 
                 if(this.defaultDutyIndex!==''){
-
-                    console.log('进了1');
                     const defaultDuty = {
                         "RiskDutyName":this.defaultDuty.RiskDutyName,
                         "RiskDutyContactMan":this.defaultDuty.RiskDutyContactMan,
@@ -204,7 +200,6 @@
                     this.basicInfoCPopup = false;
 
                 }else{
-                    console.log('进了2')
                     this.confirmShow = true;
                 }
 

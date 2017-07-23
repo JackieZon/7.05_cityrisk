@@ -42,9 +42,10 @@ export const store = new Vuex.Store({
     },
     openConfirm(state, payload){
 
-      console.log(payload);
+      console.log(payload.control);
 
-      state.confirm = { ...state.confirm,...payload }
+      state.confirm = { ...state.confirm,...payload };
+
     }
   },
   modules:{

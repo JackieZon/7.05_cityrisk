@@ -7,15 +7,17 @@
     <toast v-model="toastState" type="text" :time="1500" is-show-mask :text="toastValue" position="bottom">{{ toastValue }}</toast>     
     <confirm v-model="confirmState"
         :title="'温馨提示'"
-        @on-confirm="confirmControl">
+        @on-confirm="isConfirm"
+        @on-cancel="openConfirm({state: false})">
             <p style="text-align:center;">{{ confirmMsg }}</p>
     </confirm>
   </div>
 </template>
 
 <script>
-import {Loading,Toast} from 'vux'
-import {mapState,mapActions,mapGetters} from 'vuex'
+import {Loading,Toast,Confirm} from 'vux'
+import {mapState,mapActions,mapGetters,mapMutations} from 'vuex'
+
 export default {
   name: 'app',
   data(){
@@ -25,7 +27,8 @@ export default {
   },
   components:{
     Loading,
-    Toast
+    Toast,
+    Confirm
   },
   created(){
     // this.getRiskBaseType();
@@ -37,9 +40,7 @@ export default {
       toastValue: state => state.toast.toastValue,
       confirmState: state => state.confirm.state,
       confirmMsg: state => state.confirm.msg,
-      confirmControl: state => {
-        return state.confirm.control
-      },
+      confirmControl: state => state.confirm.control,
     })
   },
   watch:{
@@ -54,9 +55,16 @@ export default {
     }
   },
   methods:{
+    ...mapMutations([
+      'openConfirm'
+    ]),
     ...mapActions([
       'getRiskBaseType',
     ]),
+    isConfirm(){
+      this.confirmControl();
+      this.openConfirm({state: false});
+    }
   }
 }
 </script>

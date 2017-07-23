@@ -37,6 +37,12 @@
                 </div>
             </div>
         </popup>
+        
+        <div class="next">
+            <x-button @click.native="openConfirm()">添加</x-button>
+            <x-button @click.native="next">提交风险</x-button>
+        </div>
+
     </div>
 </template>
 <script>
@@ -83,8 +89,19 @@
             })
         },
         methods:{
+            ...mapMutations({
+                openConfirmAction:'openConfirm',
+            }),
+            ...mapActions({
+            }),
             next(){
                 // this.$router.push({name:'basicInfoD'})
+            },
+            openConfirm(){
+                console.log(this.openConfirm);
+                this.openConfirmAction({state:true,msg:'温馨提醒，你不能提交。',control: ()=>{
+                    console.log('你点击了确定');
+                }})
             }
         },
     }
@@ -92,11 +109,14 @@
 <style lang="less">
     .basicInfoD{
         height:100%;
-        background:#fff;
+        background:#fbf9fe;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow-y: scroll;
         .next{
-            border-top: 1px solid #f1f1f1;
             box-sizing: border-box;
-            padding:3rem 15px 0;
+            padding:2rem 15px 15px;
         }
         .weui-label{
             width: 5em!important;
