@@ -38,11 +38,13 @@
 
     export default {
 
+
         directives: {
 
             TransferDom
 
         },
+
         components: {
 
             XInput,
@@ -57,6 +59,15 @@
 
         },
 
+
+        data() {
+            return {
+                show: false,
+                showToast: true,
+                riskTypeAdd: ''
+            }
+        },
+
         created() {
             this.$store.dispatch("getEvaluatioList")
 
@@ -64,13 +75,6 @@
 
         },
 
-        data() {
-            return {
-                show: false,
-                showToast: true,
-                riskTypeAdd:'asd'
-            }
-        },
         methods: {
             addEvaluation(data) {
                 this.show = data
@@ -78,7 +82,7 @@
             submitEvaluation() {
                 this.show = false
             },
-            evaluationAdd(e){
+            evaluationAdd(e) {
                 alert(e)
             }
         },

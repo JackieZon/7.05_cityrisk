@@ -34,7 +34,9 @@ const state = {
     RiskType: {},
     AccidentConsequence: {},
     ExposedDegree: {},
-    AccidentPossibility: {}
+    AccidentPossibility: {},
+
+
 
 
 
@@ -77,9 +79,6 @@ const actions = {
     //获取评估列表
     getEvaluatioList: ({ commit, dispatch, getters, state }) => {
         getEvaluatioList({ userID: 4 }).then((res) => {
-            // console.log(JSON.stringify(res))
-            // console.log(JSON.stringify(evaluatioList))
-
             const evaluatioList = res.filter(item => item.ID == 4)
             commit("saveEvaluatioList", evaluatioList[0].ListRiskAssess[0].ListRiskAssessDetail);
         })

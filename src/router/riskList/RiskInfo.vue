@@ -11,7 +11,7 @@
             <x-input title="经度/纬度" :disabled="true" value="10/20.0" placeholder="暂无"></x-input>
         </div>
         <div class="BasicInfoB">
-            <div class="title">评估信息</div>
+            <div class="title">评估信息<span class="more" v-on:click="openEvaluation">更多</span></div>
             <x-input title="可能性分析L" :disabled="true" value="可能性小，完全意外" placeholder="暂无"></x-input>
             <x-input title="露频繁程度E" :disabled="true" value="连续暴露" placeholder="暂无"></x-input>
             <x-input title="后果严重性C" :disabled="true" value="10人以上死亡" placeholder="暂无"></x-input>
@@ -70,11 +70,11 @@
 </template>
 <script>
     import Heads from './../../components/Heads.vue'
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem,XInput } from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput } from 'vux'
     const list = () => ['基本信息', '评估信息', '责任主体', '监管机构']
 
-    export default{
-        components:{
+     export default {
+        components: {
             Heads,
             Tab,
             TabItem,
@@ -85,48 +85,95 @@
             SwiperItem,
             XInput
         },
-        watch:{
-            index(val,old){
+        watch: {
+            index(val, old) {
             }
         },
-        created(){
+        created() {
             console.log(this.$route.params)
         },
-        data(){
-            return{
+        data() {
+            return {
                 lists: list(),
                 index: 0,
-                status:'基本信息',
-                routerName: ['basicInfoA','basicInfoB','basicInfoC','basicInfoD']
+                status: '基本信息',
+                routerName: ['basicInfoA', 'basicInfoB', 'basicInfoC', 'basicInfoD']
             }
         },
-        watch:{
-            status(val,oldVal){
+        watch: {
+            status(val, oldVal) {
+            }
+        },
+         methods:{
+            openEvaluation (){
+                this.$router.push({name:"evaluationList"});
+            }
+        },
+        created() {
+            console.log(this.$route.params)
+        },
+         data() {
+            return {
+                lists: list(),
+                index: 0,
+                status: '基本信息',
+                routerName: ['basicInfoA', 'basicInfoB', 'basicInfoC', 'basicInfoD']
+            }
+        },
+         watch: {
+            status(val, oldVal) {
             }
         }
     }
+
 </script>
 <style lang="less" scoped>
-    .riskInfo{
+      .riskInfo {
         background: #f1f1f1;
         box-sizing: border-box;
         padding-bottom: 15px;
     }
-    .vux-swiper{
-        height:100%!important;
+    
+    .vux-swiper {
+        height: 100%!important;
     }
-    .weui-label{
+    
+    .weui-label {
         width: 6em!important;
     }
-    .title{
+    
+    .title {
         display: flex;
         justify-content: center;
         align-items: center;
         line-height: 45px;
-        border-bottom:2px solid #33CC99;
+        border-bottom: 2px solid #33CC99;
     }
-    .BasicInfoA{margin-top:15px;background:#fff;}
-    .BasicInfoB{margin-top:15px;background:#fff;}
-    .BasicInfoC{margin-top:15px;background:#fff;}
-    .BasicInfoD{margin-top:15px;background:#fff;}
+    
+    .more {
+        position: absolute;
+        right: 15px;
+        font-size: 14px;
+        color: #A9A9A9;
+    }
+    
+    .BasicInfoA {
+        margin-top: 15px;
+        background: #fff;
+    }
+    
+    .BasicInfoB {
+        margin-top: 15px;
+        background: #fff;
+    }
+    
+    .BasicInfoC {
+        margin-top: 15px;
+        background: #fff;
+    }
+    
+    .BasicInfoD {
+        margin-top: 15px;
+        background: #fff;
+    }
 </style>
