@@ -11,7 +11,7 @@
             <x-input title="经度/纬度" :disabled="true" value="10/20.0" placeholder="暂无"></x-input>
         </div>
         <div class="BasicInfoB">
-            <div class="title">评估信息<span class="more" v-on:click="openEvaluation">更多</span></div>
+            <div class="title">评估信息<span class="more" v-on:click="openEvaluation">查看全部</span></div>
             <x-input title="可能性分析L" :disabled="true" value="可能性小，完全意外" placeholder="暂无"></x-input>
             <x-input title="露频繁程度E" :disabled="true" value="连续暴露" placeholder="暂无"></x-input>
             <x-input title="后果严重性C" :disabled="true" value="10人以上死亡" placeholder="暂无"></x-input>

@@ -14,7 +14,7 @@
 <script>
     import Heads from './../../../components/Heads.vue'
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
-    const list = () => ['基本信息', '评估信息', '责任主体', '监管机构']
+    const list = () => ['基本信息', '责任主体', '监管机构', '评估信息']
 
     export default{
         components:{
@@ -45,7 +45,7 @@
                 lists: list(),
                 index: 0,
                 status:'基本信息',
-                routerName: ['basicInfoA','basicInfoB','basicInfoC','basicInfoD']
+                routerName: ['basicInfoA','basicInfoC','basicInfoD','basicInfoB']
             }
         }
     }

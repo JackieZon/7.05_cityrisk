@@ -15,7 +15,7 @@
                 <div class="popup0">
                     <group>
                         <div class="title">新增评估信息</div>
-                        <selector title="风险类别" :options="riskType" v-model="riskTypeAdd" @on-change="evaluationAdd"></selector>
+                        <selector title="风险类别" :options="riskType" @on-change="riskTypeValue"></selector>
                         <selector title="后果严重性C" :options="AccidentConsequence"></selector>
                         <selector title="可能性分析L" :options="AccidentPossibility"></selector>
                         <selector title="频繁程度E" :options="ExposedDegree"></selector>
@@ -63,14 +63,12 @@
         data() {
             return {
                 show: false,
-                showToast: true,
-                riskTypeAdd: ''
+                showToast: true
             }
         },
 
         created() {
             this.$store.dispatch("getEvaluatioList")
-
             // console.log(JSON.stringify(this.$store.state.evaluation.evaluatioList))
 
         },
@@ -82,9 +80,16 @@
             submitEvaluation() {
                 this.show = false
             },
-            evaluationAdd(e) {
-                alert(e)
+
+            riskTypeValue (data){
+                for(let i = 0; i < this.$store.state.evaluation.RiskType[0].detail_BaseDataList.length; i++){
+                    if(this.$store.state.evaluation.RiskType[0].detail_BaseDataList[i].ID == data){
+                        this.$store.commit("riskTypeValue",{ "key":data,"value": this.$store.state.evaluation.RiskType[0].detail_BaseDataList[i].BaseName})
+                    }
+                }
             }
+            
+
         },
 
         computed: {
@@ -92,18 +97,22 @@
             ...mapState({
                 //获取state内的列表数据
                 evaluatioList: state => state.evaluation.evaluatioList,
+                // riskTypeValue: state => state.evaluation.riskTypeValue,
+
                 riskType: state => {
                     let riskData = [];
+                    let t_data = this;
 
                     if (state.evaluation.RiskType.length != 0) {
                         for (let item in state.evaluation.RiskType[0].detail_BaseDataList) {
                             riskData.push({
-                                key: state.evaluation.RiskType[0].detail_BaseDataList[item].BaseName.ID,
+                                key: state.evaluation.RiskType[0].detail_BaseDataList[item].ID,
                                 value: state.evaluation.RiskType[0].detail_BaseDataList[item].BaseName
                             });
                         }
                     }
 
+                    // alert(JSON.stringify(riskData))
                     return riskData;
                 },
 

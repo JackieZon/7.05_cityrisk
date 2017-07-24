@@ -35,6 +35,7 @@ const state = {
     AccidentConsequence: {},
     ExposedDegree: {},
     AccidentPossibility: {},
+    riskTypeValue:''
 
 
 
@@ -71,6 +72,9 @@ const mutations = {
     },
     saveRiskType: (state, payload) => {
         state.RiskType = payload;
+    },
+    riskTypeValue:(state,payload) => {
+        // alert(JSON.stringify(payload))
     }
 
 }

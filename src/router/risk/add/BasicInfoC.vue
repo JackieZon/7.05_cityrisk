@@ -1,6 +1,6 @@
 <template>
     <div class="basicInfoC">
-        <group>
+        <group v-if="JSON.stringify(ListRiskDuty)!=='[]'">
             <swipeout>
                 <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskDuty">
                     <div slot="right-menu">
@@ -15,7 +15,7 @@
                 </swipeout-item>
             </swipeout>
         </group>
-
+        <load-more v-if="JSON.stringify(ListRiskDuty)=='[]'" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
         <popup v-model="basicInfoCPopup" :hide-on-blur="false">
             <div class="basicInfoCPopup">
                 <x-input title="联系人" placeholder="联系人" v-model="defaultDuty.RiskDutyContactMan"></x-input>
@@ -36,16 +36,6 @@
                     <x-button @click.native="oepnRiskDuty('close')">关闭</x-button>
                 </div>
             </div>
-            
-            <confirm v-model="confirmShow"
-                :title="'温馨提示'"
-                @on-cancel="onCancel"
-                @on-confirm="onConfirm"
-                @on-show="onShow"
-                @on-hide="onHide">
-                    <p style="text-align:center;">{{ '您确认添加吗' }}</p>
-            </confirm>
-            
         </popup>
 
         <div class="next">
@@ -56,7 +46,7 @@
     </div>
 </template>
 <script>
-    import { XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton,Popup, Value2nameFilter as value2name, Confirm, XSwitch, TransferDomDirective as TransferDom,GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
+    import { LoadMore, XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton,Popup, Value2nameFilter as value2name, Confirm, XSwitch, TransferDomDirective as TransferDom,GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
     import {mapMutations, mapActions, mapState} from 'vuex'
 
     export default {
@@ -74,6 +64,7 @@
             Swipeout,
             SwipeoutItem,
             SwipeoutButton,
+            LoadMore
         },
         data(){
             return {
@@ -111,7 +102,8 @@
                 'upToastMag',
                 'pushListRiskDuty',
                 'editListRiskDuty',
-                'deleteListRiskDuty'
+                'deleteListRiskDuty',
+                'openConfirm'
             ]),
             ...mapActions({
                 actionToast: 'showToast'
@@ -183,33 +175,7 @@
                     return;
                 }
 
-                if(this.defaultDutyIndex!==''){
-                    const defaultDuty = {
-                        "RiskDutyName":this.defaultDuty.RiskDutyName,
-                        "RiskDutyContactMan":this.defaultDuty.RiskDutyContactMan,
-                        "RiskDutyContactTel":this.defaultDuty.RiskDutyContactTel,
-                        "RiskDutyArea1":this.defaultDuty.RiskDutyArea1,
-                        "RiskDutyArea2":this.defaultDuty.RiskDutyArea2,
-                        "RiskDutyArea3":this.defaultDuty.RiskDutyArea3,
-                        "RiskDutyAddress":this.defaultDuty.RiskDutyAddress,
-                    }
-                    this.editListRiskDuty({
-                        index:this.defaultDutyIndex,
-                        list:defaultDuty
-                    });
-                    this.basicInfoCPopup = false;
-
-                }else{
-                    this.confirmShow = true;
-                }
-
-            },
-            onCancel(){
-                this.basicInfoCPopup = false;
-                this.clearData();
-            },
-            onConfirm(){
-                const defaultDuty = {
+                const defaultDutyUpData = {
                     "RiskDutyName":this.defaultDuty.RiskDutyName,
                     "RiskDutyContactMan":this.defaultDuty.RiskDutyContactMan,
                     "RiskDutyContactTel":this.defaultDuty.RiskDutyContactTel,
@@ -218,12 +184,25 @@
                     "RiskDutyArea3":this.defaultDuty.RiskDutyArea3,
                     "RiskDutyAddress":this.defaultDuty.RiskDutyAddress,
                 }
-                this.pushListRiskDuty(defaultDuty);
-                this.clearData();
-                this.basicInfoCPopup = false;
+
+                if(this.defaultDutyIndex!==''){
+                    this.editListRiskDuty({
+                        index:this.defaultDutyIndex,
+                        list:defaultDutyUpData
+                    });
+                    this.basicInfoCPopup = false;
+                }else{
+
+                    this.openConfirm({state:true,msg:'您确定要新增吗？',control: ()=>{
+                        console.log('你点击了确定');
+                        this.pushListRiskDuty(defaultDutyUpData);
+                        this.clearData();
+                        this.basicInfoCPopup = false;
+                    }})
+
+                }
+
             },
-            onShow(){},
-            onHide(){},
         },
     }
 </script>

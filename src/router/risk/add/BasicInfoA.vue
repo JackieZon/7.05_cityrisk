@@ -6,24 +6,7 @@
                 placeholder="请输入"
                 @on-change="(e)=>{upRiskAdd({RiskName:e})}"
                 :value="postRiskAdd.RiskName"
-                :required="true"
             ></x-input>
-
-            <!--<selector 
-                title="风险类别"
-                placeholder="请选择"
-                :options="riskType"
-                :value="riskTypeVal"
-                @on-change="riskTypeChoose"
-            ></selector>
-
-            <x-input 
-                title="类别名称" 
-                placeholder="请输入"  
-                :required="true" 
-                @on-change="(e)=>{upRiskAdd({RiskCategoryName:e})}" 
-                :value="postRiskAdd.RiskCategoryName"
-            ></x-input>-->
 
             <selector 
                 title="对象类型"
@@ -53,7 +36,6 @@
             <x-input
                 :title="'详细地址'" 
                 placeholder="请输入"
-                :required="true" 
                 @on-change="(e)=>{upRiskAdd({RiskAddress:e})}"
                 :value="postRiskAdd.RiskAddress"
             ></x-input>
@@ -95,7 +77,6 @@
         watch:{
             addressValue(val){
                 let addres = value2name(val, ChinaAddressV3Data).split(' ');
-                console.log(addres);
                 this.upRiskAdd({RiskArea1: addres[0],RiskArea2: addres[1],RiskArea3:addres[2]});
             }
         },
@@ -135,8 +116,6 @@
                         }
                     }
 
-                    console.log(riskData);
-
                     return riskData;
                 },
                 riskObjectType: state => {
@@ -161,10 +140,10 @@
                 'upRiskAdd'
             ]),
             next(){
-                this.$router.push({name:'basicInfoB'})
+                this.$router.push({name:'basicInfoC'})
             },
             riskObjectTypeChoose(val){
-                
+            
                 let riskObjectType = this.$store.state.tiskAdd.riskObjectType;
                 for(let item in riskObjectType){
 
@@ -175,29 +154,38 @@
 
                         let riskObjectTypeChild = [];
                         for(let items in riskObjectType[item].riskObjectTypeChildList){
-
+                            
                             riskObjectTypeChild.push({
                                 key:riskObjectType[item].riskObjectTypeChildList[items].ID,
                                 value:riskObjectType[item].riskObjectTypeChildList[items].ObjectTypeName
                             });
-
                         }
-                        this.riskObjectTypeChildVal = '';
+
+                        childObj:
+                            for(let child=0; child<riskObjectTypeChild.length; child++){
+                                if(riskObjectTypeChild[child].key == this.riskObjectTypeChildVal){
+                                    break childObj;
+                                }else{
+                                    if(child+1 == riskObjectTypeChild.length){
+                                        this.riskObjectTypeChildVal = '';
+                                    }
+                                }
+                            }
+
                         this.riskObjectTypeChild = riskObjectTypeChild;
                     }
                 }
 
             },
             riskObjectTypeChildChoose(val){
-
                 for(let items in this.riskObjectTypeChild){
-                    
+
                     if(this.riskObjectTypeChild[items].key == val){
                         this.upRiskAdd({RiskObjectTypeID2:this.riskObjectTypeChild[items].key})
                         this.upRiskAdd({riskObjectTypeChildChoose:this.riskObjectTypeChild[items].value})
                     }
-                }
 
+                }
             },
             riskTypeChoose(val){
                 this.upRiskAdd({RiskCategory:val})

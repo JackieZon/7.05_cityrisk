@@ -1,34 +1,41 @@
 import {getRiskBaseType,getRiskObjectType,postRiskAdd} from './../../servers/api'
 
 const state = {
-    AccidentPossibility:{},
-    ExposedDegree:{},
-    AccidentConsequence:{},
-    RiskType:{},
     riskBaseType:[],
     riskObjectType:[],
+    riskBaseType:{
+        RiskAssessL:[],
+        RiskAssessE:[],
+        RiskAssessC:[],
+        RiskAssessType:[]
+    },
     postRiskAdd:{
         "ListRiskAssess": [
             {
             "ListRiskAssessDetail": [
-                {
-                "ID": 0,
-                "RiskID": 0,
-                "RiskAssessID": 0,
-                "RiskAssessTypeID": 0,
-                "RiskAssessTypeName": "",
-                "RiskAssessLID": 0,
-                "RiskAssessLName": "",
-                "RiskAssessLScore": 0,
-                "RiskAssessEID": 0,
-                "RiskAssessEName": "",
-                "RiskAssessEScore": 0,
-                "RiskAssessCID": 0,
-                "RiskAssessCName": "",
-                "RiskAssessCScore": 0,
-                "RiskAssessDetailLv": 0,
-                "RiskAssessDetailScore": 0
-                }
+                // {
+                //     "ID": 0,
+                //     "RiskID": 0,
+                //     "RiskAssessID": 0,
+
+                //     "RiskAssessTypeID": 0,      //** 评估类型ID /火灾ID */
+                //     "RiskAssessTypeName": "",   //** 类型的名称 /火灾 */
+
+                //     "RiskAssessLID": 0,         //**ID */
+                //     "RiskAssessLName": "",      //**名称 */
+                //     "RiskAssessLScore": 0,      //**分值 */
+
+                //     "RiskAssessEID": 0,         //**ID */
+                //     "RiskAssessEName": "",      //**名称 */
+                //     "RiskAssessEScore": 0,      //**分值 */
+
+                //     "RiskAssessCID": 0,         //**ID */
+                //     "RiskAssessCName": "",      //**名称 */
+                //     "RiskAssessCScore": 0,      //**分值 */
+
+                //     "RiskAssessDetailLv": 0,    //** 4(可忽略)，3(低)，2(中等)，1(高)，0(极高) 风险等级 */
+                //     "RiskAssessDetailScore": 0  //**分值 10000 */
+                // }
             ],
             "ID": 0,
             "RiskID": 0,
@@ -49,21 +56,21 @@ const state = {
             }
         ],
         "ListRiskRegulatory":[
-            {
-                // "ID":0,
-                // "RiskID":0,
-                // "RiskRegulatoryName":"",
-                // "RiskRegulatoryContactMan":"",
-                // "RiskRegulatoryContactTel":"",
-                // "RiskRegulatoryArea1":"",
-                // "RiskRegulatoryArea2":"",
-                // "RiskRegulatoryArea3":"",
-                // "RiskRegulatoryArea4":"",
-                // "RiskRegulatoryArea5":"",
-                // "RiskRegulatoryAddress":"",
-                // "RiskRegulatoryAddMan":"",
-                // "RiskRegulatoryAddDate":"2017-07-21T03:50:54.813Z"
-            }
+            // {
+            //     "ID":0,
+            //     "RiskID":0,
+            //     "RiskRegulatoryName":"我是监管机构的名称",
+            //     "RiskRegulatoryContactMan":"我是监管机构的联系人",
+            //     "RiskRegulatoryContactTel":"15070713710",
+            //     "RiskRegulatoryArea1":"广东省",
+            //     "RiskRegulatoryArea2":"深圳市",
+            //     "RiskRegulatoryArea3":"福田区",
+            //     "RiskRegulatoryArea4":"",
+            //     "RiskRegulatoryArea5":"",
+            //     "RiskRegulatoryAddress":"福田街道办",
+            //     "RiskRegulatoryAddMan":"",
+            //     "RiskRegulatoryAddDate":"2017-07-21T03:50:54.813Z"
+            // }
         ],
         "ListRiskDuty": [
             // {
@@ -125,15 +132,12 @@ const actions = {
 
         getRiskBaseType().then((res)=>{
 
-            const AccidentPossibility = res.filter(item=>item.BaseTypeNo == 'AccidentPossibility')
-            const ExposedDegree = res.filter(item=>item.BaseTypeNo == 'ExposedDegree')
-            const AccidentConsequence = res.filter(item=>item.BaseTypeNo == 'AccidentConsequence')
-            const RiskType = res.filter(item=>item.BaseTypeNo == 'RiskType')
+            const RiskAssessL = res.filter(item=>item.BaseTypeNo == 'RiskAssessL')
+            const RiskAssessE = res.filter(item=>item.BaseTypeNo == 'RiskAssessE')
+            const RiskAssessC = res.filter(item=>item.BaseTypeNo == 'RiskAssessC')
+            const RiskAssessType = res.filter(item=>item.BaseTypeNo == 'RiskAssessType')
 
-            commit('saveAccidentPossibility',AccidentPossibility);
-            commit('saveExposedDegree',ExposedDegree);
-            commit('saveAccidentConsequence',AccidentConsequence);
-            commit('saveRiskType',RiskType);
+            commit('saveRiskBaseType',{RiskAssessL: RiskAssessL[0].detail_BaseDataList, RiskAssessE:RiskAssessE[0].detail_BaseDataList, RiskAssessC:RiskAssessC[0].detail_BaseDataList, RiskAssessType:RiskAssessType[0].detail_BaseDataList});
 
         });
 
@@ -155,43 +159,51 @@ const mutations = {
     saveData: (state, payload) => {
         state = {...state, ...payload}
     },
-    saveAccidentPossibility: (state, payload) => {
-        state.AccidentPossibility = payload;
-    },
-    saveExposedDegree: (state, payload) => {
-        state.ExposedDegree = payload;
-    },
-    saveAccidentConsequence: (state, payload) => {
-        state.AccidentConsequence = payload;
-    },
-    saveRiskType: (state, payload) => {
-        state.RiskType = payload;
-    },
     saveRiskObjectType: (state, payload) =>{
         state.riskObjectType = payload;
+    },
+    saveRiskBaseType: (state, payload)=>{
+        console.log(payload);
+        state.riskBaseType = {...state.riskBaseType, ...payload}
     },
     upRiskAdd: (state, payload) => {
         // console.log(payload)
         state.postRiskAdd = {...state.postRiskAdd, ...payload}
     },
+    // 增加、编辑、删除、责任主体
     pushListRiskDuty: (state, payload)=>{
-
-        console.log(payload);
-
         state.postRiskAdd.ListRiskDuty.push(payload);
-
-        console.log(state.postRiskAdd.ListRiskDuty);
-
     },
     deleteListRiskDuty: (state, payload)=>{
         state.postRiskAdd.ListRiskDuty.splice(payload.index,1);
     },
     editListRiskDuty: (state, payload)=>{
-        
-        console.log(payload);
         state.postRiskAdd.ListRiskDuty[payload.index] = payload.list;
+    },
 
-    }
+    // 增加、编辑、删除、监管机构
+    pushListRegulatory: (state, payload)=>{
+        state.postRiskAdd.ListRiskRegulatory.push(payload);
+    },
+    deleteListRegulatory: (state, payload)=>{
+        state.postRiskAdd.ListRiskRegulatory.splice(payload.index,1);
+    },
+    editListRegulatory: (state, payload)=>{
+        console.log(payload);
+        state.postRiskAdd.ListRiskRegulatory[payload.index] = payload.list;
+    },
+    
+    // 增加、编辑、删除、评估信息
+    pushAssessDetail: (state, payload)=>{
+        state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail.push(payload);
+    },
+    deleteAssessDetail: (state, payload)=>{
+        state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail.splice(payload.index,1);
+    },
+    editAssessDetail: (state, payload)=>{
+        console.log(payload);
+        state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail[payload.index] = payload.list;
+    },
 }
 
 export default {

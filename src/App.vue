@@ -31,7 +31,6 @@ export default {
     Confirm
   },
   created(){
-    // this.getRiskBaseType();
   },
   computed: {
     ...mapState({
