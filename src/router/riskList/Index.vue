@@ -1,7 +1,7 @@
 <template>
 	<div id="riskListPage">
-		<Heads :back="false" :title="'风险列表'" :isMap="true"></Heads>
 		<div class="search-box">
+			<Heads :back="false" :title="'风险列表'" :isMap="true"></Heads>
 			<search :autoFixed="false"></search>
 			<div class="msg">
 				<MsgToast @click.native="goPage('warningList')"></MsgToast>
@@ -10,54 +10,43 @@
 				</div>
 			</div>
 		</div>
-		<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" @click.native="goPage('riskInfo')"></RiskList>
-		
-		<scroller 
-			lock-x 
-			scrollbar-y 
-			use-pullup 
-			use-pulldown 
-			height="200px" 
-			@on-pullup-loading="loadMore" 
-			@on-pulldown-loading="refresh" 
-			v-model="status" 
-			ref="scroller"
+		<scroller
+			lock-x
+			scrollbar-y
+			use-pullup
+			use-pulldown
+			height="100%"
+			@on-pullup-loading="loadMore"
+			@on-pulldown-loading="refresh"
+			v-model="statusDown" 
+			ref="scrollerRef"
 		>
-			
-			<div class="box2">
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
-				<p>我只有一条</p>
+			<div class="listItem" style="height:100%;">
+				<div>
+					<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" @click.native="goPage('riskInfo')"></RiskList>
+				</div>
 			</div>
 
 			<!--pulldown slot-->
 
 			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
 				<div class="loadingBox">
-					<spinner style="display:flex;justify-content: center;align-items: center;margin-right:10px;" v-show="status.pulldownStatus === 'loading'" type="crescent"></spinner>
-					<span class="pulldown-arrow" style="margin-right:10px;" v-show="status.pulldownStatus === 'down' || status.pulldownStatus === 'up'" :class="{'rotate': status.pulldownStatus === 'up'}">↓</span>
-					<span>{{status.pulldownStatus=='up'?'释放刷新':(status.pulldownStatus=='loading'?'正在刷新':(status.pulldownStatus=='down'?'下拉刷新':'刷新成功'))}}</span>
+					<spinner style="display:flex;justify-content: center;align-items: center;margin-right:10px;" v-show="statusDown.pulldownStatus === 'loading'" type="crescent"></spinner>
+					<span class="pulldown-arrow" style="margin-right:10px;" v-show="statusDown.pulldownStatus === 'down' || statusDown.pulldownStatus === 'up'" :class="{'rotate': statusDown.pulldownStatus === 'up'}">↓</span>
+					<span>{{statusDown.pulldownStatus=='up'?'释放刷新':(statusDown.pulldownStatus=='loading'?'正在刷新':(statusDown.pulldownStatus=='down'?'下拉刷新':'刷新成功'))}}</span>
 				</div>
 			</div>
 
-			<!--pullup slot
-			<div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
-				<span v-show="status.pullupStatus === 'default'"> 我是default</span>
-				<span class="pullup-arrow" v-show="status.pullupStatus === 'down' || status.pullupStatus === 'up'" :class="{'rotate': status.pullupStatus === 'up'}">↑</span>
-				<span v-show="status.pullupStatus === 'loading'">我是loading<spinner type="ios-small"></spinner></span>
-			</div>-->
+			<div slot="pullup" v-show="statusDown.pullupStatus == 'down' || statusDown.pullupStatus == 'loading'" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
+				<div class="loadingBox">
+					<span class="pullup-arrow" style="margin-right:10px;" v-show="statusDown.pullupStatus === 'down'" :class="{'rotate': statusDown.pullupStatus === 'down'}">↑</span>
+					<spinner style="display:flex;justify-content: center;align-items: center;margin-right:10px;" v-show="statusDown.pullupStatus === 'loading'" type="crescent"></spinner>
+					<span>{{statusDown.pullupStatus=='down'?'加载更多':(statusDown.pullupStatus=='loading'?'加载中':'成功')}}</span>
+				</div>		
+			</div>
+		
 
 		</scroller>
-
-
 	</div>
 </template>
 <script>
@@ -85,11 +74,11 @@
 		},
 		data(){
 			return {
-				riskList:[{name:'jack'}],
-				status: {
+				riskList:[{name:'jack'},{name:'jack'},{name:'jack'},{name:'jack'}],
+				statusDown: {
 					pullupStatus: 'default',
 					pulldownStatus: 'default'
-				}
+				},
 			}
 		},
 		mounted(){
@@ -101,9 +90,12 @@
 			})
 		},
 		watch:{
-			status(){
-				console.log(`${this.status.pullupStatus}||${this.status.pulldownStatus}`);
-			}
+			statusDown(){
+				console.log(`1+${this.statusDown.pullupStatus}||${this.statusDown.pulldownStatus}`);
+			},
+			statusUp(){
+				console.log(`2+${this.statusUp.pullupStatus}||${this.statusUp.pulldownStatus}`);
+			},
 		},
 		methods:{
 			...mapMutations([
@@ -119,30 +111,40 @@
 			},
 			loadMore () {
 
+				console.log('我是pull up');
+
 				setTimeout(() => {
-					setTimeout(() => {
-					this.$refs.scroller.donePullup()
-					}, 10)
-				}, 2000)
+					this.$refs.scrollerRef.donePullup()
+					setTimeout(()=>{
+						this.riskList.push({name:'小燕'},{name:'小燕'});
+					},1000)
+				}, 2000);
 
 			},
 			refresh() {
+				// console.log('我是pull down');
 				setTimeout(() => {
-					this.$refs.scroller.donePulldown()
+					this.$refs.scrollerRef.donePulldown()
 				}, 2000)
 			},
-			load3 () {
-			}
 		}
 	}
 </script>
-<style lang="less" scoped>
+<style lang="less">
 	.rotate {
 		transform: rotate(-180deg);
 	}
 	#riskListPage{
-		// margin-bottom:20px;
+		height:100%;
 		background: #fbf9fe;
+		display: flex;
+    	flex-direction: column;
+		.main{
+			flex:1;
+			.listItem{
+				height:100%;
+			}
+		}
 		.weui-cells{margin-top:0px!important;}
 		.loadingBox{display:flex;justify-content: center;align-items: center;}
 	}
