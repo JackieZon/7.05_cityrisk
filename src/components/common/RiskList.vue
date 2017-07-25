@@ -33,7 +33,7 @@
 </script>
 <style lang="less">
   .danger{
-    background: #f1f1f1;
+    background: #fbf9fe;
     box-sizing: border-box;
 
     .weui-cells{

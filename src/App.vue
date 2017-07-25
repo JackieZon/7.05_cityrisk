@@ -4,7 +4,7 @@
       <router-view></router-view>
     </transition>
     <loading v-model="isLoading"></loading>
-    <toast v-model="toastState" type="text" :time="1500" is-show-mask :text="toastValue" position="bottom">{{ toastValue }}</toast>     
+    <toast v-model="toastState" type="text" width="15em" :time="1500" is-show-mask :text="toastValue" position="middle">{{ toastValue }}</toast>     
     <confirm v-model="confirmState"
         :title="'温馨提示'"
         @on-confirm="isConfirm"

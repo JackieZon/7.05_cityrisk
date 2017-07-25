@@ -18,10 +18,11 @@ const RiskAdd = resolve => require(['./router/risk/add/Index.vue'], resolve)
 const RiskMap = resolve => require(['./router/riskMap/Index.vue'], resolve)
 const BasicInfoA = resolve => require(['./router/risk/add/BasicInfoA.vue'], resolve)
 const BasicInfoB = resolve => require(['./router/risk/add/BasicInfoB.vue'], resolve)
-const BasicInfoB_Evaluation = resolve => require(['./router/risk/add/BasicInfoB_Evaluation.vue'], resolve)
 const BasicInfoC = resolve => require(['./router/risk/add/BasicInfoC.vue'], resolve)
 const BasicInfoD = resolve => require(['./router/risk/add/BasicInfoD.vue'], resolve)
 const EvaluationList = resolve => require(['./router/riskList/evaluationList.vue'], resolve)
+const EvaluationInfo = resolve => require(['./router/riskList/evaluationInfo.vue'],resolve)
+const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue'],resolve)
 
 // RiskList
 // const 
@@ -66,11 +67,6 @@ export default {
             name: 'basicInfoD',
             component: BasicInfoD,
           },
-          {
-            path: '/Index/RiskAdd/Evaluation',
-            name: 'BasicInfoB_Evaluation',
-            component: BasicInfoB_Evaluation,
-          },
         ]
       },
       {
@@ -99,6 +95,16 @@ export default {
     path: "/Index/RiskList/evaluationList",
     name: "evaluationList",
     component: EvaluationList
+  },
+  {
+    path:"/Index/RiskList/evaluationInfo",
+    name:"evaluationInfo",
+    component: EvaluationInfo
+  },
+  {
+    path:"/Index/RiskList/addEvaluation",
+    name:"addEvaluation",
+    component: AddEvaluation
   },
   {
     path: '/Login/Risk/RiskMap',

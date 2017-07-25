@@ -1,5 +1,5 @@
 <template>
-	<div class="riskListPage">
+	<div id="riskListPage">
 		<Heads :back="false" :title="'风险列表'" :isMap="true"></Heads>
 		<div class="search-box">
 			<search :autoFixed="false"></search>
@@ -11,10 +11,58 @@
 			</div>
 		</div>
 		<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" @click.native="goPage('riskInfo')"></RiskList>
+		
+		<scroller 
+			lock-x 
+			scrollbar-y 
+			use-pullup 
+			use-pulldown 
+			height="200px" 
+			@on-pullup-loading="loadMore" 
+			@on-pulldown-loading="refresh" 
+			v-model="status" 
+			ref="scroller"
+		>
+			
+			<div class="box2">
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+				<p>我只有一条</p>
+			</div>
+
+			<!--pulldown slot-->
+
+			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
+				<div class="loadingBox">
+					<spinner style="display:flex;justify-content: center;align-items: center;margin-right:10px;" v-show="status.pulldownStatus === 'loading'" type="crescent"></spinner>
+					<span class="pulldown-arrow" style="margin-right:10px;" v-show="status.pulldownStatus === 'down' || status.pulldownStatus === 'up'" :class="{'rotate': status.pulldownStatus === 'up'}">↓</span>
+					<span>{{status.pulldownStatus=='up'?'释放刷新':(status.pulldownStatus=='loading'?'正在刷新':(status.pulldownStatus=='down'?'下拉刷新':'刷新成功'))}}</span>
+				</div>
+			</div>
+
+			<!--pullup slot
+			<div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
+				<span v-show="status.pullupStatus === 'default'"> 我是default</span>
+				<span class="pullup-arrow" v-show="status.pullupStatus === 'down' || status.pullupStatus === 'up'" :class="{'rotate': status.pullupStatus === 'up'}">↑</span>
+				<span v-show="status.pullupStatus === 'loading'">我是loading<spinner type="ios-small"></spinner></span>
+			</div>-->
+
+		</scroller>
+
+
 	</div>
 </template>
 <script>
-	import { Search, Group, Cell, XButton } from 'vux'
+	import {Search, Group, Cell, XButton,Scroller, Divider, XSwitch, Spinner} from 'vux'
+	import {mapMutations, mapState, mapActions} from 'vuex'
 	
 	import Heads from './../../components/Heads.vue'
 	import RiskList from './../../components/common/RiskList.vue'
@@ -29,28 +77,74 @@
 			Group,
 			Cell,
 			XButton,
-			MsgToast
+			MsgToast,
+			Scroller,
+			Divider,
+			XSwitch,
+			Spinner,
 		},
 		data(){
 			return {
-				riskList:[{name:'jack'},{name:'小燕'},{name:'小燕'},{name:'小燕'},{name:'小燕'},{name:'小燕'}]
+				riskList:[{name:'jack'}],
+				status: {
+					pullupStatus: 'default',
+					pulldownStatus: 'default'
+				}
+			}
+		},
+		mounted(){
+			this.getRisk();
+		},
+		computed: {
+            ...mapState({
+
+			})
+		},
+		watch:{
+			status(){
+				console.log(`${this.status.pullupStatus}||${this.status.pulldownStatus}`);
 			}
 		},
 		methods:{
+			...mapMutations([
+            ]),
+			...mapActions([
+				'getRisk'
+            ]),
 			goRiskAdd(){
                 this.$router.push({name:'riskAdd'});
             },
 			goPage(name){
 				this.$router.push({name:name,params:{id:123}})
+			},
+			loadMore () {
+
+				setTimeout(() => {
+					setTimeout(() => {
+					this.$refs.scroller.donePullup()
+					}, 10)
+				}, 2000)
+
+			},
+			refresh() {
+				setTimeout(() => {
+					this.$refs.scroller.donePulldown()
+				}, 2000)
+			},
+			load3 () {
 			}
 		}
 	}
 </script>
 <style lang="less" scoped>
-	.riskListPage{
+	.rotate {
+		transform: rotate(-180deg);
+	}
+	#riskListPage{
 		// margin-bottom:20px;
-		background: #EFEFF4;
+		background: #fbf9fe;
 		.weui-cells{margin-top:0px!important;}
+		.loadingBox{display:flex;justify-content: center;align-items: center;}
 	}
 	.riskList{
 		margin-top:10px;

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import regExp from './../utils/regExp'
 import tiskAdd from './risk/riskAdd'
+import riskList from './map/riskList'
 import evaluation from "./risk/evaluation"
 
 Vue.use(Vuex);
@@ -41,15 +42,12 @@ export const store = new Vuex.Store({
       state.toast = {...state.toast, ...payload }
     },
     openConfirm(state, payload){
-
-      console.log(payload.control);
-
       state.confirm = { ...state.confirm,...payload };
-
     }
   },
   modules:{
     tiskAdd,
-    evaluation
+    evaluation,
+    riskList
   }
 });

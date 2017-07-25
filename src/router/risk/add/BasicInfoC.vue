@@ -2,7 +2,7 @@
     <div class="basicInfoC">
         <group v-if="JSON.stringify(ListRiskDuty)!=='[]'">
             <swipeout>
-                <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskDuty">
+                <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskDuty" :key="index">
                     <div slot="right-menu">
                         <swipeout-button @click.native="oepnRiskDuty('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
                         <swipeout-button @click.native="oepnRiskDuty('delete',index)" type="warn">{{'删除'}}</swipeout-button>
@@ -15,7 +15,7 @@
                 </swipeout-item>
             </swipeout>
         </group>
-        <load-more v-if="JSON.stringify(ListRiskDuty)=='[]'" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+        <load-more v-if="JSON.stringify(ListRiskDuty)=='[]'" :show-loading="false" :tip="'暂无责任主体'" background-color="#fbf9fe"></load-more>
         <popup v-model="basicInfoCPopup" :hide-on-blur="false">
             <div class="basicInfoCPopup">
                 <x-input title="联系人" placeholder="联系人" v-model="defaultDuty.RiskDutyContactMan"></x-input>
@@ -163,15 +163,15 @@
                     return;
                 }
                 if(!this.defaultDuty.RiskDutyArea1){
-                    this.actionToast({toastState:true,toastValue:'请输选择省市区'})
+                    this.actionToast({toastState:true,toastValue:'请选择省市区'})
                     return;
                 }
                 if(!this.defaultDuty.RiskDutyArea2){
-                    this.actionToast({toastState:true,toastValue:'请输选择省市区'})
+                    this.actionToast({toastState:true,toastValue:'请选择省市区'})
                     return;
                 }
                 if(!this.defaultDuty.RiskDutyAddress){
-                    this.actionToast({toastState:true,toastValue:'请输输入详细地址'})
+                    this.actionToast({toastState:true,toastValue:'请输入详细地址'})
                     return;
                 }
 

@@ -6,21 +6,33 @@
                 <div @click="goPages('riskMap')" v-if="isMapState" class="map" slot="right">风险地图</div>
                 <div @click="goPages('index')" v-if="isRiskAddState" class="map" slot="right">新增风险源</div>
                 <div @click="goPages('riskList')" v-if="isRiskListState" class="map" slot="right">风险列表</div>
-                <div @click="goPages('riskDanger')" v-if="isDangerState" class="map" slot="right">隐患</div>
+                <!--<div @click="goPages('riskDanger')" v-if="isDangerState" class="map" slot="right"><span style="font-size: 20px;">+</span></div>-->
+                <div v-if="isDangerState" class="map" slot="right" v-on:click="showMenus = true"><span style="font-size: 20px;">+</span></div>
+                <!--<div v-if="isDangerState" class="map" slot="right">隐患</div>-->
                 <div @click="addEvaluation" v-if="isEvaluationListState" class="map" slot="right">新增</div>
                 <div v-if="isRightTitleState" class="map" slot="right">{{rightTitle}}</div>
+
+                <div v-transfer-dom>
+                    <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="openMenu"></actionsheet>
+                </div>
+
             </x-header>
         </div>
         <div class="divHeight"></div>
     </div>
 </template>
 <script>
-    import { XHeader, Actionsheet, TransferDom } from 'vux'
+    import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
     export default {
+        directives: {
+            TransferDom
+        },
         components: {
             XHeader,
             Actionsheet,
-            TransferDom
+            TransferDom,
+            ButtonTab,
+            ButtonTabItem
         },
         props: ['title', 'back', 'isMap', 'isRiskAdd', 'isRightTitle', 'rightTitle', 'isRiskList', 'isDanger', 'isEvaluationList'],
         data() {
@@ -32,7 +44,12 @@
                 isRiskListState: false,
                 isDangerState: false,
                 isDangerState: false,
-                isEvaluationListState: false
+                isEvaluationListState: false,
+                menus: {
+                    menu1: '隐患',
+                    menu2: '新增评估'
+                },
+                showMenus: false
             }
         },
         created() {
@@ -45,11 +62,27 @@
             this.isEvaluationListState = (this.isEvaluationList == true ? true : false)
         },
         methods: {
+            openMenu(data) {
+
+                if(data == "menu1"){
+
+                    this.$router.push({ name: "riskDanger" });
+                }
+
+                if(data == "menu2"){
+
+                   this.$router.push({ name: "addEvaluation" });
+
+                }
+
+            },
+            
             goPages(name) {
                 this.$router.push({ name: name });
             },
+
             addEvaluation() {
-                this.$emit('addEvaluation', true)
+                this.$router.push({ name: "addEvaluation" });
             }
         }
     }

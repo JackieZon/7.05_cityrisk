@@ -1,33 +1,20 @@
 <template>
     <div class="riskInfo" v-cloak>
-        <Heads :title="'评估列表'" :isEvaluationList="true" v-on:addEvaluation="addEvaluation"></Heads>
-        <div class="BasicInfoB" v-for="item in evaluatioList">
-            <div class="title">评估信息</div>
-            <x-input title="风险类型" :disabled="true" :value="item.RiskAssessTypeName" placeholder="暂无"></x-input>
-            <x-input title="可能性分析L" :disabled="true" :value="item.RiskAssessLName" placeholder="暂无"></x-input>
-            <x-input title="后果严重性C" :disabled="true" :value="item.RiskAssessCName" placeholder="暂无"></x-input>
-            <x-input title="频繁程度E" :disabled="true" :value="item.RiskAssessEName" placeholder="暂无"></x-input>
-            <x-input title="等级" :disabled="true" :value="item.RiskAssessDetailLv" placeholder="暂无"></x-input>
-            <x-input title="分值" :disabled="true" :value="item.RiskAssessDetailScore" placeholder="暂无"></x-input>
-        </div>
-        <div v-transfer-dom>
-            <popup v-model="show">
-                <div class="popup0">
-                    <group>
-                        <div class="title">新增评估信息</div>
-                        <selector title="风险类别" :options="riskType" @on-change="riskTypeValue"></selector>
-                        <selector title="后果严重性C" :options="AccidentConsequence"></selector>
-                        <selector title="可能性分析L" :options="AccidentPossibility"></selector>
-                        <selector title="频繁程度E" :options="ExposedDegree"></selector>
-                        <x-input title="等级" placeholder="请输入等级"></x-input>
-                        <x-input title="风值" placeholder="请输入风值"></x-input>
-
-                        <div class="next" v-on:click="submitEvaluation">
-                            <x-button>提交</x-button>
-                        </div>
-                    </group>
+        <Heads :title="'评估列表'" :isEvaluationList="true"></Heads>
+        <div class="evaluation" v-for="item in searchList">
+            <div class="evaluationList" v-on:click="openEvaluationInfo">
+                <div style="font-size: 14px;">
+                    <p class="p_center" style="position: absolute; right: 10px;"><img src="./../../assets/icon/level.svg" alt="">{{ '蓝色' }}</p>
+                    <p class="p_center" style="position: absolute; right: 10px; top: 40px;"><img src="./../../assets/icon/windPower.svg" alt="">{{ '18级' }}</p>
+                    <p class="p_center"><img src="./../../assets/icon/riskType.svg" alt="">风险类型: 火灾、爆炸</p>
+                    <p class="p_center"><img src="./../../assets/icon/appraiser.svg" alt="">评估人:李四</p>
+                    <p class="p_center"><img src="./../../assets/icon/time2.svg" alt="">评估时间: 2017-07-24 16:39</p>
+                    <img style="position: absolute; top: 105px;" src="./../../assets/icon/describe.svg" alt="">
+                    <p style="margin-left: 30px; overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp:1; -webkit-box-orient: vertical;">描述: 这个风险源涉及的风险较多，需要着重重视，存在很多爆炸性物品随意堆放！</p>
+                    <p class="p_center" style=" margin-top: 4px;"><img src="./../../assets/icon/auditor.svg" alt="">审核人: 张三</p>
+                    <p class="auditStatus">审核状态: 未审核</p>
                 </div>
-            </popup>
+            </div>
         </div>
     </div>
 </template>
@@ -63,104 +50,28 @@
         data() {
             return {
                 show: false,
-                showToast: true
+                showToast: true,
+                searchList: [1, 2, 3, 4, 5, 6]
             }
         },
 
         created() {
-            this.$store.dispatch("getEvaluatioList")
-            // console.log(JSON.stringify(this.$store.state.evaluation.evaluatioList))
 
         },
 
         methods: {
-            addEvaluation(data) {
-                this.show = data
-            },
-            submitEvaluation() {
-                this.show = false
-            },
-
-            riskTypeValue (data){
-                for(let i = 0; i < this.$store.state.evaluation.RiskType[0].detail_BaseDataList.length; i++){
-                    if(this.$store.state.evaluation.RiskType[0].detail_BaseDataList[i].ID == data){
-                        this.$store.commit("riskTypeValue",{ "key":data,"value": this.$store.state.evaluation.RiskType[0].detail_BaseDataList[i].BaseName})
-                    }
-                }
+            openEvaluationInfo() {
+                this.$router.push({ name: 'evaluationInfo' });
             }
-            
+
 
         },
 
         computed: {
 
             ...mapState({
-                //获取state内的列表数据
-                evaluatioList: state => state.evaluation.evaluatioList,
-                // riskTypeValue: state => state.evaluation.riskTypeValue,
 
-                riskType: state => {
-                    let riskData = [];
-                    let t_data = this;
-
-                    if (state.evaluation.RiskType.length != 0) {
-                        for (let item in state.evaluation.RiskType[0].detail_BaseDataList) {
-                            riskData.push({
-                                key: state.evaluation.RiskType[0].detail_BaseDataList[item].ID,
-                                value: state.evaluation.RiskType[0].detail_BaseDataList[item].BaseName
-                            });
-                        }
-                    }
-
-                    // alert(JSON.stringify(riskData))
-                    return riskData;
-                },
-
-                AccidentConsequence: state => {
-                    let riskData = [];
-
-                    if (state.evaluation.AccidentConsequence.length != 0) {
-                        for (let item in state.evaluation.AccidentConsequence[0].detail_BaseDataList) {
-                            riskData.push({
-                                key: state.evaluation.AccidentConsequence[0].detail_BaseDataList[item].BaseName.ID,
-                                value: state.evaluation.AccidentConsequence[0].detail_BaseDataList[item].BaseName
-                            });
-                        }
-                    }
-
-                    return riskData;
-                },
-
-                ExposedDegree: state => {
-                    let riskData = [];
-
-                    if (state.evaluation.ExposedDegree.length != 0) {
-                        for (let item in state.evaluation.ExposedDegree[0].detail_BaseDataList) {
-                            riskData.push({
-                                key: state.evaluation.ExposedDegree[0].detail_BaseDataList[item].BaseName.ID,
-                                value: state.evaluation.ExposedDegree[0].detail_BaseDataList[item].BaseName
-                            });
-                        }
-                    }
-
-                    return riskData;
-                },
-                AccidentPossibility: state => {
-                    let riskData = [];
-
-                    if (state.evaluation.AccidentPossibility.length != 0) {
-                        for (let item in state.evaluation.AccidentPossibility[0].detail_BaseDataList) {
-                            riskData.push({
-                                key: state.evaluation.AccidentPossibility[0].detail_BaseDataList[item].BaseName.ID,
-                                value: state.evaluation.AccidentPossibility[0].detail_BaseDataList[item].BaseName
-                            });
-                        }
-                    }
-
-                    return riskData;
-                }
-
-            }),
+            })
 
         }
 
@@ -202,14 +113,39 @@
         background: #f1f1f1;
     }
     
-    button.weui-btn,
-    input.weui-btn {
-        color: white;
-        background: #33CC99;
-    }
-    
     .popup0 .weui-cell {
         font-size: 17px;
+    }
+    
+    .evaluation {
+        width: 100%;
+        margin: 15px 0 10px 0;
+        background: white;
+    }
+    
+    .evaluationList {
+        padding: 10px 15px;
+        position: relative;
+    }
+    
+    .evaluationList p {
+        line-height: 30px;
+    }
+    
+    .evaluationList img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
+    
+    .p_center {
+        display: flex;
+        align-items: center;
+    }
+    
+    .auditStatus {
+        float: right;
+        margin-top: -31px;
     }
     
     [v-cloak] {

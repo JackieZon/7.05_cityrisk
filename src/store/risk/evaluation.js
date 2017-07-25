@@ -1,11 +1,12 @@
-import { getEvaluatioList, getRiskBaseType } from './../../servers/api'
+import { getEvaluatioList, getRiskBaseType, postRiskAssessAdd } from './../../servers/api'
 const state = {
 
     evaluatioList: [],
+
     riskAssessData: {
         "ListRiskAssessDetail": [
             {
-
+                "ID": 0,
                 "RiskID": 0,
                 "RiskAssessID": 0,
                 "RiskAssessTypeID": 0,
@@ -23,42 +24,40 @@ const state = {
                 "RiskAssessDetailScore": 0
             }
         ],
+        "ID": 0,
         "RiskID": 0,
         "RiskAgencyID": 0,
-        "RiskAssessManID": 0,
+        "RiskAssessIntro": "string",
+        "RiskAssessTypeIDs": "string",
+        "RiskAssessTypeNames": "string",
+        "RiskAssessLv": 0,
+        "RiskAssessScore": 0,
+        "RiskAssessMan": 0,
         "RiskAssessManName": "string",
-        "RiskAssessManNameTel": "string",
-        "RiskAssessDate": "2017-07-21T02:05:45.015Z",
+        "RiskAssessManTel": "string",
+        "RiskAssessDate": "2017-07-25T07:17:03.982Z",
+        "RiskAssessStatus": 0,
+        "RiskAssessAuditIntro": "string",
+        "RiskAssessAuditMan": 0,
+        "RiskAssessAuditManName": "string",
+        "RiskAssessAuditDate": "2017-07-25T07:17:03.982Z"
     },
 
     RiskType: {},
     AccidentConsequence: {},
     ExposedDegree: {},
     AccidentPossibility: {},
-    riskTypeValue:''
+    riskTypeValue: ''
 
 
 
 
-
-
-    // //可能性
-    // Possibility:[],
-
-    // //频繁程度
-    // frequentlyDegree:[],
-
-    // //后果
-    // consequence:[],
-
-    // //风险类型
-    // riskType:[]
 
 }
 const mutations = {
 
     saveEvaluatioList: (state, payload) => {
-        state.evaluatioList = payload
+        state.evaluatioList.push(payload)
         window.sessionStorage.setItem("evaluatioList", payload)
     },
     saveAccidentPossibility: (state, payload) => {
@@ -72,33 +71,19 @@ const mutations = {
     },
     saveRiskType: (state, payload) => {
         state.RiskType = payload;
-    },
-    riskTypeValue:(state,payload) => {
-        // alert(JSON.stringify(payload))
     }
 
 }
 const actions = {
 
-    //获取评估列表
-    getEvaluatioList: ({ commit, dispatch, getters, state }) => {
-        getEvaluatioList({ userID: 4 }).then((res) => {
-            const evaluatioList = res.filter(item => item.ID == 4)
-            commit("saveEvaluatioList", evaluatioList[0].ListRiskAssess[0].ListRiskAssessDetail);
-        })
-
-    },
-
     //获取基础数据
     getRiskBaseType: ({ commit, dispatch, getters, state }) => {
 
         getRiskBaseType().then((res) => {
-            // console.log(JSON.stringify(res));
-
-            const AccidentPossibility = res.filter(item => item.BaseTypeNo == 'AccidentPossibility')
-            const ExposedDegree = res.filter(item => item.BaseTypeNo == 'ExposedDegree')
-            const AccidentConsequence = res.filter(item => item.BaseTypeNo == 'AccidentConsequence')
-            const RiskType = res.filter(item => item.BaseTypeNo == 'RiskType')
+            const AccidentPossibility = res.filter(item => item.BaseTypeNo == 'RiskAssessL')
+            const ExposedDegree = res.filter(item => item.BaseTypeNo == 'RiskAssessE')
+            const AccidentConsequence = res.filter(item => item.BaseTypeNo == 'RiskAssessC')
+            const RiskType = res.filter(item => item.BaseTypeNo == 'RiskAssessType')
 
             commit('saveAccidentPossibility', AccidentPossibility);
             commit('saveExposedDegree', ExposedDegree);
@@ -107,6 +92,7 @@ const actions = {
 
         })
     }
+
 
 }
 

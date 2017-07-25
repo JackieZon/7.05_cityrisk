@@ -2,7 +2,7 @@
     <div class="basicInfoD">
         <group v-if="JSON.stringify(ListRiskRegulatory)!=='[]'">
             <swipeout>
-                <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskRegulatory">
+                <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskRegulatory" :key="index">
                     <div slot="right-menu">
                         <swipeout-button @click.native="oepnRegulatory('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
                         <swipeout-button @click.native="oepnRegulatory('delete',index)" type="warn">{{'删除'}}</swipeout-button>
@@ -15,7 +15,7 @@
                 </swipeout-item>
             </swipeout>
         </group>
-        <load-more v-if="JSON.stringify(ListRiskRegulatory)=='[]'" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+        <load-more v-if="JSON.stringify(ListRiskRegulatory)=='[]'" :show-loading="false" :tip="'暂无监管机构'" background-color="#fbf9fe"></load-more>
         <popup v-model="basicInfoDPopup" :hide-on-blur="false">
             <div class="basicInfoDPopup">
                 <x-input title="机构名称" placeholder="机构名称" v-model="defaultRegulatory.RiskRegulatoryName"></x-input>
@@ -166,15 +166,15 @@
                     return;
                 }
                 if(!regulatory.RiskRegulatoryArea1){
-                    this.showToast({toastState:true,toastValue:'请输选择省市区'})
+                    this.showToast({toastState:true,toastValue:'请选择省市区'})
                     return;
                 }
                 if(!regulatory.RiskRegulatoryArea2){
-                    this.showToast({toastState:true,toastValue:'请输选择省市区'})
+                    this.showToast({toastState:true,toastValue:'请选择省市区'})
                     return;
                 }
                 if(!regulatory.RiskRegulatoryAddress){
-                    this.showToast({toastState:true,toastValue:'请输输入详细地址'})
+                    this.showToast({toastState:true,toastValue:'请输入详细地址'})
                     return;
                 }
 

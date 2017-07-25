@@ -1,7 +1,7 @@
 import {getRiskBaseType,getRiskObjectType,postRiskAdd} from './../../servers/api'
 
 const state = {
-    riskBaseType:[],
+    // riskBaseType:[],
     riskObjectType:[],
     riskBaseType:{
         RiskAssessL:[],
@@ -13,6 +13,21 @@ const state = {
         "ListRiskAssess": [
             {
             "ListRiskAssessDetail": [
+                {
+					"RiskAssessTypeID":19,
+					"RiskAssessTypeName":"火灾",
+					"RiskAssessLID":1,
+					"RiskAssessLName":"完全可以预料",
+					"RiskAssessLScore":10,
+					"RiskAssessEID":7,
+					"RiskAssessEName":"连续暴露",
+					"RiskAssessEScore":10,
+					"RiskAssessCID":13,
+					"RiskAssessCName":"10人以上死亡",
+					"RiskAssessCScore":100,
+					"RiskAssessDetailLv":"0",
+					"RiskAssessDetailScore":10000
+				}
                 // {
                 //     "ID": 0,
                 //     "RiskID": 0,
@@ -33,12 +48,13 @@ const state = {
                 //     "RiskAssessCName": "",      //**名称 */
                 //     "RiskAssessCScore": 0,      //**分值 */
 
-                //     "RiskAssessDetailLv": 0,    //** 4(可忽略)，3(低)，2(中等)，1(高)，0(极高) 风险等级 */
+                //     "RiskAssessDetailLv": 0,    //**风险等级 0(极高) ，1(高)，2(中等)，3(低), 4(可忽略)*/
                 //     "RiskAssessDetailScore": 0  //**分值 10000 */
                 // }
             ],
             "ID": 0,
             "RiskID": 0,
+            "RiskAssessIntro":"",
             "RiskAgencyID": 0,
             "RiskAssessTypeIDs": "",
             "RiskAssessTypeNames": "",
@@ -163,11 +179,10 @@ const mutations = {
         state.riskObjectType = payload;
     },
     saveRiskBaseType: (state, payload)=>{
-        console.log(payload);
         state.riskBaseType = {...state.riskBaseType, ...payload}
     },
     upRiskAdd: (state, payload) => {
-        // console.log(payload)
+        console.log(payload)
         state.postRiskAdd = {...state.postRiskAdd, ...payload}
     },
     // 增加、编辑、删除、责任主体
@@ -201,9 +216,11 @@ const mutations = {
         state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail.splice(payload.index,1);
     },
     editAssessDetail: (state, payload)=>{
-        console.log(payload);
         state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail[payload.index] = payload.list;
-    },
+	},
+	saveAssess: (state, payload)=>{
+		state.postRiskAdd.ListRiskAssess[0].RiskAssessIntro = payload.RiskAssessIntro;
+	}
 }
 
 export default {

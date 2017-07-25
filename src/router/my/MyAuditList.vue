@@ -5,7 +5,7 @@
         <tab-item selected>已审核</tab-item>
         <tab-item>待审核</tab-item>
     </tab>
-    <group v-for="item in searchList">
+    <!--<group v-for="item in searchList">
         <div class="content title">
             <span>{{ item.title }}</span>
         </div>
@@ -33,7 +33,7 @@
         <div class="next">
             <x-button @click.native="auditState = !auditState">审核</x-button>
         </div>
-    </group>
+    </group>-->
     <popup v-model="auditState" :hide-on-blur="false">
         <div class="auditState">
             <radio v-model="pass" :options="radio001" @on-change="change"></radio>
