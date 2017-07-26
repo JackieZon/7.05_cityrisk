@@ -43,11 +43,24 @@ let webpackConfig = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        exclude: [
+          path.resolve(__dirname, './../src/assets/icon'),
+        ],
         loader: 'url-loader',
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.svg$/,
+        include: [
+          path.resolve(__dirname, './../src/assets/icon'),
+        ],
+        loader: 'svg-sprite-loader?' + JSON.stringify({
+          name: '[name]',
+          prefixize: true,
+        }),
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,

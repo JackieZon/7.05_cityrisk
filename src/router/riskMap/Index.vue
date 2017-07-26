@@ -1,7 +1,7 @@
 <template>
     <div class="amap">
         <div class="map-heads">
-            <Heads :title="'风险地图'" :isRiskList="true"></Heads>
+            <Heads :back="false" :title="'风险地图'" :isRiskList="true"></Heads>
             <search :autoFixed="false"></search>
             <div class="msg">
                 <MsgToast @click.native="goPage('warningList')"></MsgToast>
@@ -13,13 +13,13 @@
         <div class="map" style="flex:1" v-show="mapShow">
             <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="mapShow=true">
             
-                <!--<bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
+                <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
                 <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
                 <bm-panorama></bm-panorama>
 
                 <bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
-                </bm-marker>-->
+                </bm-marker>
 
             </baidu-map>
         </div>

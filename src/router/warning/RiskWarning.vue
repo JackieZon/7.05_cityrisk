@@ -7,12 +7,12 @@
 
       <div class="list-info">
         <p class="address">
-          <img src="../../assets/icon/address.svg" alt="">预警区 : {{ item.address }}
+          <!--<img src="../../assets/icon/address.svg" alt="">预警区 : {{ item.address }}-->
         </p>
 
-        <img v-if="item.notice === 1" class="notice" src="../../assets/icon/location-red.svg" alt="">
+        <!--<img v-if="item.notice === 1" class="notice" src="../../assets/icon/location-red.svg" alt="">
         <img v-if="item.notice === 2" class="notice" src="../../assets/icon/location-yellow.svg" alt="">
-        <img v-if="item.notice === 3" class="notice" src="../../assets/icon/location-blue.svg" alt="">
+        <img v-if="item.notice === 3" class="notice" src="../../assets/icon/location-blue.svg" alt="">-->
 
         <p class="content">{{ item.noticeType }} : {{ item.content }}</p>
 

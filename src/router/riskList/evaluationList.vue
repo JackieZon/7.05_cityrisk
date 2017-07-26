@@ -4,14 +4,14 @@
         <div class="evaluation" v-for="item in searchList">
             <div class="evaluationList" v-on:click="openEvaluationInfo">
                 <div style="font-size: 14px;">
-                    <p class="p_center" style="position: absolute; right: 10px;"><img src="./../../assets/icon/level.svg" alt="">{{ '蓝色' }}</p>
-                    <p class="p_center" style="position: absolute; right: 10px; top: 40px;"><img src="./../../assets/icon/windPower.svg" alt="">{{ '18级' }}</p>
-                    <p class="p_center"><img src="./../../assets/icon/riskType.svg" alt="">风险类型: 火灾、爆炸</p>
-                    <p class="p_center"><img src="./../../assets/icon/appraiser.svg" alt="">评估人:李四</p>
-                    <p class="p_center"><img src="./../../assets/icon/time2.svg" alt="">评估时间: 2017-07-24 16:39</p>
-                    <img style="position: absolute; top: 105px;" src="./../../assets/icon/describe.svg" alt="">
+                    <p class="p_center" style="position: absolute; right: 10px;"><!--<img src="./../../assets/icon/level.svg" alt="">-->{{ '蓝色' }}</p>
+                    <p class="p_center" style="position: absolute; right: 10px; top: 40px;"><!--<img src="./../../assets/icon/windPower.svg" alt="">-->{{ '18级' }}</p>
+                    <p class="p_center"><!--<img src="./../../assets/icon/riskType.svg" alt="">-->风险类型: 火灾、爆炸</p>
+                    <p class="p_center"><!--<img src="./../../assets/icon/appraiser.svg" alt="">-->评估人:李四</p>
+                    <p class="p_center"><!--<img src="./../../assets/icon/time2.svg" alt="">-->评估时间: 2017-07-24 16:39</p>
+                    <!--<img style="position: absolute; top: 105px;" src="./../../assets/icon/describe.svg" alt="">-->
                     <p style="margin-left: 30px; overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp:1; -webkit-box-orient: vertical;">描述: 这个风险源涉及的风险较多，需要着重重视，存在很多爆炸性物品随意堆放！</p>
-                    <p class="p_center" style=" margin-top: 4px;"><img src="./../../assets/icon/auditor.svg" alt="">审核人: 张三</p>
+                    <p class="p_center" style=" margin-top: 4px;"><!--<img src="./../../assets/icon/auditor.svg" alt="">-->审核人: 张三</p>
                     <p class="auditStatus">审核状态: 未审核</p>
                 </div>
             </div>

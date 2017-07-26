@@ -5,12 +5,8 @@
                 <img src="./../../assets/logo/risk_logo.png" alt="logo">
             </div>
             <div class="account">
-                <x-input title="账号" :is-type="regExp.typePhone" placeholder="账号">
-                    <img slot="label" style="padding-right:10px;display:block;" src="./../../assets/icon/account.svg" width="24" height="24">
-                </x-input>
-                <x-input title="密码" type="password" placeholder="密码">
-                    <img slot="label" style="padding-right:10px;display:block;" src="./../../assets/icon/unlock.svg" width="24" height="24">
-                </x-input>
+                <x-input title="<svg width='24' height='24' ><use xlink:href='#account' /></svg>" :is-type="regExp.typePhone" placeholder="账号"></x-input>
+                <x-input title="<svg width='24' height='24' ><use xlink:href='#unlock' /></svg>" type="password" placeholder="密码"></x-input>
             </div>
             <div class="in">
                 <x-button class="loginBtn" @click.native="getText" >登录</x-button>
@@ -51,12 +47,12 @@ export default {
             // getRiskObjectType().then((res)=>{
             //     console.log(res);
             // });
-            this.$router.push({name:'riskAdd'})
+            this.$router.push({name:'home'})
         }
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
     #login{
         background:#fff;
         width:100%;
@@ -64,6 +60,13 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        .weui-label{
+            width: 3em!important;
+            color: #32ac8e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .main{
             width:100%;
             margin-bottom: 5rem;

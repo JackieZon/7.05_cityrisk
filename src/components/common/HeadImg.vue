@@ -2,13 +2,10 @@
     <div class="headImg">
         <div class="head">
             <div class="img">
-                <img src="./../../assets/icon/head-icon.svg" alt="">
+                <Icon :name="'head-icon'" :width="'100%'" :height="'100%'" style="background: rgba(255,255,255,0.85);" />
             </div>
             <div class="name">Jack</div>
         </div>
-        <!--<div>
-            <span>权限：管理员</span>
-        </div>-->
     </div>
 </template>
 <script>
@@ -40,7 +37,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                /* background: #f1f1f1; */
+                color: #33CC99;
                 border-radius: 50%;
                 overflow: hidden;
                 border: 6px solid rgba(255,255,255,0.35);

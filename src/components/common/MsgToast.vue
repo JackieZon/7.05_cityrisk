@@ -1,6 +1,6 @@
 <template>
     <div class="msgInfo" @click.native="goPage">
-        <img src="./../../assets/icon/msg-icon.svg" width="25" alt="">
+        <Icon :name="'msg-icon'" :width="25" :height="25"/>
         <div class="msgs">您收到一条福田区雷电预警，点击查看详情</div>
     </div>
 </template>

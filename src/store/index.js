@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import regExp from './../utils/regExp'
 import tiskAdd from './risk/riskAdd'
 import riskList from './map/riskList'
+import riskInfo from './map/riskInfo'
 import evaluation from "./risk/evaluation"
 
 Vue.use(Vuex);
@@ -26,8 +27,8 @@ export const store = new Vuex.Store({
       setTimeout(()=>{
         context.commit('upToastMag',{
           toastState: false
-        })
-      },1500)
+        });
+      },1500);
     },
     showToast({commit,dispatch,getters,state},payload){
       commit('upToastMag',payload);
@@ -48,6 +49,7 @@ export const store = new Vuex.Store({
   modules:{
     tiskAdd,
     evaluation,
-    riskList
+    riskList,
+    riskInfo
   }
 });

@@ -5,42 +5,38 @@ const state = {
 
     riskAssessData: {
         "ListRiskAssessDetail": [
-            {
-                "ID": 0,
-                "RiskID": 0,
-                "RiskAssessID": 0,
-                "RiskAssessTypeID": 0,
-                "RiskAssessTypeName": "string",
-                "RiskAssessLID": 0,
-                "RiskAssessLName": "string",
-                "RiskAssessLScore": 0,
-                "RiskAssessEID": 0,
-                "RiskAssessEName": "string",
-                "RiskAssessEScore": 0,
-                "RiskAssessCID": 0,
-                "RiskAssessCName": "string",
-                "RiskAssessCScore": 0,
-                "RiskAssessDetailLv": 0,
-                "RiskAssessDetailScore": 0
-            }
+            // {
+            //     "ID": 0,
+            //     "RiskID": 0,
+            //     "RiskAssessID": 0,
+            //     "RiskAssessTypeID": 0,
+            //     "RiskAssessTypeName": "string",
+            //     "RiskAssessLID": 0,
+            //     "RiskAssessLName": "string",
+            //     "RiskAssessLScore": 0,
+            //     "RiskAssessEID": 0,
+            //     "RiskAssessEName": "string",
+            //     "RiskAssessEScore": 0,
+            //     "RiskAssessCID": 0,
+            //     "RiskAssessCName": "string",
+            //     "RiskAssessCScore": 0,
+            //     "RiskAssessDetailLv": 0,
+            //     "RiskAssessDetailScore": 0
+            // }
         ],
-        "ID": 0,
-        "RiskID": 0,
+        "ID": 1053,
+        "RiskID": 1022,
         "RiskAgencyID": 0,
-        "RiskAssessIntro": "string",
+        "RiskAssessIntro": "",
         "RiskAssessTypeIDs": "string",
         "RiskAssessTypeNames": "string",
         "RiskAssessLv": 0,
         "RiskAssessScore": 0,
         "RiskAssessMan": 0,
-        "RiskAssessManName": "string",
-        "RiskAssessManTel": "string",
+        "RiskAssessManName": "Tomy",
+        "RiskAssessManTel": "15920970565",
         "RiskAssessDate": "2017-07-25T07:17:03.982Z",
         "RiskAssessStatus": 0,
-        "RiskAssessAuditIntro": "string",
-        "RiskAssessAuditMan": 0,
-        "RiskAssessAuditManName": "string",
-        "RiskAssessAuditDate": "2017-07-25T07:17:03.982Z"
     },
 
     RiskType: {},
@@ -71,6 +67,20 @@ const mutations = {
     },
     saveRiskType: (state, payload) => {
         state.RiskType = payload;
+    },
+
+    pushAssessDetails: (state, payload) => {
+        state.riskAssessData.ListRiskAssessDetail.push(payload);
+    },
+
+    deleteAssessDetails: (state, payload) => {
+        state.riskAssessData.ListRiskAssessDetail.splice(payload.index, 1);
+    },
+    editAssessDetails: (state, payload) => {
+        state.riskAssessData.ListRiskAssessDetail[payload.index] = payload.list;
+    },
+    saveAssesss: (state, payload) => {
+        state.riskAssessData.RiskAssessIntro = payload.RiskAssessIntro;
     }
 
 }
@@ -90,6 +100,13 @@ const actions = {
             commit('saveAccidentConsequence', AccidentConsequence);
             commit('saveRiskType', RiskType);
 
+        })
+    },
+
+    postRiskAdds({ commit, state }) {
+        // console.log(JSON.stringify(state.riskAssessData))
+        postRiskAssessAdd(state.riskAssessData).then((res) => {
+            console.log(JSON.stringify(res))
         })
     }
 

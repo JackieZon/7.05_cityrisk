@@ -1,16 +1,16 @@
 <template>
   <div class="footers">
     <tabbar>
-        <tabbar-item :selected="tabData[0] == tabStatus" @click.native="goPages('basicInfoA')">
-            <img slot="icon" src="./../assets/icon/home-icon.svg">
+        <tabbar-item :selected="tabData[0] == tabStatus" @click.native="goPages('home')">
+            <Icon slot="icon" :name="'home-icon'" />
             <span slot="label">首页</span>
         </tabbar-item>
-        <tabbar-item :selected="tabData[1] == tabStatus" @click.native="goPages('riskList')">
-            <img slot="icon" link="/Index/RiskList" src="./../../src/assets/icon/list-icon.svg">
-            <span slot="label">风险列表</span>
+        <tabbar-item :selected="tabData[1] == tabStatus" @click.native="goPages('homeMap')">
+            <Icon slot="icon" :name="'list-icon'" />
+            <span slot="label">风险地图</span>
         </tabbar-item>
         <tabbar-item :selected="tabData[2] == tabStatus" @click.native="goPages('my')">
-            <img slot="icon" src="./../assets/icon/my-icon.svg">
+            <Icon slot="icon" :name="'my-icon'" />
             <span slot="label">个人</span>
         </tabbar-item>
     </tabbar>
@@ -29,7 +29,7 @@
         },
         data(){
             return {
-                tabPath:['RiskAdd','RiskList','My'],
+                tabPath:['Home','RiskMap','My'],
                 tabData:[0,1,2],
                 tabStatus:0
             }

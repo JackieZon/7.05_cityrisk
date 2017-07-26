@@ -8,6 +8,12 @@ import {store} from './../src/store/index'
 import './../config/components.config'
 import './assets/css/animate.css'
 import BaiduMap from 'vue-baidu-map'
+import './utils/filter'
+// requires and returns all modules that match 
+const requireAll = requireContext => requireContext.keys().map(requireContext);
+// import all svg
+const req = require.context('./assets/icon', true, /\.svg$/);
+requireAll(req);
 
 Vue.use(BaiduMap, {
   ak: 'fTznLHvlDdp9ysB1b6xrbh0upjxx3C89'

@@ -9,7 +9,7 @@
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
                         <cell :title="item.RiskRegulatoryName" :inline-desc="item.RiskRegulatoryArea1+item.RiskRegulatoryArea2+item.RiskRegulatoryArea3+item.RiskRegulatoryAddress">
-                            <img slot="icon" width="35" style="display:block;margin-right:10px;" src="./../../../assets/icon/my-team.svg">
+                            <!--<img slot="icon" width="35" style="display:block;margin-right:10px;" src="./../../../assets/icon/my-team.svg">-->
                         </cell>
                     </div>
                 </swipeout-item>

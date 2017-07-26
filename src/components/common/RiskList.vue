@@ -1,19 +1,19 @@
 <template>
-  <div class="danger">
+  <div id="danger">
     <group>
-      <p class="title">{{'华文大厦'}}<img src="./../../assets/icon/location1.svg" alt=""></p>
+      <p class="title"><Icon class="Icon" :name="'location1'" style="color:#33CC99"/><span class="titleInfo">{{item.RiskFullAddress?item.RiskFullAddress:'暂无'}}</span></p>
       <div class="mark">
-        <p><img src="./../../assets/icon/level.svg" alt="">{{ '蓝色' }}</p>
-        <p><img src="./../../assets/icon/windPower.svg" alt="">{{ '18级' }}</p>
+        <p :style="{'color':fontColor[riskStatus.indexOf(item.RiskLvName)]}"><Icon class="Icon" :name="'level'" />{{ item.RiskLvName }}</p>
+        <p><Icon class="Icon" :name="'trend-icon'" style="color:#33CC99" />{{ item.RiskScore | s_toNum}}</p>
       </div>
       <div class="content">
-        <p><img src="./../../assets/icon/riskName.svg" alt="">险源名称 : {{ '热带强台风' }}</p>
-        <p><img src="./../../assets/icon/address.svg" alt="">险源地址 : {{ '深圳市南山区西丽街道' }}</p>
+        <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 : {{ item.RiskName | s_toStr}}</p>
+        <p><Icon class="Icon" :name="'address'" style="color:#33CC99" />地址 : {{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</p>
       </div>
       <div>
-        <p style="float: left;">{{ '2017 7-16 21:02' }}</p>
-        <p style="float: right;">纬度 : {{ '20.1' }}</p>
-        <p style="float: right;margin-right:10px;">经度 : {{ '10' }}</p>
+        <p style="float: left;">{{ item.RiskAddDate | s_toDate}}</p>
+        <p style="float: right;">纬度: {{ item.RiskLng | s_toStr }}</p>
+        <p style="float: right;margin-right:10px;">经度: {{ item.RiskLat | s_toStr }}</p>
       </div>
     </group>
   </div>
@@ -24,15 +24,20 @@
     components:{
       Group
     },
+    props:['item'],
     data (){
         return {
-            searchList:[]
+            searchList:[],
+            riskStatus:['极高','高','中等','低','可忽略'],
+            fontColor:['#FF0000','#FF8C00','#FFD700','#1E90FF']
         }
     },
+    mounted(){
+    }
   }
 </script>
 <style lang="less">
-  .danger{
+  #danger{
     background: #fbf9fe;
     box-sizing: border-box;
 
@@ -42,11 +47,22 @@
       margin:0px!important;
     }
 
+    .Icon{
+      margin-right: 5px;
+    }
+
     .title { 
-      line-height: 25px; 
+      line-height: 100%;
       font-size: 17px; 
       display: flex;
       justify-content: center;
+      .titleInfo{
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 45%;
+        text-align: center;
+      }
     }
     .mark { 
       position: absolute;
@@ -60,6 +76,7 @@
       font-size: 14px; 
       line-height: 30px; 
       img { 
+        vertical-align: sub;
         width: 20px; 
         height: 20px; 
         margin-right: 5px; 

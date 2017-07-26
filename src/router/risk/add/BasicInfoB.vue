@@ -20,7 +20,7 @@
                             </div>
                             <div slot="content" class="demo-content vux-1px-t">
                                 <cell :title="item.RiskAssessTypeName" :inline-desc="`等级:${status[item.RiskAssessDetailLv]}  分值:${item.RiskAssessDetailScore}`">
-                                    <img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../../assets/icon/assess-icon.svg">
+                                    <!--<img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../../assets/icon/assess-icon.svg">-->
                                 </cell>
                             </div>
                         </swipeout-item>

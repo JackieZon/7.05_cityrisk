@@ -7,17 +7,17 @@
         <div class="content">
 
           <p class="content-info">
-            <img src="../../assets/icon/address.svg" alt="">
+            <!--<img src="../../assets/icon/address.svg" alt="">-->
             <span>风险地址 :&nbsp;&nbsp;{{ item.riskAddress }}</span>
           </p>
 
           <p class="content-info">
-            <img src="../../assets/icon/time1.svg" alt="">
+            <!--<img src="../../assets/icon/time1.svg" alt="">-->
             <span>事故日期 :&nbsp;&nbsp;</span>
             <span>{{ item.date }}</span>
           </p>
 
-          <img class="describe-icon" src="../../assets/icon/describe.svg" alt="">
+          <!--<img class="describe-icon" src="../../assets/icon/describe.svg" alt="">-->
           <p class="describe">
             <span>事故描述 :&nbsp;</span>
             <span>{{ item.describe }}</span>

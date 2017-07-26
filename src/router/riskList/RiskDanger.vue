@@ -141,6 +141,6 @@
         border:1px solid #33CC99;
         padding: 10px;
         box-sizing: border-box;
-        background: url('./../../assets/icon/addImg-icon.svg') 50% 50% no-repeat #fff;
+        // background: url('./../../assets/icon/addImg-icon.svg') 50% 50% no-repeat #fff;
     }
 </style>

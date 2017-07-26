@@ -46,10 +46,6 @@ export const getEvaluatioList = async(param) => {
 
 //新增风险评估
 //http://wx-cityrisk.subei88.com:8080/api/RiskAssessAdd
-/**
- * 
- * @param {*} param 
- */
 export const postRiskAssessAdd = async(param) => {
   const riskAssessAdd = await axiosApi(`${param_baseUrl}RiskAssessAdd`,"post",param);
   return riskAssessAdd
@@ -66,3 +62,11 @@ export const getRisk = async(param)=>{
   return riskList;
 }
 
+// 风险详情
+//http://wx-cityrisk.subei88.com:8080/api/RiskInfo/1029
+
+export const getRiskInfo = async(id)=>{
+  console.log(`在接口里得到的ID是=${id}`);
+  const riskInfo = await axiosApi(`${param_baseUrl}RiskInfo/${id}`,"post",{});
+  return riskInfo;
+}

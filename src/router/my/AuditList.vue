@@ -7,7 +7,7 @@
       <tab-item @on-item-click="tab(2)">审核中</tab-item>
       <tab-item @on-item-click="tab(3,4)">已审核</tab-item>
     </tab>
-    <!--<group v-for="item in searchList">
+    <group v-for="item in searchList">
       <div class="header">
         <p>{{ item.title }}</p>
       </div>
@@ -38,7 +38,7 @@
         <x-button mini type="warn">撤销</x-button>
         <x-button mini type="primary">修改</x-button>
       </div>
-    </group>-->
+    </group>
   </div>
 </template>
 <script>

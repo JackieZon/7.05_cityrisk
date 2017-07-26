@@ -5,7 +5,7 @@
         <tab-item selected>已审核</tab-item>
         <tab-item>待审核</tab-item>
     </tab>
-    <!--<group v-for="item in searchList">
+    <group v-for="(item,index) in searchList" :key="index">
         <div class="content title">
             <span>{{ item.title }}</span>
         </div>
@@ -30,10 +30,10 @@
             <span style="color: #ff3b3b;" v-if="item.state === 3">审核失败</span>
             <span style="color: #33CC99;" v-if="item.state === 4">审核通过</span>
         </div>
-        <div class="next">
+        <!--<div class="next">
             <x-button @click.native="auditState = !auditState">审核</x-button>
-        </div>
-    </group>-->
+        </div>-->
+    </group>
     <popup v-model="auditState" :hide-on-blur="false">
         <div class="auditState">
             <radio v-model="pass" :options="radio001" @on-change="change"></radio>

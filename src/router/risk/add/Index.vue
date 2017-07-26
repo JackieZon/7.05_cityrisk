@@ -1,6 +1,6 @@
 <template>
     <div class="addrisk">
-        <Heads :back="false" :title="'新增风险源'" :isMap="true"></Heads>
+        <Heads :noBack="true" :goBack="'home'" :title="'新增风险源'"></Heads>
         <tab :line-width=2 active-color='#33CC99' v-model="index">
             <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
         </tab>

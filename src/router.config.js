@@ -1,5 +1,5 @@
 
-// const Home = resolve => require(['./router/home/Index.vue'], resolve)
+const Home = resolve => require(['./router/home/Index.vue'], resolve)
 
 const Login = resolve => require(['./router/login/Login.vue'], resolve)
 const Index = resolve => require(['./router/index/Index.vue'], resolve)
@@ -10,6 +10,8 @@ const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo = resolve => require(['./router/my/MyInfo.vue'], resolve)
 const AuditList = resolve => require(['./router/my/AuditList.vue'], resolve)
 const MyAuditList = resolve => require(['./router/my/MyAuditList.vue'], resolve)
+const MyAuditInfo = resolve => require(['./router/my/MyAuditInfo.vue'], resolve)
+const AuditInfo = resolve => require(['./router/my/AuditInfo.vue'], resolve)
 const WarningList = resolve => require(['./router/warning/Index'], resolve)
 const Alarm = resolve => require(['./router/warning/Alarm'], resolve)
 const Warning = resolve => require(['./router/warning/RiskWarning'], resolve)
@@ -21,8 +23,9 @@ const BasicInfoB = resolve => require(['./router/risk/add/BasicInfoB.vue'], reso
 const BasicInfoC = resolve => require(['./router/risk/add/BasicInfoC.vue'], resolve)
 const BasicInfoD = resolve => require(['./router/risk/add/BasicInfoD.vue'], resolve)
 const EvaluationList = resolve => require(['./router/riskList/evaluationList.vue'], resolve)
-const EvaluationInfo = resolve => require(['./router/riskList/evaluationInfo.vue'],resolve)
-const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue'],resolve)
+const EvaluationInfo = resolve => require(['./router/riskList/evaluationInfo.vue'], resolve)
+const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue'], resolve)
+
 
 // RiskList
 // const 
@@ -43,43 +46,53 @@ export default {
     component: Index,
     children: [
       {
-        path: '/Index/RiskAdd',
-        name: 'riskAdd',
-        component: RiskAdd,
-        children: [
-          {
-            path: '/Index/RiskAdd/BasicInfoA',
-            name: 'basicInfoA',
-            component: BasicInfoA,
-          },
-          {
-            path: '/Index/RiskAdd/BasicInfoB',
-            name: 'basicInfoB',
-            component: BasicInfoB,
-          },
-          {
-            path: '/Index/RiskAdd/BasicInfoC',
-            name: 'basicInfoC',
-            component: BasicInfoC,
-          },
-          {
-            path: '/Index/RiskAdd/BasicInfoD',
-            name: 'basicInfoD',
-            component: BasicInfoD,
-          },
-        ]
-      },
-      {
-        path: '/Index/RiskList',
-        name: 'riskList',
-        component: RiskList
+        path:'/Index/Home',
+        name:'home',
+        component: Home
       },
       {
         path: '/Index/My',
         name: 'my',
         component: My
-      }
+      },
+      {
+        path: '/Index/RiskMap',
+        name: 'homeMap',
+        component: RiskMap
+      },
     ]
+  },
+  {
+    path: '/Index/Home/RiskAdd',
+    name: 'riskAdd',
+    component: RiskAdd,
+    children: [
+      {
+        path: '/Index/RiskAdd/BasicInfoA',
+        name: 'basicInfoA',
+        component: BasicInfoA,
+      },
+      {
+        path: '/Index/RiskAdd/BasicInfoB',
+        name: 'basicInfoB',
+        component: BasicInfoB,
+      },
+      {
+        path: '/Index/RiskAdd/BasicInfoC',
+        name: 'basicInfoC',
+        component: BasicInfoC,
+      },
+      {
+        path: '/Index/RiskAdd/BasicInfoD',
+        name: 'basicInfoD',
+        component: BasicInfoD,
+      },
+    ]
+  },
+  {
+    path: '/Index/RiskMap/RiskList',
+    name: 'riskList',
+    component: RiskList
   },
   {
     path: '/Index/RiskList/RiskInfo/:id',
@@ -97,13 +110,13 @@ export default {
     component: EvaluationList
   },
   {
-    path:"/Index/RiskList/evaluationInfo",
-    name:"evaluationInfo",
+    path: "/Index/RiskList/evaluationInfo",
+    name: "evaluationInfo",
     component: EvaluationInfo
   },
   {
-    path:"/Index/RiskList/addEvaluation",
-    name:"addEvaluation",
+    path: "/Index/RiskList/addEvaluation",
+    name: "addEvaluation",
     component: AddEvaluation
   },
   {
@@ -111,11 +124,6 @@ export default {
     name: 'riskMap',
     component: RiskMap
   },
-  // {
-  //   path:'/Home',
-  //   name:'home',
-  //   component: Home
-  // },
   {
     path: '/Index/My/MyInfo',
     name: 'myInfo',
@@ -130,6 +138,16 @@ export default {
     path: '/Index/My/MyAuditList',
     name: 'myAuditList',
     component: MyAuditList
+  },
+  {
+    path: '/Index/My/MyAuditInfo',
+    name: 'myAuditInfo',
+    component: MyAuditInfo
+  },
+  {
+    path: '/Index/My/AuditInfo',
+    name: 'auditInfo',
+    component: AuditInfo
   },
   {
     path: "/Login/Risk/RiskMap/warningList",
