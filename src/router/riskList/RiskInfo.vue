@@ -1,68 +1,98 @@
 <template>
-    <div class="riskInfo" v-cloak>
-        <Heads :title="'风险详情'" :isDanger="true"></Heads>
+    <div id="riskInfo" v-cloak>
+        <Heads :title="'风险详情'" :isDanger="addOperation"></Heads>
         <div class="BasicInfoA">
             <div class="title">基本信息</div>
             <x-input title="险源名称" :disabled="true" placeholder="暂无" :value="riskInfo.RiskName"></x-input>
             <x-input title="对象类型" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskObjectTypeName1} - ${riskInfo.RiskObjectTypeName2}`"></x-input>
-            <x-input title="经度/纬度" :disabled="true" value="10/20.0" placeholder="暂无"></x-input>
+            <x-input title="经度/纬度" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskLat?riskInfo.RiskLat:'无'} / ${riskInfo.RiskLng?riskInfo.RiskLng:'无'}`"></x-input>
 
-            <x-input 
-                title="风险地址" 
-                :disabled="true" 
-                :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
-                placeholder="暂无"
-             ></x-input>
+            <x-input title="风险地址" :disabled="true" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
+                placeholder="暂无"></x-input>
 
-            <x-textarea 
-                v-show="false"
-                title="风险地址" 
-                placeholder="风险地址" 
-                :readonly="true"
-                :show-counter="false"
-                :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
-            ></x-textarea>
-            
+            <x-textarea v-show="false" title="风险地址" placeholder="风险地址" :readonly="true" :show-counter="false" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"></x-textarea>
+
         </div>
 
         <div class="BasicInfoC" v-if="JSON.stringify(riskInfo.ListRiskDuty)!=='[]'" v-for="item in riskInfo.ListRiskDuty">
             <div class="title">责任主体</div>
-            <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskDutyName" ></x-input>
+            <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskDutyName"></x-input>
             <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="`${item.RiskDutyAreaName1}-${item.RiskDutyAreaName2}-${item.RiskDutyAreaName3}-${item.RiskDutyAddress}`"></x-input>
             <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactMan"></x-input>
             <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactTel"></x-input>
         </div>
 
-        <div class="BasicInfoD">
+        <div class="BasicInfoD" v-if="JSON.stringify(riskInfo.ListRiskRegulatory)!=='[]'" v-for="item in riskInfo.ListRiskRegulatory">
             <div class="title">监管机构</div>
-            <x-input title="单位名称" :disabled="true" value="管理员" placeholder="暂无"></x-input>
-            <x-input title="单位地址" :disabled="true" value="南山西丽茶光" placeholder="暂无"></x-input>
-            <x-input title="联系人" :disabled="true" value="默认" placeholder="暂无"></x-input>
-            <x-input title="联系电话" :disabled="true" value="15070713710" placeholder="暂无"></x-input>
+            <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryName"></x-input>
+            <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="item.RiskFullRegulatoryAddress"></x-input>
+            <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactMan"></x-input>
+            <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactTel"></x-input>
         </div>
-        
-        <div class="evaluation">
+
+        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
             <div class="title">评估列表<span class="more" v-on:click="openEvaluation">查看全部</span></div>
             <div class="evaluationList" v-on:click="openEvaluationInfo">
-                <div style="font-size: 14px;">
-                    <p class="p_center" style="position: absolute; right: 10px;"><!--<img src="./../../assets/icon/level.svg" alt="">-->{{ '蓝色' }}</p>
-                    <p class="p_center" style="position: absolute; right: 10px; top: 40px;"><!--<img src="./../../assets/icon/windPower.svg" alt="">-->{{ '18级' }}</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/riskType.svg" alt=""-->>风险类型: 火灾、爆炸</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/appraiser.svg" alt="">-->评估人:李四</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/time2.svg" alt="">-->评估时间: 2017-07-24 16:39</p>
-                    <!--<img style="position: absolute; top: 105px;" src="./../../assets/icon/describe.svg" alt="">-->
-                    <p style="margin-left: 30px; overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp:1; -webkit-box-orient: vertical;">描述: 这个风险源涉及的风险较多，需要着重重视，存在很多爆炸性物品随意堆放！</p>
-                    <p class="p_center" style=" margin-top: 4px;"><!--<img src="./../../assets/icon/auditor.svg" alt="">-->审核人: 张三</p>
-                    <p style="float: right; margin-top: -31px;">审核状态: 未审核</p>
+                <div style="font-size: 14px;" v-if="riskInfo.ListRiskAssess">
+
+                    <div style="position: absolute; right: 10px; top: 10px;">
+                        <p class="p_center" :style="{'color':fontColor[riskInfo.ListRiskAssess[0].RiskAssessLv]}">
+                            <Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[riskInfo.ListRiskAssess[0].RiskAssessLv] }}</p>
+                        <p class="p_center">
+                            <Icon slot="icon" class="icon" :name="'trend-icon'" style="color:#33CC99" />{{ riskInfo.ListRiskAssess[0].RiskAssessScore }}</p>
+                    </div>
+
+                    <p class="p_center">
+                        <Icon slot="icon" class="icon" :name="'riskType'" style="color:#33CC99" />类型: {{riskInfo.ListRiskAssess[0].RiskAssessTypeNames | s_toStr}}</p>
+                    <p class="p_center">
+                        <Icon slot="icon" class="icon" :name="'appraiser'" style="color:#33CC99" />评估人: {{riskInfo.ListRiskAssess[0].RiskAssessManName | s_toStr}}</p>
+                    <p class="p_center">
+                        <Icon slot="icon" class="icon" :name="'time2'" style="color:#33CC99" />时间: {{riskInfo.ListRiskAssess[0].RiskAssessDate | s_toDate}}</p>
+                    <p class="p_center"><span class="displayFlex"><Icon slot="icon" class="icon" :name="'describe'" style="color:#33CC99;" /></span><span><p class="assessInfo">描述: {{riskInfo.ListRiskAssess[0].RiskAssessIntro | s_toStr}}</p></span></p>
+                    <p class="p_center">
+                        <Icon slot="icon" class="icon" :name="'auditor'" style="color:#33CC99" />审核人: {{riskInfo.ListRiskAssess[0].RiskAssessAuditManName | s_toStr}}</p>
+                    <p style="float: right; margin-top: -31px;">审核状态: {{RiskAssessStatusName[riskInfo.ListRiskAssess[0].RiskAssessStatus]}}</p>
+
                 </div>
             </div>
         </div>
+
+        <div v-if="riskInfo.RiskStatus == 1 || riskInfo.RiskStatus == 0" style="width: 100%;height: 60px;"></div>
+
+        <div v-transfer-dom>
+            <!--<popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">-->
+            <popup v-model="show">
+                <div class="popup0">
+                    <group>
+                        <radio :options="menu" @on-change="change" v-model="result"></radio>
+                        <x-textarea title="原因" :max="200" placeholder="请输入原因" :show-counter="false" v-model="riskAuditIntro" :height="200" :rows="8"
+                            :cols="30"></x-textarea>
+                        <x-button type="primary" style="width: 92%; margin: 10px 4% 20px 4%; background: #33CC99;" @click.native="submit">提交审核</x-button>
+                    </group>
+                </div>
+            </popup>
+        </div>
+
+        <flexbox :style="{'display':($route.params.editStatus==0?'none':(riskInfo.RiskStatus==1?'':'none'))}">
+            <flexbox-item>
+                <x-button @click.native="editMenuStatus = true;">编辑</x-button>
+                <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
+            </flexbox-item>
+            <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
+                <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
+            </flexbox-item>-->
+        </flexbox>
+
+        <div v-transfer-dom>
+            <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
+        </div>
+
     </div>
 </template>
 <script>
     import Heads from './../../components/Heads.vue'
-    import { TransferDom, Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, Selector, Group, Popup, XTextarea } from 'vux'
-	import {mapMutations, mapState, mapActions} from 'vuex'
+    import { TransferDom,Actionsheet, Tab, TabItem, Sticky, Divider, XButton, Flexbox, FlexboxItem, Radio, Swiper, SwiperItem, XInput, Selector, Group, Popup, XTextarea } from 'vux'
+    import { mapMutations, mapState, mapActions } from 'vuex'
     const list = () => ['基本信息', '评估信息', '责任主体', '监管机构']
 
     export default {
@@ -83,44 +113,137 @@
             Popup,
             Group,
             XTextarea,
+            Flexbox,
+            FlexboxItem,
+            Radio,
+            Actionsheet
         },
         watch: {
             status(val, oldVal) {
-            }
-        },
-        mounted(){
-            this.getRiskInfo(this.$route.params.id);
-        },
-        methods: {
-            ...mapMutations([
-            ]),
-			...mapActions([
-				'getRiskInfo'
-            ]),
-            openEvaluationInfo (){
-                this.$router.push({ name: 'evaluationInfo' });
             },
 
-            openEvaluation() {
-                this.$router.push({ name: "evaluationList" });
-            },
-            addEvaluation() {
-                this.show = true
+            riskInfo() {
+
+                this.$store.commit("setRiskId", this.riskInfo.ID)
+
+                const menu = [[],['编辑','撤销'],(this.riskInfo.RiskStatus==1?['审核']:[])];
+                this.editMenu = menu[this.$route.params.editStatus]
+
             }
+        },
+        mounted() {
+
+            this.getRiskInfo(this.$route.params.id);
+            console.log(this.$route.params);
+
         },
         data() {
             return {
+                editMenuStatus:false,
+                editMenu:[],
                 lists: list(),
                 index: 0,
                 status: '基本信息',
                 routerName: ['basicInfoA', 'basicInfoB', 'basicInfoC', 'basicInfoD'],
                 show: false,
-                showToast: true
+                riskStatus: ['极高', '高', '中等', '低', '可忽略'],
+                RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
+                fontColor: ['#FF0000', '#FF8C00', '#FFD700', '#1E90FF'],
+
+                show: false,
+                menu: [{ 'key': 3, 'value': '通过' }, { 'key': 2, 'value': '不通过' }],
+                result: "",
+                riskAuditIntro: "",
+                addOperation: ""
+            }
+        },
+        created() {
+            this.addOperation = this.$route.params.add
+        },
+
+        methods: {
+            ...mapActions([
+                'getRiskInfo',
+                'showToast'
+            ]),
+            ...mapMutations([
+                'openConfirm',
+            ]),
+            openEvaluationInfo() {
+                this.$router.push({ name: 'evaluationInfo' });
+            },
+
+            openEvaluation(item) {
+                this.$router.push({ name: "evaluationList", params: this.$route.params });
+            },
+            addEvaluation() {
+                this.show = true
+            },
+            changeEdit(val){
+
+                console.log(this.editMenu[val]);
+
+                if(this.editMenu[val] == '编辑'){
+
+                    this.$router.push({name:'riskAdd'});
+
+                }else if(this.editMenu[val] == '撤销'){
+
+                    this.openConfirm({state:true,msg:'确定要撤销吗？',control: ()=>{
+                        // this.deleteListRiskDuty({index: index});
+                    }});
+
+                }else if(this.editMenu[val] == '审核'){
+                    this.showAudit();
+                }
+
+
+            },
+            //审核
+            showAudit() {
+
+                this.show = true;
+
+            },
+
+            change(data) {
+
+                this.$store.commit("setRiskAuditStatus", data);
+
+            },
+            submit() { //提交审核
+                var t_data = this;
+
+                if (!this.result) {
+                    this.showToast({ toastState: true, toastValue: '请选择结果！' })
+                    return;
+                }
+
+                if (!this.riskAuditIntro) {
+                    this.showToast({ toastState: true, toastValue: '请输入原因' })
+                    return;
+                }
+
+                this.$store.commit("setRiskAuditIntro", t_data.riskAuditIntro);
+
+                this.$store.dispatch("updateRiskStatusAudit")
+
+                this.showToast({ toastState: true, toastValue: '审核成功' })
+
+                this.show = false;
+
+                setTimeout(() => {
+                    this.$router.push({ name: 'myAuditList' });
+                }, 2000)
+            },
+
+            revoke() {
+                this.$store.dispatch("updateRiskStatusRecall")
             }
         },
         computed: {
             ...mapState({
-                riskInfo(state){
+                riskInfo(state) {
                     return state.riskInfo.riskInfo;
                 }
             })
@@ -128,100 +251,119 @@
     }
 
 </script>
-<style lang="less" scoped>
-    .riskInfo {
+<style lang="less">
+    #riskInfo {
         background: #f1f1f1;
         box-sizing: border-box;
-        padding-bottom: 15px;
-    }
-    
-    .vux-swiper {
-        height: 100%!important;
-    }
-    
-    .weui-label {
-        width: 6em!important;
-    }
-    
-    .title {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        line-height: 45px;
-        border-bottom: 2px solid #33CC99;
-    }
-    
-    .more {
-        position: absolute;
-        right: 15px;
-        font-size: 14px;
-        color: #A9A9A9;
-    }
-    
-    .BasicInfoA {
-        margin-top: 15px;
-        background: #fff;
-    }
-    
-    .BasicInfoB {
-        margin-top: 15px;
-        background: #fff;
-    }
-    
-    .BasicInfoC {
-        margin-top: 15px;
-        background: #fff;
-    }
-    
-    .BasicInfoD {
-        margin-top: 15px;
-        background: #fff;
-    }
-    
-    .next {
-        border-top: 1px solid #f1f1f1;
-        box-sizing: border-box;
-        padding: 15px;
-        background: #f1f1f1;
-    }
-    
-    button.weui-btn,
-    input.weui-btn {
-        color: white;
-        background: #33CC99;
-    }
-    
-    .popup0 .weui-cell {
-        font-size: 17px;
-    }
-    
-    .evaluation {
-        width: 100%;
-        margin: 15px 0 10px 0;
-        background: white;
-    }
-    
-    .evaluationList {
-        padding: 10px 15px;
-        position: relative;
-    }
-    
-    .evaluationList p {
-        line-height: 30px;
-    }
-    
-    .evaluationList img {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-    }
-    
-    .p_center {
-        display: flex;
-        align-items: center;
-    }
-    
-    [v-cloak] {
-        display: none;
+        .displayFlex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .assessInfo {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            line-height: normal!important;
+        }
+        .icon {
+            padding-right: 10px;
+        }
+        .weui-label {
+            width: 5em!important;
+        }
+        .vux-swiper {
+            height: 100%!important;
+        }
+        .title {
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 45px;
+            border-bottom: 2px solid #33CC99;
+        }
+        .more {
+            position: absolute;
+            right: 15px;
+            font-size: 14px;
+            color: #A9A9A9;
+        }
+        .BasicInfoA {
+            margin-top: 15px;
+            background: #fff;
+        }
+        .BasicInfoB {
+            margin-top: 15px;
+            background: #fff;
+        }
+        .BasicInfoC {
+            margin-top: 15px;
+            background: #fff;
+        }
+        .BasicInfoD {
+            margin-top: 15px;
+            background: #fff;
+        }
+        .next {
+            border-top: 1px solid #f1f1f1;
+            box-sizing: border-box;
+            padding: 15px;
+            background: #f1f1f1;
+        }
+        button.weui-btn,
+        input.weui-btn {
+            color: white;
+            background: #33CC99;
+        }
+        .popup0 .weui-cell {
+            font-size: 17px;
+        }
+        .evaluation {
+            width: 100%;
+            margin: 15px 0 0px 0;
+            background: white;
+        }
+        .evaluationList {
+            padding: 10px 15px;
+            position: relative;
+        }
+        .evaluationList p {
+            line-height: 30px;
+        }
+        .evaluationList img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .p_center {
+            display: flex;
+            align-items: center;
+        }
+        [v-cloak] {
+            display: none;
+        }
+        /*审核*/
+        .vux-flexbox {
+            position: fixed;
+            bottom: 0;
+            z-index: 99;
+        }
+        .vux-flexbox-item {
+            padding: 10px;
+            background: #fff;
+        }
+        .weui-btn {
+            // border-radius: 0 !important;
+        }
+        .weui-btn_primary {
+            background-color: #33CC99 !important;
+        }
+        .popup0 .weui-cell__hd {
+            width: 50px;
+        }
+
     }
 </style>

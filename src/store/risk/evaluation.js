@@ -1,8 +1,12 @@
-import { getEvaluatioList, getRiskBaseType, postRiskAssessAdd } from './../../servers/api'
+import { getRiskBaseType, postRiskAssessAdd, getRiskAssess } from './../../servers/api'
 const state = {
 
     evaluatioList: [],
-
+    riskAssessList: [],
+    defaultRiskAssess:{
+        "RiskID": 0,
+        // "RiskAssessStatus": 0,
+    },
     riskAssessData: {
         "ListRiskAssessDetail": [
             // {
@@ -43,11 +47,7 @@ const state = {
     AccidentConsequence: {},
     ExposedDegree: {},
     AccidentPossibility: {},
-    riskTypeValue: ''
-
-
-
-
+    riskTypeValue: '',
 
 }
 const mutations = {
@@ -81,8 +81,23 @@ const mutations = {
     },
     saveAssesss: (state, payload) => {
         state.riskAssessData.RiskAssessIntro = payload.RiskAssessIntro;
-    }
-
+    },
+    saveDefaultRiskAssess: (state, payload)=>{
+        console.log(payload);
+        state.defaultRiskAssess = {...state.defaultRiskAssess, ...payload}
+    },
+    saveRiskAssessList(state, paylaod){
+        if(paylaod.type==0){
+            state.riskAssessList = [];
+            state.riskAssessList = state.riskAssessList.concat(paylaod.res);
+        }else if(paylaod.type==1){
+            state.riskAssessList = state.riskAssessList.concat(paylaod.res);
+        }
+        
+    },
+    deleteRiskAssessList(){
+        state.riskAssessList = [];
+    },
 }
 const actions = {
 
@@ -108,6 +123,12 @@ const actions = {
         postRiskAssessAdd(state.riskAssessData).then((res) => {
             console.log(JSON.stringify(res))
         })
+    },
+
+    getRiskAssess({commit, state},payload){
+        getRiskAssess(state.defaultRiskAssess).then((res)=>{
+            commit('saveRiskAssessList',{res:res,type: payload.type,});
+        })
     }
 
 
@@ -123,6 +144,5 @@ export default {
     mutations,
     actions,
     getters
-
 
 }

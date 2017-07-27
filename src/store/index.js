@@ -5,6 +5,8 @@ import tiskAdd from './risk/riskAdd'
 import riskList from './map/riskList'
 import riskInfo from './map/riskInfo'
 import evaluation from "./risk/evaluation"
+import myAuditInfo from "./risk/myAuditInfo"
+import myAuditList from "./risk/myAuditList"
 
 Vue.use(Vuex);
 
@@ -50,6 +52,8 @@ export const store = new Vuex.Store({
     tiskAdd,
     evaluation,
     riskList,
-    riskInfo
+    riskInfo,
+    myAuditInfo,
+    myAuditList
   }
 });

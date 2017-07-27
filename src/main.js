@@ -1,4 +1,4 @@
-
+import  { ToastPlugin } from 'vux'
 import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
@@ -9,6 +9,9 @@ import './../config/components.config'
 import './assets/css/animate.css'
 import BaiduMap from 'vue-baidu-map'
 import './utils/filter'
+
+Vue.use(ToastPlugin)
+
 // requires and returns all modules that match 
 const requireAll = requireContext => requireContext.keys().map(requireContext);
 // import all svg

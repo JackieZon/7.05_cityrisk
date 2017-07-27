@@ -1,39 +1,42 @@
 <template>
-    <div class="riskInfo" v-cloak>
+    <div id="riskInfo" v-cloak>
         <Heads :title="'评估列表'" :isEvaluationList="true"></Heads>
-        <div class="evaluation" v-for="item in searchList">
-            <div class="evaluationList" v-on:click="openEvaluationInfo">
-                <div style="font-size: 14px;">
-                    <p class="p_center" style="position: absolute; right: 10px;"><!--<img src="./../../assets/icon/level.svg" alt="">-->{{ '蓝色' }}</p>
-                    <p class="p_center" style="position: absolute; right: 10px; top: 40px;"><!--<img src="./../../assets/icon/windPower.svg" alt="">-->{{ '18级' }}</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/riskType.svg" alt="">-->风险类型: 火灾、爆炸</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/appraiser.svg" alt="">-->评估人:李四</p>
-                    <p class="p_center"><!--<img src="./../../assets/icon/time2.svg" alt="">-->评估时间: 2017-07-24 16:39</p>
-                    <!--<img style="position: absolute; top: 105px;" src="./../../assets/icon/describe.svg" alt="">-->
-                    <p style="margin-left: 30px; overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp:1; -webkit-box-orient: vertical;">描述: 这个风险源涉及的风险较多，需要着重重视，存在很多爆炸性物品随意堆放！</p>
-                    <p class="p_center" style=" margin-top: 4px;"><!--<img src="./../../assets/icon/auditor.svg" alt="">-->审核人: 张三</p>
-                    <p class="auditStatus">审核状态: 未审核</p>
+        
+        <PullUpRefresh 
+            :pullDown="pullDown"
+            :pullUp="pullUp"
+        >
+        
+            <div class="evaluation" v-for="item in riskAssessList">
+                <div class="evaluationList" v-on:click="openEvaluationInfo">
+                    <div style="font-size: 14px;">
+                        <div style="position: absolute; right: 10px; top: 10px;width: 80px;">
+                            <p class="p_center" :style="{'color':fontColor[0]}"><Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[item.RiskAssessLv] }}</p>
+                            <p class="p_center"><Icon slot="icon" class="icon" :name="'trend-icon'" style="color:#33CC99" />{{ item.RiskAssessScore }}</p>
+                        </div>
+                        <p class="p_center"><Icon slot="icon" class="icon" :name="'riskType'" style="color:#33CC99" />类型: {{ item.RiskAssessTypeNames | s_toStr}}</p>
+                        <p class="p_center"><Icon slot="icon" class="icon" :name="'appraiser'" style="color:#33CC99" />评估人: {{ item.RiskAssessManName | s_toStr}}</p>
+                        <p class="p_center"><Icon slot="icon" class="icon" :name="'time2'" style="color:#33CC99" />时间: {{ item.RiskAssessDate | s_toDate }}</p>
+                        <p class="p_center"><span class="displayFlex"><Icon slot="icon" class="icon" :name="'describe'" style="color:#33CC99;" /></span><span><p class="assessInfo">描述: {{ item.RiskAssessIntro | s_toStr}}</p></span></p>
+                        <p class="p_center" ><Icon slot="icon" class="icon" :name="'auditor'" style="color:#33CC99" />审核人: {{ item.RiskAssessAuditManName | s_toStr}}</p>
+                        <p style="float: right; margin-top: -31px;">审核状态: {{RiskAssessStatusName[item.RiskAssessStatus]}}</p>
+
+                    </div>
                 </div>
             </div>
-        </div>
+
+        </PullUpRefresh>
     </div>
 </template>
 <script>
-    import { TransferDom, XInput, Popup, Radio, XTextarea, XButton, Group, XSwitch, Selector } from "vux"
+    import { XInput, Popup, Radio, XTextarea, XButton, Group, XSwitch, Selector } from "vux"
     import Heads from './../../components/Heads.vue'
-    import { mapState } from 'vuex'
+    import PullUpRefresh from './../../components/common/PullUpRefresh.vue'
+    import { mapState, mapActions, mapMutations } from 'vuex'
 
     export default {
 
-
-        directives: {
-
-            TransferDom
-
-        },
-
         components: {
-
             XInput,
             Heads,
             Popup,
@@ -42,8 +45,8 @@
             XButton,
             Group,
             XSwitch,
-            Selector
-
+            Selector,
+            PullUpRefresh
         },
 
 
@@ -51,104 +54,135 @@
             return {
                 show: false,
                 showToast: true,
-                searchList: [1, 2, 3, 4, 5, 6]
+                searchList: [1, 2, 3, 4, 5, 6],
+                riskStatus:['极高','高','中等','低','可忽略'],
+                RiskAssessStatusName:['暂存','待审核','审核退回','审核通过'],
+                fontColor:['#FF0000','#FF8C00','#FFD700','#1E90FF'],
+                pageIndex:0,
             }
         },
 
-        created() {
-
+        mounted() {
+            this.saveDefaultRiskAssess({RiskID:this.$route.params.id });
+            // type等于0时重新更新数据
+            this.getRiskAssess({type:0});
         },
-
+        watch:{
+            riskAssessList(){
+                console.log('改变数据');
+            }
+        },
+        computed: {
+            ...mapState({
+                riskAssessList(state){
+                    return state.evaluation.riskAssessList;
+                }
+            })
+        },
         methods: {
+            ...mapMutations([
+                'saveDefaultRiskAssess',
+                'deleteRiskAssessList'
+            ]),
+			...mapActions([
+				'getRiskAssess'
+            ]),
             openEvaluationInfo() {
                 this.$router.push({ name: 'evaluationInfo' });
-            }
-
-
-        },
-
-        computed: {
-
-            ...mapState({
-
-            })
+            },
+            pullDown(){
+                // type等于0时重新更新数据
+                this.getRiskAssess({type:0});
+            },
+            pullUp(){
+                this.pageIndex += 1;
+                console.log(this.pageIndex);
+            },
 
         }
-
     }
 
 </script>
-<style>
-    .riskInfo {
-        background: #f1f1f1;
+<style lang="less">
+    #riskInfo {
+        background: #fbf9fe;
         box-sizing: border-box;
-        padding-bottom: 15px;
-    }
-    
-    .vux-swiper {
-        height: 100%!important;
-    }
-    
-    .weui-label {
-        width: 6em!important;
-    }
-    
-    .title {
+        height: 100%;    
         display: flex;
-        justify-content: center;
-        align-items: center;
-        line-height: 45px;
-        border-bottom: 2px solid #33CC99;
-    }
-    
-    .BasicInfoB {
-        margin-top: 15px;
-        background: #fff;
-    }
-    
-    .next {
-        border-top: 1px solid #f1f1f1;
-        box-sizing: border-box;
-        padding: 15px;
-        background: #f1f1f1;
-    }
-    
-    .popup0 .weui-cell {
-        font-size: 17px;
-    }
-    
-    .evaluation {
-        width: 100%;
-        margin: 15px 0 10px 0;
-        background: white;
-    }
-    
-    .evaluationList {
-        padding: 10px 15px;
-        position: relative;
-    }
-    
-    .evaluationList p {
-        line-height: 30px;
-    }
-    
-    .evaluationList img {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-    }
-    
-    .p_center {
-        display: flex;
-        align-items: center;
-    }
-    
-    .auditStatus {
-        float: right;
-        margin-top: -31px;
-    }
-    
-    [v-cloak] {
-        display: none
+        flex-direction: column;
+
+        .displayFlex{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vux-swiper {
+            height: 100%!important;
+        }
+        
+        .weui-label {
+            width: 6em!important;
+        }
+        
+        .title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 45px;
+            border-bottom: 2px solid #33CC99;
+        }
+        
+        .BasicInfoB {
+            margin-top: 15px;
+            background: #fff;
+        }
+        
+        .next {
+            border-top: 1px solid #f1f1f1;
+            box-sizing: border-box;
+            padding: 15px;
+            background: #f1f1f1;
+        }
+        
+        .popup0 .weui-cell {
+            font-size: 17px;
+        }
+        
+        .evaluation {
+            width: 100%;
+            margin-top: 10px;
+            background: #fbf9fe;
+        }
+        
+        .evaluationList {
+            padding: 10px 15px;
+            position: relative;
+            background: #fff;
+        }
+        
+        .evaluationList p {
+            line-height: 30px;
+        }
+        
+        .evaluationList img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        
+        .p_center {
+            display: flex;
+            align-items: center;
+        }
+        
+        .auditStatus {
+            float: right;
+            margin-top: -31px;
+        }
+        
+        [v-cloak] {
+            display: none
+        }
     }
 </style>

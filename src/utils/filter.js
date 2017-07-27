@@ -42,8 +42,6 @@ Vue.filter('s_dateStr', function (val) {
     val = val.split('T').join(' ')
     val = val.split('-').join('/')
 
-    console.log(val);
-
     if (Date.parse(vals) <= Date.parse("2001/1/1")) {
         return "";
     }
@@ -84,9 +82,8 @@ Vue.component('no-data',{
                 fontSize: '16px',
                 fontFamily: "Microsoft YaHei",
                 lineHeight: '45px',
-                borderBottom: '1px solid #f1f1f1',
                 width:'100%',
-                height:screen.availHeight * 0.6 + 'px',
+                height:screen.availHeight * 0.65 + 'px',
             },
             imgSrc:'http://app-forklift.subei88.com/Upload/conmonImg/refresh-icon.png',
             imgStyle:{width:'28px',height:'28px'},
@@ -96,7 +93,7 @@ Vue.component('no-data',{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingTop: '20px',
+              paddingTop: '0',
               boxSizing: 'border-box',
               color:'#33CC99'
             }

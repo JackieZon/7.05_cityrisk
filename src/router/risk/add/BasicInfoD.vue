@@ -9,7 +9,7 @@
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
                         <cell :title="item.RiskRegulatoryName" :inline-desc="item.RiskRegulatoryArea1+item.RiskRegulatoryArea2+item.RiskRegulatoryArea3+item.RiskRegulatoryAddress">
-                            <!--<img slot="icon" width="35" style="display:block;margin-right:10px;" src="./../../../assets/icon/my-team.svg">-->
+                            <Icon slot="icon" class="flexBox" :name="'my-team'" :width="'35'" :height="'35'" style="color:#33CC99"/>
                         </cell>
                     </div>
                 </swipeout-item>
@@ -147,7 +147,11 @@
                     this.clearData();
                     this.basicInfoDPopup = false;
                 }else if(type=='delete'){
-                    this.deleteListRegulatory({index: index});
+
+                    this.openConfirmAction({state:true,msg:'确定要删除吗？',control: ()=>{
+                        this.deleteListRegulatory({index: index});
+                    }});
+                    
                 }
                 
             },
@@ -195,12 +199,9 @@
                     });
                     this.basicInfoDPopup = false;
                 }else{
-                    this.openConfirmAction({state:true,msg:'您确定要新增吗？',control: ()=>{
-                        console.log('你点击了确定');
-                        this.pushListRegulatory(regulatoryUpData);
-                        this.clearData();
-                        this.basicInfoDPopup = false;
-                    }})
+                    this.pushListRegulatory(regulatoryUpData);
+                    this.clearData();
+                    this.basicInfoDPopup = false;
                 }
 
             },

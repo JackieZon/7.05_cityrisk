@@ -37,18 +37,22 @@
                 <x-input title="风险描述" style="width: 90px; float: left; border-top: 0;"></x-input>
             </div>
             <div id="describe">
-                <x-textarea class="x_textarea" readonly value="台风将在某某地区登陆"></x-textarea>
+                <x-textarea class="x_textarea" readonly value="台风将要登陆"></x-textarea>
             </div>
 
             <div style="width: 100%; height: 30px;"></div>
         </div>
+
+
+
         <div v-transfer-dom>
             <!--<popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">-->
             <popup v-model="show">
                 <div class="popup0">
                     <group>
                         <radio :options="menu" @on-change="change" v-model="result"></radio>
-                        <x-textarea title="描述" :max="200" placeholder="请输入描述" :show-counter="false" :height="200" :rows="8" :cols="30"></x-textarea>
+                        <x-textarea title="原因" :max="200" placeholder="请输入原因" :show-counter="false" v-model="riskAuditIntro" :height="200" :rows="8"
+                            :cols="30"></x-textarea>
                         <x-button type="primary" class="submit" @click.native="submit">提交审核</x-button>
                     </group>
                 </div>
@@ -67,6 +71,7 @@
 </template>
 <script>
     import Heads from './../../components/Heads.vue'
+    import { mapActions } from 'vuex'
     import { TransferDom, XInput, XTextarea, XButton, Flexbox, FlexboxItem, Group, XSwitch, Popup, Radio } from 'vux'
     export default {
 
@@ -78,8 +83,10 @@
 
             return {
                 show: false,
-                menu: ['通过', '不通过'],
-                result: ""
+                menu: [{ 'key': 3, 'value': '通过' }, { 'key': 2, 'value': '不通过' }],
+                result: "",
+                riskAuditIntro: ""
+
             }
 
         },
@@ -97,20 +104,46 @@
         },
 
         methods: {
+            ...mapActions([
+                'showToast',
+                'postRiskAdds'
+            ]),
+
             showAudit() {
+
                 this.show = true;
+
             },
+
             change(data) {
-                console.log(data)
+
+                this.$store.commit("setRiskAuditStatus", data);
+
             },
             submit() {
+
+                var t_data = this;
+
                 if (!this.result) {
-                    alert('请选择结果！');
+                    this.showToast({ toastState: true, toastValue: '' })
+                    this.showToast({ toastState: true, toastValue: '请选择结果！' })
                     return;
                 }
 
-                this.show = false
+                if (!this.riskAuditIntro) {
+                    this.showToast({ toastState: true, toastValue: '请输入原因!' })
+                    return;
+                }
+
+                this.$store.commit("setRiskAuditIntro", t_data.riskAuditIntro);
+
+                this.$store.dispatch("updateRiskStatusAudit")
+
+                this.showToast({ toastState: true, toastValue: '审核成功' })
+
+                this.show = false;
             }
+
         }
 
     }

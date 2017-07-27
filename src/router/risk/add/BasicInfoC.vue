@@ -9,7 +9,7 @@
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
                         <cell :title="item.RiskDutyName" :inline-desc="item.RiskDutyArea1+item.RiskDutyArea2+item.RiskDutyArea3+item.RiskDutyAddress">
-                            <!--<img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../../assets/icon/trust-icon.svg">-->
+                            <Icon slot="icon" class="flexBox" :name="'trust-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
                         </cell>
                     </div>
                 </swipeout-item>
@@ -144,7 +144,11 @@
                     this.clearData();
                     this.basicInfoCPopup = false;
                 }else if(type=='delete'){
-                    this.deleteListRiskDuty({index: index});
+
+                    this.openConfirm({state:true,msg:'确定要删除吗？',control: ()=>{
+                        this.deleteListRiskDuty({index: index});
+                    }});
+                    
                 }
                 
             },
@@ -193,12 +197,9 @@
                     this.basicInfoCPopup = false;
                 }else{
 
-                    this.openConfirm({state:true,msg:'您确定要新增吗？',control: ()=>{
-                        console.log('你点击了确定');
-                        this.pushListRiskDuty(defaultDutyUpData);
-                        this.clearData();
-                        this.basicInfoCPopup = false;
-                    }})
+                    this.pushListRiskDuty(defaultDutyUpData);
+                    this.clearData();
+                    this.basicInfoCPopup = false;
 
                 }
 

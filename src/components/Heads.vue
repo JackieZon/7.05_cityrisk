@@ -47,7 +47,7 @@
                 isDangerState: false,
                 isEvaluationListState: false,
                 menus: {
-                    menu1: '隐患',
+                    menu1: '新增隐患',
                     menu2: '新增评估'
                 },
                 showMenus: false

@@ -20,7 +20,7 @@
                             </div>
                             <div slot="content" class="demo-content vux-1px-t">
                                 <cell :title="item.RiskAssessTypeName" :inline-desc="`等级:${status[item.RiskAssessDetailLv]}  分值:${item.RiskAssessDetailScore}`">
-                                    <!--<img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../../assets/icon/assess-icon.svg">-->
+                                    <Icon slot="icon" class="flexBox" :name="'assess-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
                                 </cell>
                             </div>
                         </swipeout-item>
@@ -32,7 +32,10 @@
 
         <div class="next">
             <x-button @click.native="assess = true">增加</x-button>
-            <x-button @click.native="upDataRiskAdd">提交风险</x-button>
+            <div class="updata">
+                <x-button @click.native="upDataRiskAdd(0)">保存</x-button>
+                <x-button @click.native="upDataRiskAdd(1)">提交</x-button>
+            </div>
         </div>
         <popup v-model="assess" :hide-on-blur="false">
             <div class="evaluation">
@@ -159,7 +162,8 @@
                 'pushAssessDetail',
                 'deleteAssessDetail',
                 'editAssessDetail',
-                'saveAssess'
+                'saveAssess',
+                'updateLoadingStatus',
             ]),
 
             ...mapActions([
@@ -216,54 +220,60 @@
             next(){
                 // this.$router.push({name:'basicInfoC'});
             },
-            upDataRiskAdd(){
+            upDataRiskAdd(type){
+
+                this.upRiskAdd({RiskStatus:type})
 
                 const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
                 const ListRiskDuty = this.$store.state.tiskAdd.postRiskAdd.ListRiskDuty; //责任主体
                 const ListRiskRegulatory = this.$store.state.tiskAdd.postRiskAdd.ListRiskRegulatory; //监管机构
                 const ListRiskAssess = this.$store.state.tiskAdd.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail; //风险评估
 
-                console.log(ListRiskDuty.length);
-                console.log(ListRiskRegulatory.length);
-                console.log(ListRiskAssess.length);
-                console.log(postRiskAdd);
-
                 if(!postRiskAdd.RiskName){
                     this.showToast({toastState:true,toastValue:'请填写险源名称！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskObjectTypeID1){
-                    this.showToast({toastState:true,toastValue:'请在基本信息选择对象类型！'});
+                    this.showToast({toastState:true,toastValue:'请选择对象类型！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskObjectTypeID2){
-                    this.showToast({toastState:true,toastValue:'请在基本信息选择子对象类型！'});
+                    this.showToast({toastState:true,toastValue:'请选择对象类型！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskArea1){
-                    this.showToast({toastState:true,toastValue:'请在基本信息选择省市区！'});
+                    this.showToast({toastState:true,toastValue:'请选择省市区！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskArea2){
-                    this.showToast({toastState:true,toastValue:'请在基本信息选择省市区！'});
+                    this.showToast({toastState:true,toastValue:'请选择省市区！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskArea3){
-                    this.showToast({toastState:true,toastValue:'请在基本信息选择省市区！'});
+                    this.showToast({toastState:true,toastValue:'请选择省市区！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
                 if(!postRiskAdd.RiskAddress){
-                    this.showToast({toastState:true,toastValue:'请在基本信息填写详细地址！'});
+                    this.showToast({toastState:true,toastValue:'请填写详细地址！'});
+                    this.$router.push({name:'basicInfoA'});
                     return;
                 }
 
                 if(ListRiskDuty.length==0){
                     this.showToast({toastState:true,toastValue:'您至少添加一个责任主体！'});
+                    this.$router.push({name:'basicInfoC'});
                     return;
                 }
 
                 if(ListRiskRegulatory.length==0){
                     this.showToast({toastState:true,toastValue:'您至少添加一个监管机构！'});
+                    this.$router.push({name:'basicInfoD'});
                     return;
                 }
 
@@ -276,9 +286,10 @@
                     this.showToast({toastState:true,toastValue:'请填写评估描述！'});
                     return;
                 }
+                
+                this.updateLoadingStatus({isLoading: true})
 
-                return;
-                this.postRiskAdd();
+                this.postRiskAdd({$router: this.$router});
             },
             clearData(){
                 this.defalutAssess.RiskAssessTypeID='';
@@ -324,7 +335,11 @@
                     this.clearData();
                     this.assess = false;
                 }else if(type=='delete'){
-                    this.deleteAssessDetail({index: index});
+
+                    this.openConfirm({state:true,msg:'确定要删除吗？',control: ()=>{
+                        this.deleteAssessDetail({index: index});
+                    }});
+
                 }
                 
             },
@@ -376,11 +391,9 @@
                     this.clearData();
                     this.assess = false;
                 }else{
-                    this.openConfirm({state:true,msg:'您确定要新增吗？',control: ()=>{
-                        this.pushAssessDetail(assessUpData);
-                        this.clearData();
-                        this.assess = false;
-                    }})
+                    this.pushAssessDetail(assessUpData);
+                    this.clearData();
+                    this.assess = false;
                 }
 
             },
@@ -498,6 +511,16 @@
         flex-direction: column;
         justify-content: space-between;
         overflow-y: scroll;
+
+        .updata{
+            display: flex;
+            flex-direction: row;
+            margin-top: 15px;
+            .weui-btn + .weui-btn{
+                margin: 0!important;
+            }
+        }
+
         .group{
             padding-top: 10px!important;
             margin: 0;

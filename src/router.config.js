@@ -95,7 +95,8 @@ export default {
     component: RiskList
   },
   {
-    path: '/Index/RiskList/RiskInfo/:id',
+    // editStatus == 0; 0仅查看信息，1带撤销和编辑，2带审核按钮
+    path: '/Index/RiskList/RiskInfo/:id/:add/:editStatus',
     name: 'riskInfo',
     component: RiskInfo
   },
@@ -105,12 +106,12 @@ export default {
     component: RiskDanger
   },
   {
-    path: "/Index/RiskList/evaluationList",
+    path: "/Index/RiskList/RiskInfo/EvaluationList/:id",
     name: "evaluationList",
     component: EvaluationList
   },
   {
-    path: "/Index/RiskList/evaluationInfo",
+    path: "/Index/RiskList/RiskInfo/EvaluationList/evaluationInfo",
     name: "evaluationInfo",
     component: EvaluationInfo
   },

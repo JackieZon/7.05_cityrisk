@@ -18,7 +18,7 @@
 
             <selector
                 v-if="JSON.stringify(riskObjectTypeChild)!=='[]'"
-                title="子类型" 
+                title="" 
                 placeholder="请选择"
                 :options="riskObjectTypeChild"
                 :value="riskObjectTypeChildVal"

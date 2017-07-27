@@ -1,13 +1,21 @@
 import axios from 'axios'
 import qs from 'qs'
+import {store} from './../store/index'
+import Vue from 'vue'
 
 export default (url, type, param) => {
+
+  // store.commit('updateLoadingStatus', {isLoading: true});
+
   switch (type) {
 
     case 'get':
-
       const getApi = new Promise((resolve, reject) => {
         axios.get(url,param).then((res) => {
+
+          setTimeout(()=>{
+            store.commit('updateLoadingStatus', {isLoading: false});
+          },800)
 
           if (res.status >= 200 && res.status < 300) {
             if (res.data.status) {
@@ -24,13 +32,21 @@ export default (url, type, param) => {
       break;
       
     case 'post':
-
       const postApi = new Promise((resolve, reject) => {
         axios.post(url, qs.stringify(param)).then((res) => {
-            console.log(res);
+          
+          setTimeout(()=>{
+            store.commit('updateLoadingStatus', {isLoading: false});
+          },800);
+
           if (res.status >= 200 && res.status < 300) {
             if (res.data.status) {
               resolve(res.data.info);
+            }else{
+                Vue.$vux.toast.show({
+                    text: res.data.info,
+                    type: 'cancel',
+                });
             }
           }
 

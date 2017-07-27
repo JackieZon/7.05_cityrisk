@@ -1,4 +1,6 @@
 import {getRiskBaseType,getRiskObjectType,postRiskAdd} from './../../servers/api'
+import Vue from 'vue'
+import {store} from './../index'
 
 const state = {
     // riskBaseType:[],
@@ -13,21 +15,21 @@ const state = {
         "ListRiskAssess": [
             {
             "ListRiskAssessDetail": [
-                {
-					"RiskAssessTypeID":19,
-					"RiskAssessTypeName":"火灾",
-					"RiskAssessLID":1,
-					"RiskAssessLName":"完全可以预料",
-					"RiskAssessLScore":10,
-					"RiskAssessEID":7,
-					"RiskAssessEName":"连续暴露",
-					"RiskAssessEScore":10,
-					"RiskAssessCID":13,
-					"RiskAssessCName":"10人以上死亡",
-					"RiskAssessCScore":100,
-					"RiskAssessDetailLv":"0",
-					"RiskAssessDetailScore":10000
-				}
+                // {
+				// 	"RiskAssessTypeID":19,
+				// 	"RiskAssessTypeName":"火灾",
+				// 	"RiskAssessLID":1,
+				// 	"RiskAssessLName":"完全可以预料",
+				// 	"RiskAssessLScore":10,
+				// 	"RiskAssessEID":7,
+				// 	"RiskAssessEName":"连续暴露",
+				// 	"RiskAssessEScore":10,
+				// 	"RiskAssessCID":13,
+				// 	"RiskAssessCName":"10人以上死亡",
+				// 	"RiskAssessCScore":100,
+				// 	"RiskAssessDetailLv":"0",
+				// 	"RiskAssessDetailScore":10000
+				// }
                 // {
                 //     "ID": 0,
                 //     "RiskID": 0,
@@ -163,9 +165,23 @@ const actions = {
             commit('saveRiskObjectType',res);
         })
     },
-    postRiskAdd({commit,state}){
+    postRiskAdd({commit,state},payload){
+        
+        let $router = payload.$router;
+
         postRiskAdd(state.postRiskAdd).then((res)=>{
-            console.log(res);
+            
+            store.commit('updateLoadingStatus', {isLoading: false})
+
+            Vue.$vux.toast.show({
+                text: (state.postRiskAdd.RiskStatus==0?'保存成功':'提交成功'),
+                type: 'success',
+                onHide(){
+                    $router.push({name:'riskList'})
+                }
+            });
+
+            
         })
     }
 }

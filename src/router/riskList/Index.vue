@@ -1,7 +1,7 @@
 <template>
 	<div id="riskListPage">
 		<div class="search-box">
-			<Heads :back="true" :title="'风险列表'" :isMap="true"></Heads>
+			<Heads :back="true" :noBack="true" :goBack="'homeMap'" :title="'风险列表'" :isMap="true"></Heads>
 			<search :autoFixed="false"></search>
 			<div class="msg">
 				<MsgToast @click.native="goPage('warningList')"></MsgToast>
@@ -21,10 +21,10 @@
 			ref="scrollerRef"
 		>
 			<div class="listItem" style="height:100%;">
-				<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" :item="item" @click.native="goPage('riskInfo',item)"></RiskList>
+				<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" :item="item" @click.native="goPage('riskInfo',item,1)"></RiskList>
 				<div v-show="false" style="display:flex;justify-content: center;align-items: center;margin:10px 0;"><spinner type="crescent" style="margin-right:10px;"></spinner>加载中...</div>
 			</div>
-			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down pulldownBox" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
+			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
 				<div class="loadingBox">
 					<spinner style="display:flex;justify-content: center;align-items: center;margin-right:10px;" v-show="statusDown.pulldownStatus === 'loading'" type="crescent"></spinner>
 					<span class="pulldown-arrow" style="margin-right:10px;" v-show="statusDown.pulldownStatus === 'down' || statusDown.pulldownStatus === 'up'" :class="{'rotate': statusDown.pulldownStatus === 'up'}">↓</span>
@@ -35,7 +35,7 @@
 	</div>
 </template>
 <script>
-	import {Search, Group, Cell, XButton,Scroller, Divider, XSwitch, Spinner,LoadMore} from 'vux'
+	import {Search, Group, Cell, XButton, Scroller, Divider, XSwitch, Spinner,LoadMore} from 'vux'
 	import {mapMutations, mapState, mapActions} from 'vuex'
 	
 	import Heads from './../../components/Heads.vue'
@@ -106,8 +106,8 @@
 			goRiskAdd(){
                 this.$router.push({name:'riskAdd'});
             },
-			goPage(name,item){
-				this.$router.push({name:name,params:{id:item.ID}})
+			goPage(name,item,addOperation){
+				this.$router.push({name:name,params:{id:item.ID,add:addOperation,editStatus:0}})
 			},
 			refresh() {
 				console.log('我是往下拉');

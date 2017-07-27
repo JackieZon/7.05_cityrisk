@@ -83,11 +83,18 @@ body {
   background-color: #fbf9fe;
 }
 .icon {
-    width: 1em;
-    height: 1em;
+    width: 1.5em;
+    height: 1.5em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
+    padding-right: 10px;
+}
+.flexBox{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 10px;
 }
 .vux-header .vux-header-left .left-arrow:before{
     content: "";
