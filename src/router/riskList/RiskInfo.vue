@@ -206,7 +206,12 @@
             },
             changeEdit(val){
 
-                console.log(this.editMenu[val]);
+                console.log(this.menuStatus[0]);
+                console.log(val);
+
+                if(val=='cancel'){
+                    return;
+                }
 
                 if(this.menuStatus[0] == '编辑'){
 

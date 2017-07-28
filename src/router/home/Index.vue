@@ -1,26 +1,42 @@
 <template>
-    <div class="home">
-        <Heads :back="false" :title="'首页'" :isRiskAdd="true"></Heads>
-        <swiper 
-            loop 
-            auto 
-            :show-desc-mask="false" 
-            :list="swiperList" 
-            :index="swiperIndex" 
-            @on-index-change="swiperChange"
-            :interval="5000"
-        ></swiper>
-        <load-more :show-loading="false" :tip="'暂无已审核风险'" background-color="#fbf9fe"></load-more>
+    <div id="home">
+        <div class="upper">
+            <Heads :back="false" :title="'首页'" :isRiskAdd="true"></Heads>
+        </div>
+        <PullUpRefresh
+            :pullDown="pullDown"
+            :pullUp="pullUp"
+            :item="riskList"
+            :default="defaultData"
+        >
+            <swiper 
+                loop 
+                auto 
+                :show-desc-mask="false" 
+                :list="swiperList" 
+                :index="swiperIndex" 
+                @on-index-change="swiperChange"
+                :interval="5000"
+            ></swiper>
+            <RiskList v-for="(item,index) in riskList" class="riskList" :item="item" :key="index" @click.native="goRiskInfo(item)" :class="riskList"></RiskList>
+        </PullUpRefresh>
+        <!--<load-more :show-loading="false" :tip="'暂无已审核风险'" background-color="#fbf9fe"></load-more>-->
     </div>
 </template>
 <script>
+    import RiskList from './../../components/common/RiskList.vue'
+    import PullUpRefresh from './../../components/common/PullUpRefresh.vue'
     import { Swiper, LoadMore } from 'vux'
     import Heads from './../../components/Heads.vue'
+    import {mapMutations, mapState, mapActions} from 'vuex'
+
     export default {
         components: {
             Heads,
             Swiper,
-            LoadMore
+            LoadMore,
+            PullUpRefresh,
+            RiskList,
         },
         data(){
             return {
@@ -42,15 +58,57 @@
                 }]
             }
         },
+        mounted(){
+            this.deleteRiskList();
+            this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:0});
+            this.getRisk();
+        },
+        computed:{
+            ...mapState({
+				riskList(state){
+					return state.riskList.riskList
+				},
+                defaultData(state){
+                    return state.riskList.defaultData
+                }
+            })
+        },
         methods:{
+            ...mapMutations([
+                'saveDefaultData',
+                'deleteRiskList'
+            ]),
+            ...mapActions([
+                'getRisk'
+            ]),
             swiperChange(val){
                 console.log(val);
+            },
+            pullDown(){
+                this.deleteRiskList();
+                this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:0});
+                this.getRisk();
+            },
+            pullUp(){
+                this.saveDefaultData({pageIndex:this.defaultData.pageIndex+=1,pageSize:10});
+                this.getRisk();
+            },
+            goRiskInfo(item){
+                this.$router.push({name:'riskInfo',params:{id:item.ID,add:1,editStatus:1}})
             }
         }
     }
 </script>
 <style lang="less" scoped>
-    .home{
-
+    #home{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .riskList:first-child{
+            padding-top: 0px;
+        }
+        .riskList{
+            padding-top: 10px;
+        }
     }
 </style>
