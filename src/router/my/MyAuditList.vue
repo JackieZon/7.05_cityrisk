@@ -6,7 +6,7 @@
       <tab-item @on-item-click="pendingAudit">待审核</tab-item>
     </tab>
     <group v-for="(item,index) in searchList" :key="index">
-      <div v-on:click=" goPage('riskInfo', item, '')">
+      <div v-on:click=" goPage('riskInfo', item, 0)">
         <div class="content title">
           <p>{{ item.RiskAreaName1 + item.RiskAreaName2 + item.RiskAreaName3 + item.RiskAreaName4 + item.RiskName }}</p>
         </div>
@@ -35,6 +35,7 @@
 <script>
   import Heads from './../../components/Heads.vue'
   import { Group, XButton, Tab, TabItem, Popup, Selector, Radio, XTextarea } from "vux"
+  import {mapMutations, mapState, mapActions} from 'vuex'
   export default {
     components: {
       Group,
@@ -60,26 +61,47 @@
     },
     created() {
 
+      this.$store.commit("saveDefaultData",{pageIndex: 1 ,pageSize: 1000,});
+      
       this.$store.dispatch("getRisk");
 
-      this.Audited();
+      // alert(JSON.stringify(this.searchList))
 
+    },
+    watch:{
+      riskList(val,oldVal){
+
+        console.log(`我改变了${JSON.stringify(val)}`)
+        this.Audited();
+        
+      }
+    },
+    computed:{
+      ...mapState({
+        riskList(state){
+          return state.riskList.riskList;
+        }
+      })
     },
     methods: {
 
       pendingAudit() { //未审核状态
         this.searchList = [];
-        this.searchList = this.$store.getters.pendingAudit
+
+        const list = this.riskList.filter( res => res.RiskStatus == 1 )
+        this.searchList = list
       },
 
       Audited() { //已审核状态
         this.searchList = [];
-        this.searchList = this.$store.getters.Audited
+        const list = this.riskList.filter( res => res.RiskStatus == 2 || res.RiskStatus == 3 );
+        this.searchList = list;
       },
 
 
       goPage(name, item, addOperation) {
-        this.$router.push({ name: name, params: { id: item.ID, add:addOperation } })
+        console.log(name);
+				this.$router.push({name:name,params:{id:item.ID,add:addOperation,editStatus:2}});
       }
 
     }

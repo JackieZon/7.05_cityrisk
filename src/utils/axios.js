@@ -13,13 +13,13 @@ export default (url, type, param) => {
       const getApi = new Promise((resolve, reject) => {
         axios.get(url,param).then((res) => {
 
-          setTimeout(()=>{
-            store.commit('updateLoadingStatus', {isLoading: false});
-          },800)
+          // setTimeout(()=>{
+          //   store.commit('updateLoadingStatus', {isLoading: false});
+          // },800)
 
           if (res.status >= 200 && res.status < 300) {
             if (res.data.status) {
-              resolve(res.data.info);
+              resolve({info:res.data.info,all:res.data});
             }
           }
 
@@ -35,13 +35,13 @@ export default (url, type, param) => {
       const postApi = new Promise((resolve, reject) => {
         axios.post(url, qs.stringify(param)).then((res) => {
           
-          setTimeout(()=>{
-            store.commit('updateLoadingStatus', {isLoading: false});
-          },800);
+          // setTimeout(()=>{
+          //   store.commit('updateLoadingStatus', {isLoading: false});
+          // },800);
 
           if (res.status >= 200 && res.status < 300) {
             if (res.data.status) {
-              resolve(res.data.info);
+              resolve({info:res.data.info,all:res.data});
             }else{
                 Vue.$vux.toast.show({
                     text: res.data.info,

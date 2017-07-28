@@ -27,6 +27,7 @@ Vue.use(VueRouter);
 // 获取后台基础数据
 store.dispatch('getRiskBaseType');
 store.dispatch('getRiskObjectType');
+store.dispatch('getArea');
 
 const router = new VueRouter(routerConfig)
 

@@ -73,9 +73,9 @@
             </popup>
         </div>
 
-        <flexbox :style="{'display':($route.params.editStatus==0?'none':(riskInfo.RiskStatus==1?'':'none'))}">
+        <flexbox :style="{'display':($route.params.editStatus==0?'none':(riskInfo.RiskStatus==3?'none':''))}">
             <flexbox-item>
-                <x-button @click.native="editMenuStatus = true;">编辑</x-button>
+                <x-button @click.native="editMenuStatus = true;">{{menuStatus[0]}}</x-button>
                 <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
             </flexbox-item>
             <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
@@ -126,16 +126,40 @@
 
                 this.$store.commit("setRiskId", this.riskInfo.ID)
 
-                const menu = [[],['编辑','撤销'],(this.riskInfo.RiskStatus==1?['审核']:[])];
-                this.editMenu = menu[this.$route.params.editStatus]
+                // editStatus     0是查看详情  1是用户编辑 或 撤回   2是审核
+                // 风险状态    -1(全部)   0(暂存+审核退回)   1(待审核)  3(已审核) 
+
+                const editStatus = this.$route.params.editStatus;
+                let menuStatus = [];
+
+                console.log('我是风险状态'+this.riskInfo.RiskStatus);
+
+                if(editStatus == 0){
+                    menuStatus = [];
+                }else if(editStatus == 1){
+                    
+                    if(this.riskInfo.RiskStatus==0||this.riskInfo.RiskStatus==2){
+                        menuStatus = ['编辑']
+                    }else if(this.riskInfo.RiskStatus==1){
+                        menuStatus = ['撤回']
+                    }
+
+                }else if(editStatus == 2 && this.riskInfo.RiskStatus==1){
+                    menuStatus = ['审核'];
+                }
+                
+                // const menu = [[],['编辑','撤销'],(this.riskInfo.RiskStatus==1?['审核']:[])];
+
+                this.menuStatus = menuStatus;
+                this.editMenu = menuStatus;
 
             }
         },
         mounted() {
 
             this.getRiskInfo(this.$route.params.id);
-            console.log(this.$route.params);
-
+            // console.log(this.$route.params);
+            console.log(`我是风险的状态${this.riskInfo.RiskStatus}`);
         },
         data() {
             return {
@@ -149,16 +173,16 @@
                 riskStatus: ['极高', '高', '中等', '低', '可忽略'],
                 RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
                 fontColor: ['#FF0000', '#FF8C00', '#FFD700', '#1E90FF'],
-
-                show: false,
                 menu: [{ 'key': 3, 'value': '通过' }, { 'key': 2, 'value': '不通过' }],
+                menuStatus:[],
+                show: false,
                 result: "",
                 riskAuditIntro: "",
                 addOperation: ""
             }
         },
         created() {
-            this.addOperation = this.$route.params.add
+            this.addOperation = this.$route.params.add;
         },
 
         methods: {
@@ -168,9 +192,10 @@
             ]),
             ...mapMutations([
                 'openConfirm',
+                'editRisk'
             ]),
-            openEvaluationInfo() {
-                this.$router.push({ name: 'evaluationInfo' });
+            openEvaluationInfo(ID) {
+                this.$router.push({ name: 'evaluationInfo',params:{infoId:this.riskInfo.ListRiskAssess[0].ID} });
             },
 
             openEvaluation(item) {
@@ -183,17 +208,22 @@
 
                 console.log(this.editMenu[val]);
 
-                if(this.editMenu[val] == '编辑'){
+                if(this.menuStatus[0] == '编辑'){
 
-                    this.$router.push({name:'riskAdd'});
+                    this.openConfirm({state:true,msg:'确定要编辑吗？',control: ()=>{
+                        this.$router.push({name:'riskAdd',params:{id:this.riskInfo.ID}});
 
-                }else if(this.editMenu[val] == '撤销'){
+                        this.editRisk(this.riskInfo);
 
-                    this.openConfirm({state:true,msg:'确定要撤销吗？',control: ()=>{
+                    }});
+
+                }else if(this.menuStatus[0] == '撤回'){
+
+                    this.openConfirm({state:true,msg:'确定要撤回吗？',control: ()=>{
                         // this.deleteListRiskDuty({index: index});
                     }});
 
-                }else if(this.editMenu[val] == '审核'){
+                }else if(this.menuStatus[0] == '审核'){
                     this.showAudit();
                 }
 

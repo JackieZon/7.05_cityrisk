@@ -63,14 +63,14 @@ const actions = {
         console.log(state.AuditData.ID)
         console.log(state.AuditData.RiskStatus)
         console.log(state.AuditData.RiskAuditIntro)
-        updateRiskStatusAudit(state.AuditData).then((res) => {
+        updateRiskStatusAudit(state.AuditData).then((data) => {
         })
     },
 
     updateRiskStatusRecall: ({ state },payload) => {
         console.log(`这是数据中心里${state.AuditData.ID}`);
-        updateRiskStatusRecall(state.AuditData.ID).then((res) => {
-            console.log(res)
+        updateRiskStatusRecall(state.AuditData.ID).then((data) => {
+            console.log(data.info)
         })
     }
 

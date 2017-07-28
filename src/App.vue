@@ -55,7 +55,7 @@ export default {
   },
   methods:{
     ...mapMutations([
-      'openConfirm'
+      'openConfirm',
     ]),
     ...mapActions([
       'getRiskBaseType',

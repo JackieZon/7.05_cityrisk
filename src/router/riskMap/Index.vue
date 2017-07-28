@@ -35,9 +35,12 @@
         // @on-cancel="onCancel"
         // @on-submit="onSubmit"
         // ref="search"
+    import { addRiskDefault } from './../../utils/defaultData.js'
     import Heads from './../../components/Heads.vue'
     import MsgToast from './../../components/common/MsgToast.vue'
     import { Search, Group, Cell, XButton } from 'vux'
+    import {mapMutations, mapState, mapActions} from 'vuex'
+
     export default {
         components:{
             Heads,
@@ -59,7 +62,12 @@
             console.log(this)
         },
         methods:{
+            ...mapMutations([
+                'editRisk'
+            ]),
             goRiskAdd(){
+
+                this.editRisk(addRiskDefault);
                 this.$router.push({name:'riskAdd'});
             },
             markerIn(){

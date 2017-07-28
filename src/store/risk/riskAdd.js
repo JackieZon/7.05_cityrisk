@@ -148,12 +148,12 @@ const actions = {
     },
     getRiskBaseType: ({commit,dispatch,getters,state}) => {
 
-        getRiskBaseType().then((res)=>{
+        getRiskBaseType().then((data)=>{
 
-            const RiskAssessL = res.filter(item=>item.BaseTypeNo == 'RiskAssessL')
-            const RiskAssessE = res.filter(item=>item.BaseTypeNo == 'RiskAssessE')
-            const RiskAssessC = res.filter(item=>item.BaseTypeNo == 'RiskAssessC')
-            const RiskAssessType = res.filter(item=>item.BaseTypeNo == 'RiskAssessType')
+            const RiskAssessL = data.info.filter(item=>item.BaseTypeNo == 'RiskAssessL')
+            const RiskAssessE = data.info.filter(item=>item.BaseTypeNo == 'RiskAssessE')
+            const RiskAssessC = data.info.filter(item=>item.BaseTypeNo == 'RiskAssessC')
+            const RiskAssessType = data.info.filter(item=>item.BaseTypeNo == 'RiskAssessType')
 
             commit('saveRiskBaseType',{RiskAssessL: RiskAssessL[0].detail_BaseDataList, RiskAssessE:RiskAssessE[0].detail_BaseDataList, RiskAssessC:RiskAssessC[0].detail_BaseDataList, RiskAssessType:RiskAssessType[0].detail_BaseDataList});
 
@@ -161,8 +161,8 @@ const actions = {
 
     },
     getRiskObjectType: ({commit,dispatch,getters,state})=>{
-        getRiskObjectType().then((res)=>{
-            commit('saveRiskObjectType',res);
+        getRiskObjectType().then((data)=>{
+            commit('saveRiskObjectType',data.info);
         })
     },
     postRiskAdd({commit,state},payload){
@@ -236,7 +236,13 @@ const mutations = {
 	},
 	saveAssess: (state, payload)=>{
 		state.postRiskAdd.ListRiskAssess[0].RiskAssessIntro = payload.RiskAssessIntro;
-	}
+    },
+    
+    // 用户编辑风险
+    editRisk(state, payload){
+        console.log(`用户编辑风险点`);
+        state.postRiskAdd = payload;
+    }
 }
 
 export default {

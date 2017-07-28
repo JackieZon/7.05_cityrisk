@@ -7,6 +7,7 @@ import riskInfo from './map/riskInfo'
 import evaluation from "./risk/evaluation"
 import myAuditInfo from "./risk/myAuditInfo"
 import myAuditList from "./risk/myAuditList"
+import {getArea} from './../servers/api'
 
 Vue.use(Vuex);
 
@@ -35,7 +36,15 @@ export const store = new Vuex.Store({
     showToast({commit,dispatch,getters,state},payload){
       commit('upToastMag',payload);
       dispatch('hideToast');
+    },
+    getArea({commit,dispatch,getters,state}){
+      getArea().then((data)=>{
+        console.log('得到省市区地址*********************************************************');
+        console.log(data.info);
+        commit('saveArea',data.info);
+      })
     }
+    // http://wx-cityrisk.subei88.com:8080/api/Area
   },
   mutations: {
     updateLoadingStatus (state, payload) {
@@ -46,6 +55,9 @@ export const store = new Vuex.Store({
     },
     openConfirm(state, payload){
       state.confirm = { ...state.confirm,...payload };
+    },
+    saveArea(state, payload){
+      state.areaData = payload;
     }
   },
   modules:{

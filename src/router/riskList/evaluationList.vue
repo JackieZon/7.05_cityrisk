@@ -5,10 +5,12 @@
         <PullUpRefresh 
             :pullDown="pullDown"
             :pullUp="pullUp"
+            :item="riskAssessList"
+            :default="defaultData"
         >
         
             <div class="evaluation" v-for="item in riskAssessList">
-                <div class="evaluationList" v-on:click="openEvaluationInfo">
+                <div class="evaluationList" v-on:click="openEvaluationInfo(item.ID)">
                     <div style="font-size: 14px;">
                         <div style="position: absolute; right: 10px; top: 10px;width: 80px;">
                             <p class="p_center" :style="{'color':fontColor[0]}"><Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[item.RiskAssessLv] }}</p>
@@ -63,7 +65,7 @@
         },
 
         mounted() {
-            this.saveDefaultRiskAssess({RiskID:this.$route.params.id });
+            this.saveDefaultData({RiskID:this.$route.params.id });
             // type等于0时重新更新数据
             this.getRiskAssess({type:0});
         },
@@ -76,27 +78,31 @@
             ...mapState({
                 riskAssessList(state){
                     return state.evaluation.riskAssessList;
+                },
+                defaultData(state){
+                    return state.evaluation.defaultData
                 }
             })
         },
         methods: {
             ...mapMutations([
-                'saveDefaultRiskAssess',
+                'saveDefaultData',
                 'deleteRiskAssessList'
             ]),
 			...mapActions([
 				'getRiskAssess'
             ]),
-            openEvaluationInfo() {
-                this.$router.push({ name: 'evaluationInfo' });
+            openEvaluationInfo(Id) {
+                this.$router.push({ name: 'evaluationInfo',params:{infoId:Id} })
+                // this.$router.push({ name: 'evaluationInfo' });
             },
             pullDown(){
                 // type等于0时重新更新数据
+                this.saveDefaultData({ pageIndex:1,});
                 this.getRiskAssess({type:0});
             },
             pullUp(){
-                this.pageIndex += 1;
-                console.log(this.pageIndex);
+                this.saveDefaultData({ pageIndex: this.defaultData.pageIndex +=1});
             },
 
         }

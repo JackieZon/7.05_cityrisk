@@ -5,8 +5,10 @@ const state = {
     riskList:[],
     defaultData:{
         RiskName: "",
-        page: 1 ,
-        rows: 10,
+        RiskStatus: -1,
+        pageIndex: 1 ,
+        pageSize: 10,
+        total: 0,
     },
 }
 
@@ -15,14 +17,29 @@ const actions = {
         commit('getUserInfo', subei_common.getUserInfo());
     },
     getRisk({commit,dispatch,getters,state}){
+
         console.log(JSON.stringify(state.defaultData));
-        getRisk(state.defaultData).then((res)=>{
-            console.log(res.length)
-            commit('saveGetRiskList',res);
+
+        getRisk(state.defaultData).then((data)=>{
+            
+            console.log(data.info);
+            commit('saveDefaultData',{total: data.all.total})
+            commit('saveGetRiskList',data.info);
+
         });
     }
 }
-const getters = {}
+const getters = {
+
+    pendingAudit: state => {
+        return state.riskList.filter( res => res.RiskStatus == 1 || res.RiskStatus == 0 )
+    },
+
+    Audited: state => {
+        return state.riskList.filter( res => res.RiskStatus == 2 || res.RiskStatus == 3 )
+    }
+
+}
 
 const mutations = {
     saveData(state, payload){

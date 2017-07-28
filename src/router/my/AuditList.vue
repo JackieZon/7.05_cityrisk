@@ -13,8 +13,9 @@
       :pullDown="pullDown"
       :pullUp="pullUp"
       :item="riskList"
+      :default="defaultData"
     >
-      <RiskList v-for="item in riskList" class="riskList" :item="item" ></RiskList>
+      <RiskList v-for="(item,index) in riskList" class="riskList" :item="item" :key="index" @click.native="goRiskInfo(item)" ></RiskList>
     </PullUpRefresh>
     <!--<group v-for="item in searchList">
       <div class="header">
@@ -168,7 +169,21 @@
         }
     },
     mounted(){
+      this.deleteRiskList();
+      this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:-1});
       this.getRisk();
+      console.log('我是路由');
+      console.log(this.$router);
+    },
+    watch:{
+      '$route' (to, from) {
+
+        alert(`${to}***${from}`)
+
+        const toDepth = to.path.split('/').length
+        const fromDepth = from.path.split('/').length
+
+      }
     },
     computed: {
       ...mapState({
@@ -190,18 +205,21 @@
       ]),
       changeTab(status){
         this.deleteRiskList();
-        this.saveDefaultData({RiskStatus:status});
+        this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:status});
         this.getRisk();
       },
       pullDown(){
-        this.saveDefaultData({page:1,rows:10});
+        this.deleteRiskList();
+        this.saveDefaultData({pageIndex:1,pageSize:10});
         this.getRisk();
       },
       pullUp(){
-        this.deleteRiskList();
-        this.saveDefaultData({page:this.defaultData.page+=1,rows:10});
+        this.saveDefaultData({pageIndex:this.defaultData.pageIndex+=1,pageSize:10});
         this.getRisk();
       },
+      goRiskInfo(item){
+        this.$router.push({name:'riskInfo',params:{id:item.ID,add:1,editStatus:1}})
+      }
     }
   }
 </script>
@@ -212,8 +230,11 @@
   #audit{height: 100%;display: flex;flex-direction: column;}
   #audit .header {height: 45px;width: 100%;text-align: center;border-bottom: 2px solid #33CC99; }
     #audit .header p {color: #333;line-height: 45px;font-size: 18px; }
+  .riskList:first-child{
+    padding-top: 0px;
+  }
   .riskList{
-    margin-top: 10px;
+    padding-top: 10px;
   }
   #audit .content { margin: 16px 15px 16px 15px; display: flex; align-items: center; }
     .content img { width: 24px; height: 24px; margin-right: 6px; }

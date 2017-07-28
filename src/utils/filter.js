@@ -100,7 +100,7 @@ Vue.component('no-data',{
         }
     },
     created:function(){
-      console.log(typeof(this.load));
+    //   console.log(typeof(this.load));
     },
     methods:{
         say:function(){

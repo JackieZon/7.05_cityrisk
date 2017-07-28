@@ -63,7 +63,7 @@ export default {
     ]
   },
   {
-    path: '/Index/Home/RiskAdd',
+    path: '/Index/Home/RiskAdd/:id',
     name: 'riskAdd',
     component: RiskAdd,
     children: [
@@ -96,7 +96,8 @@ export default {
   },
   {
     // editStatus == 0; 0仅查看信息，1带撤销和编辑，2带审核按钮
-    path: '/Index/RiskList/RiskInfo/:id/:add/:editStatus',
+    // /:add/:editStatus
+    path: '/Index/RiskList/RiskInfo/:id',
     name: 'riskInfo',
     component: RiskInfo
   },
@@ -111,12 +112,12 @@ export default {
     component: EvaluationList
   },
   {
-    path: "/Index/RiskList/RiskInfo/EvaluationList/evaluationInfo",
+    path: "/Index/RiskList/RiskInfo/EvaluationList/evaluationInfo/:infoId",
     name: "evaluationInfo",
     component: EvaluationInfo
   },
   {
-    path: "/Index/RiskList/addEvaluation",
+    path: "/Index/RiskList/addEvaluation/:id",
     name: "addEvaluation",
     component: AddEvaluation
   },

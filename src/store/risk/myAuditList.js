@@ -14,9 +14,9 @@ const actions = {
 
     // getRisk: ({state,commit}) => {
 
-    //     getRisk(state.getAuditListData).then((res) => {
+    //     getRisk(state.getAuditListData).then((data) => {
     //         // console.log(JSON.stringify(res))
-    //         commit("setAuditList",res)
+    //         commit("setAuditList",data.info)
     //         // alert(JSON.stringify(state.auditList))
     //     })
 
@@ -35,15 +35,6 @@ const mutations = {
 }
 
 const getters = {
-
-    pendingAudit: state => {
-        return state.auditList.filter( res => res.RiskStatus == 1 || res.RiskStatus == 0 )
-    },
-
-    Audited: state => {
-        return state.auditList.filter( res => res.RiskStatus == 2 || res.RiskStatus == 3 )
-    }
-
 }
 
 export default {

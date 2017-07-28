@@ -1,6 +1,8 @@
 import { updateRiskStatusAudit } from './../../servers/api'
 
-const state = {}
+const state = {
+    
+}
 
 const mutations = {}
 

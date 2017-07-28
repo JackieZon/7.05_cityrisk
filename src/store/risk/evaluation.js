@@ -3,9 +3,12 @@ const state = {
 
     evaluatioList: [],
     riskAssessList: [],
-    defaultRiskAssess:{
+    defaultData:{
         "RiskID": 0,
         // "RiskAssessStatus": 0,
+        pageIndex: 1 ,
+        pageSize: 10,
+        total: 0,
     },
     riskAssessData: {
         "ListRiskAssessDetail": [
@@ -28,12 +31,12 @@ const state = {
             //     "RiskAssessDetailScore": 0
             // }
         ],
-        "ID": 1053,
+        "ID": 0,
         "RiskID": 1022,
         "RiskAgencyID": 0,
         "RiskAssessIntro": "",
         "RiskAssessTypeIDs": "string",
-        "RiskAssessTypeNames": "string",
+        "RiskAssessTypeNames": "",
         "RiskAssessLv": 0,
         "RiskAssessScore": 0,
         "RiskAssessMan": 0,
@@ -48,9 +51,15 @@ const state = {
     ExposedDegree: {},
     AccidentPossibility: {},
     riskTypeValue: '',
+    openEvaluationList: false
 
 }
 const mutations = {
+
+    saveID: (state, payload) => {
+        state.riskAssessData.RiskID = payload;
+        // state.riskAssessData.ListRiskAssessDetail.RiskID = payload;
+    },
 
     saveEvaluatioList: (state, payload) => {
         state.evaluatioList.push(payload)
@@ -71,6 +80,7 @@ const mutations = {
 
     pushAssessDetails: (state, payload) => {
         state.riskAssessData.ListRiskAssessDetail.push(payload);
+        state.riskAssessData.RiskAssessTypeNames += payload.RiskAssessTypeName + " "
     },
 
     deleteAssessDetails: (state, payload) => {
@@ -82,16 +92,17 @@ const mutations = {
     saveAssesss: (state, payload) => {
         state.riskAssessData.RiskAssessIntro = payload.RiskAssessIntro;
     },
-    saveDefaultRiskAssess: (state, payload)=>{
-        console.log(payload);
-        state.defaultRiskAssess = {...state.defaultRiskAssess, ...payload}
+    saveDefaultData: (state, payload)=>{
+        // console.log(payload);
+        state.defaultData = {...state.defaultData, ...payload}
     },
-    saveRiskAssessList(state, paylaod){
-        if(paylaod.type==0){
+    saveRiskAssessList(state, payload){
+
+        if(payload.type==0){
             state.riskAssessList = [];
-            state.riskAssessList = state.riskAssessList.concat(paylaod.res);
-        }else if(paylaod.type==1){
-            state.riskAssessList = state.riskAssessList.concat(paylaod.res);
+            state.riskAssessList = state.riskAssessList.concat(payload.res);
+        }else if(payload.type==1){
+            state.riskAssessList = state.riskAssessList.concat(payload.res);
         }
         
     },
@@ -104,11 +115,11 @@ const actions = {
     //获取基础数据
     getRiskBaseType: ({ commit, dispatch, getters, state }) => {
 
-        getRiskBaseType().then((res) => {
-            const AccidentPossibility = res.filter(item => item.BaseTypeNo == 'RiskAssessL')
-            const ExposedDegree = res.filter(item => item.BaseTypeNo == 'RiskAssessE')
-            const AccidentConsequence = res.filter(item => item.BaseTypeNo == 'RiskAssessC')
-            const RiskType = res.filter(item => item.BaseTypeNo == 'RiskAssessType')
+        getRiskBaseType().then((data) => {
+            const AccidentPossibility = data.info.filter(item => item.BaseTypeNo == 'RiskAssessL')
+            const ExposedDegree = data.info.filter(item => item.BaseTypeNo == 'RiskAssessE')
+            const AccidentConsequence = data.info.filter(item => item.BaseTypeNo == 'RiskAssessC')
+            const RiskType = data.info.filter(item => item.BaseTypeNo == 'RiskAssessType')
 
             commit('saveAccidentPossibility', AccidentPossibility);
             commit('saveExposedDegree', ExposedDegree);
@@ -120,14 +131,22 @@ const actions = {
 
     postRiskAdds({ commit, state }) {
         // console.log(JSON.stringify(state.riskAssessData))
-        postRiskAssessAdd(state.riskAssessData).then((res) => {
-            console.log(JSON.stringify(res))
+        postRiskAssessAdd(state.riskAssessData).then((data) => {
+            if(data.all.status){
+                state.openEvaluationList = true
+            }
+            console.log(JSON.stringify(data))
         })
     },
 
     getRiskAssess({commit, state},payload){
-        getRiskAssess(state.defaultRiskAssess).then((res)=>{
-            commit('saveRiskAssessList',{res:res,type: payload.type,});
+        getRiskAssess(state.defaultData).then((data)=>{
+
+            console.log(`我是评估列表${payload.type}`);
+            console.log(JSON.stringify(data));
+            
+            commit('saveDefaultData',{total:data.all.total});
+            commit('saveRiskAssessList',{res:data.info,type: payload.type,});
         })
     }
 

@@ -13,14 +13,14 @@
 
             <group>
                 <swipeout>
-                    <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskAssessDetail">
+                    <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskAssessDetail" :key="index">
                         <div slot="right-menu">
                             <swipeout-button @click.native="oepnAssess('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
                             <swipeout-button @click.native="oepnAssess('delete',index)" type="warn">{{'删除'}}</swipeout-button>
                         </div>
                         <div slot="content" class="demo-content vux-1px-t">
                             <cell :title="item.RiskAssessTypeName" :inline-desc="`等级:${status[item.RiskAssessDetailLv]}  分值:${item.RiskAssessDetailScore}`">
-                                <img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../assets/icon/assess-icon.svg">
+                                <Icon slot="icon" class="flexBox" :name="'assess-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
                             </cell>
                         </div>
                     </swipeout-item>
@@ -249,13 +249,13 @@
                     this.clearData();
                     this.evaluation = false;
                 } else {
-                    this.openConfirm({
-                        state: true, msg: '您确定要新增吗？', control: () => {
+                    // this.openConfirm({
+                    //     state: true, msg: '您确定要新增吗？', control: () => {
                             this.pushAssessDetails(assessUpData);
                             this.clearData();
                             this.evaluation = false;
-                        }
-                    })
+                    //     }
+                    // })
                 }
 
 
@@ -309,7 +309,19 @@
                     this.showToast({ toastState: true, toastValue: '请填写评估描述！' });
                     return;
                 }
-                this.postRiskAdds();
+
+                 this.openConfirm({
+                        state: true, msg: '您确定要提交吗？', control: () => {
+                         this.postRiskAdds();
+                        //  alert(this.$store.state.evaluation.openEvaluationList)
+                        setTimeout(() => {
+                            if(this.$store.state.evaluation.openEvaluationList){
+                             this.$router.push({ name: 'evaluationList' });
+                         }
+                        },1000)
+                            
+                        }
+                    })
             }
         },
 
@@ -320,6 +332,7 @@
 
         created() {
             this.$store.dispatch("getRiskBaseType")
+            this.$store.commit("saveID",this.$route.params.id)
         },
 
         computed: {
