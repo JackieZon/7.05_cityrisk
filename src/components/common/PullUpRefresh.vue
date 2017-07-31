@@ -12,8 +12,8 @@
 		>
 			<div class="listItem" style="height:100%;">
                 <slot>
-					<no-data :item='item' :load="pullDown"></no-data>
                 </slot>
+				<no-data :item='item' :load="isPullDown"></no-data>
 				<div v-if="defaults.total!==item.length&&defaults.total>item.length&&item.length!==0" style="display:flex;justify-content: center;align-items: center;margin:10px 0;"><spinner type="crescent" style="margin-right:10px;"></spinner>加载中...</div>
 			</div>
 			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
@@ -111,7 +111,7 @@
 					setTimeout(() => {
 						
 						if(this.default.total==this.item.length){
-							this.showToast({toastState:true,toastValue:'亲，已经到底了'});
+							this.showToast({toastState:true,toastValue:`亲，已经到底了`});
 						}
 						if(typeof(this.pullUp) == 'function'){
 							this.pullUp();
@@ -123,6 +123,15 @@
 				}
 
 			},
+			isPullDown(){
+				this.updateLoadingStatus({isLoading:true});
+				if(typeof(this.pullDown)=='function'){
+					this.pullDown();
+				}
+				setTimeout(()=>{
+					this.updateLoadingStatus({isLoading:false});
+				},1000)
+			}
         }
     }
 

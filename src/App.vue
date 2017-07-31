@@ -4,7 +4,7 @@
       <router-view></router-view>
     </transition>
     <loading v-model="isLoading"></loading>
-    <toast v-model="toastState" type="text" width="15em" :time="1500" is-show-mask :text="toastValue" position="middle">{{ toastValue }}</toast>     
+    <toast v-model="toastState" type="text" width="15em" :time="1500" class="toast" is-show-mask :text="toastValue" position="middle">{{ toastValue }}</toast>     
     <confirm v-model="confirmState"
         :title="'温馨提示'"
         @on-confirm="isConfirm"
@@ -77,6 +77,9 @@ html,body{
   #app{
     width:100%;
     height:100%;
+    .toast{
+        z-index: 999;
+    }
   }
 }
 body {
@@ -95,6 +98,12 @@ body {
   justify-content: center;
   align-items: center;
   padding-right: 10px;
+}
+.flexLeft{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
 }
 .vux-header .vux-header-left .left-arrow:before{
     content: "";

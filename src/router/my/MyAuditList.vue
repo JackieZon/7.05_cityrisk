@@ -1,12 +1,20 @@
 <template>
   <div id="myAudit">
-    <Heads :title="'审核'"></Heads>
-    <tab :line-width=2 active-color='#33CC99'>
-      <tab-item selected @on-item-click="Audited">已审核</tab-item>
-      <tab-item @on-item-click="pendingAudit">待审核</tab-item>
-    </tab>
-    <group v-for="(item,index) in searchList" :key="index">
-      <div v-on:click=" goPage('riskInfo', item, 0)">
+    <div class="upper">
+      <Heads :title="'审核'"></Heads>
+      <tab :line-width=2 active-color='#33CC99'>
+        <tab-item selected @on-item-click="changeTab(1)">待审核</tab-item>
+        <tab-item  @on-item-click="changeTab(3)">已审核</tab-item>
+        <tab-item @on-item-click="changeTab(2)">已退回</tab-item>
+      </tab>
+    </div>
+    <PullUpRefresh 
+      :pullDown="pullDown" 
+      :pullUp="pullUp" 
+      :item="searchList" 
+      :default="defaultData"
+    >
+      <div v-for="(item,index) in searchList" class="padd-top" :key="index" v-on:click=" goPage('riskInfo', item, 0)">
         <div class="content title">
           <p>{{ item.RiskAreaName1 + item.RiskAreaName2 + item.RiskAreaName3 + item.RiskAreaName4 + item.RiskName }}</p>
         </div>
@@ -29,13 +37,15 @@
           <p v-for="items in riskStatus" v-bind:style="items.style" v-if="items.state === item.RiskStatus">{{ items.value }}</p>
         </div>
       </div>
-    </group>
+
+    </PullUpRefresh>
   </div>
 </template>
 <script>
   import Heads from './../../components/Heads.vue'
   import { Group, XButton, Tab, TabItem, Popup, Selector, Radio, XTextarea } from "vux"
-  import {mapMutations, mapState, mapActions} from 'vuex'
+  import PullUpRefresh from './../../components/common/PullUpRefresh.vue'
+  import { mapMutations, mapState, mapActions } from 'vuex'
   export default {
     components: {
       Group,
@@ -46,7 +56,8 @@
       Popup,
       Selector,
       Radio,
-      XTextarea
+      XTextarea,
+      PullUpRefresh
     },
     data() {
       return {
@@ -56,52 +67,76 @@
           { "state": 2, "value": "审核退回", 'style': { 'color': "#ff3b3b" } },
           { "state": 3, "value": "审核通过", 'style': { 'color': "#33CC99" } }
         ],
-        searchList: []
+        // searchList: []
       }
     },
-    created() {
+    mounted() {
 
-      this.$store.commit("saveDefaultData",{pageIndex: 1 ,pageSize: 1000,});
-      
-      this.$store.dispatch("getRisk");
-
-      // alert(JSON.stringify(this.searchList))
-
+      // console.log(JSON.stringify(`我是数据呀${this.searchList}`))
+      this.deleteAuditList();
+      this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10, RiskStatus: -1 });
+      // this.getRisks();
+      this.changeTab(1)
     },
-    watch:{
-      riskList(val,oldVal){
 
-        console.log(`我改变了${JSON.stringify(val)}`)
-        this.Audited();
-        
+    //created() {
+
+    //this.$store.commit("saveMyAuditListDefaultData", { pageIndex: 1, pageSize: 1000, });
+
+    //      this.$store.dispatch("getRisks");
+
+    // alert(JSON.stringify(this.searchList))
+
+    //  },
+    watch: {
+      searchList(val, oldVal) {
+
+        // console.log(`我改变了${JSON.stringify(val)}`)
+        // this.Audited();
+
+      },
+      defaultData() {
+        // console.log(`我是默认数据${JSON.stringify(this.defaultData)}`)
       }
     },
-    computed:{
+    computed: {
       ...mapState({
-        riskList(state){
-          return state.riskList.riskList;
+        searchList(state) {
+          return state.myAuditList.auditList;
+        },
+        defaultData(state) {
+          return state.myAuditList.defaultData
         }
       })
     },
     methods: {
+      ...mapMutations([
+        'saveMyAuditListDefaultData',
+        'deleteAuditList'
+      ]),
+      ...mapActions([
+        'getRisks'
+      ]),
 
-      pendingAudit() { //未审核状态
-        this.searchList = [];
-
-        const list = this.riskList.filter( res => res.RiskStatus == 1 )
-        this.searchList = list
+      changeTab(status) {
+        this.deleteAuditList();
+        this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10, RiskStatus: status });
+        this.getRisks();
       },
-
-      Audited() { //已审核状态
-        this.searchList = [];
-        const list = this.riskList.filter( res => res.RiskStatus == 2 || res.RiskStatus == 3 );
-        this.searchList = list;
+      pullDown() {
+        this.deleteAuditList();
+        this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10 });
+        this.getRisks();
+      },
+      pullUp() {
+        this.saveMyAuditListDefaultData({ pageIndex: this.defaultData.pageIndex += 1, pageSize: 10 });
+        this.getRisks();
       },
 
 
       goPage(name, item, addOperation) {
         console.log(name);
-				this.$router.push({name:name,params:{id:item.ID,add:addOperation,editStatus:2}});
+        this.$router.push({ name: name, params: { id: item.ID, add: addOperation, editStatus: 2 } });
       }
 
     }
@@ -110,50 +145,59 @@
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .vux-tab .vux-tab-item.vux-tab-selected {
     color: #33CC99 !important;
   }
-  
+
   .vux-tab-ink-bar {
     background-color: #33CC99 !important;
   }
-  
+
   #myAudit {
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .header {
+      height: 35px;
+      width: 100%;
+      text-align: center;
+      background-color: #33CC99;
+    }
+
+    .padd-top {
+      padding-top: 15px;
+    }
   }
-  
-  #myAudit .header {
-    height: 35px;
-    width: 100%;
-    text-align: center;
-    background-color: #33CC99;
+
+  .weui-cells {
+    margin: 0!important;
   }
-  
+
   #myAudit .header p {
     color: white;
     line-height: 35px;
     font-size: 18px;
   }
-  
+
   #myAudit .content {
     padding: 10px 15px;
     display: flex;
     align-items: center;
   }
-  
+
   .content img {
     width: 24px;
     height: 24px;
     margin-right: 6px;
   }
-  
+
   .content span {
     font-size: 16px;
     display: inline-block;
     margin-left: 5px;
   }
-  
+
   .content p {
     font-size: 16px;
     display: inline-block;
@@ -164,7 +208,7 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
-  
+
   .content.title {
     display: flex;
     justify-content: center;

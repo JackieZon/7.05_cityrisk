@@ -10,14 +10,17 @@
                 </div>
             </div>
         </div>
-        <div class="map" style="flex:1" v-show="mapShow">
-            <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="mapShow=true">
+        <div class="map" style="flex:1">
+            <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="readyMap">
             
                 <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
                 <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-                <bm-panorama></bm-panorama>
 
                 <bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
+                    <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
+                </bm-marker>
+
+                <bm-marker @click="markerIn" :position="{lng: 116.4017, lat: 40.225964}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
                 </bm-marker>
 
@@ -54,7 +57,7 @@
             return {
                 availHeight:window.screen.availHeight,
                 zoom: 10,
-                center: {lng: 116.404, lat: 39.915},
+                center: {lng: 116.4017, lat: 40.225964},
                 mapShow:false
             }
         },
@@ -75,6 +78,17 @@
             },
             goPage(name){
                 this.$router.push({name:name})
+            },
+            readyMap({BMap, map}){
+                console.log('百度地图示例数据');
+                console.log(BMap);
+                console.log(map);
+
+                map.addEventListener("moveend", function(e){
+                    console.log(e);
+                    console.log(`${map.getCenter().lng}***${map.getCenter().lat}`);
+                });
+
             }
         }
     }
@@ -114,9 +128,6 @@
                 align-items: center;
                 justify-content: center;
             }
-        }
-        .map-heads{
-            height: 132px;
         }
     }
     .weui-search-bar__cancel-btn{

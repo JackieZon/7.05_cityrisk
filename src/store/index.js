@@ -15,6 +15,7 @@ export const store = new Vuex.Store({
   state:{
     regExp,
     isLoading: false,
+    areaData:[],
     toast:{
       toastState: false,
       toastValue: '',
@@ -23,7 +24,7 @@ export const store = new Vuex.Store({
       state: false,
       msg:'我是提醒消息',
       control:()=>{}
-    }
+    },
   },
   actions: {
     hideToast(context){
@@ -34,6 +35,8 @@ export const store = new Vuex.Store({
       },1500);
     },
     showToast({commit,dispatch,getters,state},payload){
+      payload.state=true;
+      console.log(payload);
       commit('upToastMag',payload);
       dispatch('hideToast');
     },

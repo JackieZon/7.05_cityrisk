@@ -25,11 +25,8 @@ const BasicInfoD = resolve => require(['./router/risk/add/BasicInfoD.vue'], reso
 const EvaluationList = resolve => require(['./router/riskList/evaluationList.vue'], resolve)
 const EvaluationInfo = resolve => require(['./router/riskList/evaluationInfo.vue'], resolve)
 const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue'], resolve)
-
-
-// RiskList
-// const 
-
+const GetLngLat = resolve => require(['./components/common/GetLngLat.vue'], resolve)
+const MyAssessAuditList = resolve => require(['./router/my/MyAssessAuditList.vue'], resolve)
 export default {
   routes: [{
     path: '/',
@@ -63,7 +60,7 @@ export default {
     ]
   },
   {
-    path: '/Index/Home/RiskAdd/:id',
+    path: '/Index/Home/RiskAdd/',
     name: 'riskAdd',
     component: RiskAdd,
     children: [
@@ -146,6 +143,11 @@ export default {
     name: 'myAuditInfo',
     component: MyAuditInfo
   },
+   {
+    path: '/Index/My/MyAssessAuditList',
+    name: 'myAssessAuditList',
+    component: MyAssessAuditList
+  },
   {
     path: '/Index/My/AuditInfo',
     name: 'auditInfo',
@@ -167,6 +169,11 @@ export default {
         component: Alarm
       }
     ]
+  },
+  {
+    path: "/Map/Map/Map/Map",
+    name: "getLngLat",
+    component: GetLngLat
   }
   ]
 }

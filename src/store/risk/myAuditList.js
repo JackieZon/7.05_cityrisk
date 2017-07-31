@@ -5,6 +5,13 @@ const state = {
         'userID': 1,
         'RiskStatus': -1
     },
+    defaultData:{
+        RiskName: "",
+        RiskStatus: -1,
+        pageIndex: 1 ,
+        pageSize: 10,
+        total: 0,
+    },
 
     auditList:[]
 
@@ -21,15 +28,34 @@ const actions = {
     //     })
 
     // }
+     getRisks({commit,dispatch,getters,state}){
+
+        // console.log(JSON.stringify(state.defaultData));
+
+        getRisk(state.defaultData).then((data)=>{
+            
+            // console.log(data.info);
+            commit('saveMyAuditListDefaultData',{total: data.all.total})
+            commit('setAuditList',data.info);
+
+        });
+    }
 
 }
 
 const mutations = {
 
     setAuditList (state,payload) {
+state.auditList.push(...payload);
 
-        state.auditList = payload
+    },
 
+    saveMyAuditListDefaultData(state, payload){
+        state.defaultData = {...state.defaultData,...payload}
+    },
+
+    deleteAuditList(state, payload){
+        state.auditList = [];
     }
 
 }

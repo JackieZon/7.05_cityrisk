@@ -68,6 +68,7 @@
       position: absolute;
       right: 15px; 
       top: 10px;
+      width: 65px;
       p{line-height: 22px;}
     }
     p { 

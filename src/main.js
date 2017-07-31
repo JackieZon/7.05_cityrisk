@@ -8,7 +8,7 @@ import {store} from './../src/store/index'
 import './../config/components.config'
 import './assets/css/animate.css'
 import BaiduMap from 'vue-baidu-map'
-import './utils/filter'
+import './utils/filter.js'
 
 Vue.use(ToastPlugin)
 

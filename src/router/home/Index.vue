@@ -41,6 +41,7 @@
         data(){
             return {
                 swiperIndex: 1,
+                riskLists:[],
                 swiperList:[{
                     url: 'javascript:',
                     img: 'http://wx-cityrisk.subei88.com/Upload/banner.jpg',
