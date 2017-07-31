@@ -14,13 +14,13 @@
         <div class="map">
             <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="readyMap">
             
-                <!--<bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
+                <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
                 <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
 
-                <bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
+                <!--<bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
                 </bm-marker>-->
-
+    
                 <bm-marker @click="markerIn" :position="{lng: 116.4017, lat: 40.225964}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
                 </bm-marker>
@@ -159,6 +159,7 @@
         button{
             background: #33CC99;
             color: #fff;
+            font-size: 16px;
             &:active{
                 background: #22bb88!important;
                 color:#fff;

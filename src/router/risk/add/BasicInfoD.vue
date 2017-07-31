@@ -25,7 +25,7 @@
                     :title="'省市区'" 
                     v-model="addressValue" 
                     raw-value 
-                    :list="addressData" 
+                    :list="areaData" 
                     value-text-align="left"
                 ></x-address>
 
@@ -67,7 +67,7 @@
         },
         data(){
             return {
-                addressValue: ['广东省', '深圳市', '南山区'],
+                addressValue: [],
                 addressData: ChinaAddressV3Data,
                 basicInfoDPopup: false,
                 confirmShow: false,
@@ -80,24 +80,39 @@
                     "RiskRegulatoryArea1":"",
                     "RiskRegulatoryArea2":"",
                     "RiskRegulatoryArea3":"",
+                    "RiskRegulatoryArea4":"",
+                    "RiskRegulatoryArea5":"",
                     "RiskRegulatoryAddress":"",
                 }
             }
         },
         computed:{
             ...mapState({
-                ListRiskRegulatory: state => state.tiskAdd.postRiskAdd.ListRiskRegulatory
-            })
+                ListRiskRegulatory: state => state.tiskAdd.postRiskAdd.ListRiskRegulatory,
+                areaData: state => state.areaData
+            }),
         },
         watch:{
             addressValue(val){
-                let addres = value2name(val, ChinaAddressV3Data).split(' ');
+
+                let addres = value2name(val, this.areaData).split(' ');
                 
                 console.log(addres);
 
-                this.defaultRegulatory.RiskRegulatoryArea1 = addres[0];
-                this.defaultRegulatory.RiskRegulatoryArea2 = addres[1];
-                this.defaultRegulatory.RiskRegulatoryArea3 = addres[2];
+                let defaults = this.defaultRegulatory;
+
+                defaults.RiskRegulatoryAreaName1 = addres[0];
+                defaults.RiskRegulatoryAreaName2 = addres[1];
+                defaults.RiskRegulatoryAreaName3 = addres[2];
+                defaults.RiskRegulatoryAreaName4 = addres[3];
+                defaults.RiskRegulatoryAreaName5 = addres[4];
+                
+                defaults.RiskRegulatoryArea1 = val[0];
+                defaults.RiskRegulatoryArea2 = val[1];
+                defaults.RiskRegulatoryArea3 = val[2];
+                defaults.RiskRegulatoryArea4 = val[3];
+                defaults.RiskRegulatoryArea5 = val[4];
+
             }
         },
         methods:{
@@ -121,6 +136,8 @@
                 // this.defaultRegulatory.RiskRegulatoryArea1 = '';
                 // this.defaultRegulatory.RiskRegulatoryArea2 = '';
                 // this.defaultRegulatory.RiskRegulatoryArea3 = '';
+                // this.defaultRegulatory.RiskRegulatoryArea4 = '';
+                // this.defaultRegulatory.RiskRegulatoryArea5 = '';
                 this.defaultRegulatory.RiskRegulatoryAddress = '';
                 // this.addressValue = [];
             },
@@ -139,9 +156,11 @@
                         "RiskRegulatoryArea1":this.ListRiskRegulatory[index].RiskRegulatoryArea1,
                         "RiskRegulatoryArea2":this.ListRiskRegulatory[index].RiskRegulatoryArea2,
                         "RiskRegulatoryArea3":this.ListRiskRegulatory[index].RiskRegulatoryArea3,
+                        "RiskRegulatoryArea4":this.ListRiskRegulatory[index].RiskRegulatoryArea4,
+                        "RiskRegulatoryArea5":this.ListRiskRegulatory[index].RiskRegulatoryArea5,
                         "RiskRegulatoryAddress":this.ListRiskRegulatory[index].RiskRegulatoryAddress,
                     };
-                    this.addressValue = [this.ListRiskRegulatory[index].RiskRegulatoryArea1, this.ListRiskRegulatory[index].RiskRegulatoryArea2, this.ListRiskRegulatory[index].RiskRegulatoryArea3];
+                    this.addressValue = [this.ListRiskRegulatory[index].RiskRegulatoryArea1, this.ListRiskRegulatory[index].RiskRegulatoryArea2, this.ListRiskRegulatory[index].RiskRegulatoryArea3, this.ListRiskRegulatory[index].RiskRegulatoryArea4,, this.ListRiskRegulatory[index].RiskRegulatoryArea5];
                     this.basicInfoDPopup = true;
                 }else if(type=='close'){
                     this.clearData();
@@ -189,6 +208,8 @@
                     "RiskRegulatoryArea1":regulatory.RiskRegulatoryArea1,
                     "RiskRegulatoryArea2":regulatory.RiskRegulatoryArea2,
                     "RiskRegulatoryArea3":regulatory.RiskRegulatoryArea3,
+                    "RiskRegulatoryArea4":regulatory.RiskRegulatoryArea4,
+                    "RiskRegulatoryArea5":regulatory.RiskRegulatoryArea5,
                     "RiskRegulatoryAddress":regulatory.RiskRegulatoryAddress,
                 }
 
@@ -229,5 +250,25 @@
             background:#fff;
             overflow: hidden;
         }
+        .vux-cell-primary{
+            overflow: hidden;
+        }
+        .vux-popup-picker-value{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            overflow: hidden;
+            display: block;
+        }
+    }
+    .weui-cells{
+        margin-top: 10px!important;
+    }
+    .vux-cell-bd.vux-cell-primary{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+        
     }
 </style>

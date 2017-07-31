@@ -2,7 +2,7 @@
     <div id="basicInfoB">
         <div class="enter">
             <div class="enterInfo">
-                <x-input title="等级/分值" :disabled="true" value="(待设置) / (待设置)" placeholder="风险等级"></x-input>
+                <x-input title="等级/分值" :disabled="true" :value="countTotal.grade?`( ${countTotal.grade} ) / ( ${countTotal.score} )`:'请先添加评估'" placeholder="风险等级"></x-input>
 
                 <x-textarea title="风险描述" 
                     placeholder="风险描述" 
@@ -10,7 +10,7 @@
                     :value="riskIntro"
                     @on-change="changeRiskIntro"
                 ></x-textarea>
-
+                
                 <group class="group">
                     <swipeout>
                         <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskAssessDetail" :key="index">
@@ -249,18 +249,24 @@
                     this.$router.push({name:'basicInfoA'});
                     return;
                 }
-                if(!postRiskAdd.RiskArea2){
-                    this.showToast({toastState:true,toastValue:'请选择省市区！'});
-                    this.$router.push({name:'basicInfoA'});
-                    return;
-                }
-                if(!postRiskAdd.RiskArea3){
-                    this.showToast({toastState:true,toastValue:'请选择省市区！'});
-                    this.$router.push({name:'basicInfoA'});
-                    return;
-                }
+                // if(!postRiskAdd.RiskArea2){
+                //     this.showToast({toastState:true,toastValue:'请选择省市区！'});
+                //     this.$router.push({name:'basicInfoA'});
+                //     return;
+                // }
+                // if(!postRiskAdd.RiskArea3){
+                //     this.showToast({toastState:true,toastValue:'请选择省市区！'});
+                //     this.$router.push({name:'basicInfoA'});
+                //     return;
+                // }
                 if(!postRiskAdd.RiskAddress){
                     this.showToast({toastState:true,toastValue:'请填写详细地址！'});
+                    this.$router.push({name:'basicInfoA'});
+                    return;
+                }
+
+                if(!postRiskAdd.RiskLng){
+                    this.showToast({toastState:true,toastValue:'请填选择经纬度！'});
                     this.$router.push({name:'basicInfoA'});
                     return;
                 }
@@ -314,6 +320,7 @@
                 if(type=='open'){
                     this.assess = true;
                 }else if(type=='edit'){
+                    console.log(this.ListRiskAssessDetail[index]);
 
                     this.defalutAssess.RiskAssessTypeID = this.ListRiskAssessDetail[index].RiskAssessTypeID;
                     this.defalutAssess.RiskAssessTypeName = this.ListRiskAssessDetail[index].RiskAssessTypeName;
@@ -384,6 +391,7 @@
                 console.log(assessUpData);
 
                 if(this.assessType=='edit'){
+
                     this.editAssessDetail({
                         index:this.assessIndex,
                         list:assessUpData
@@ -499,6 +507,37 @@
                 this.defalutAssess.RiskAssessDetailLv = state;
 
                 return this.defalutAssess.RiskAssessLScore * this.defalutAssess.RiskAssessEScore * this.defalutAssess.RiskAssessCScore;
+            },
+            countTotal(){
+                if(JSON.stringify(this.ListRiskAssessDetail)!=='[]'){
+
+                    let list = this.ListRiskAssessDetail;
+                    let scoreArr = [];
+                    for(let val in this.ListRiskAssessDetail){
+                        scoreArr.push(this.ListRiskAssessDetail[val].RiskAssessDetailScore)
+                    }
+                    console.log(scoreArr)
+                    const countVal = scoreArr.sort()[0];
+
+                    let status = ['极高','高','中等','低','可忽略'];
+                    let state;
+                    if(countVal<=70){
+                        state = 4;
+                    }else if(countVal>=70 && countVal<150){
+                        state = 3;
+                    }else if(countVal>=150 && countVal<240){
+                        state = 2;
+                    }else if(countVal>=240 && countVal<720){
+                        state = 1;
+                    }else if(countVal>=720){
+                        state = 0;
+                    }
+
+                    return {grade:status[state],score: countVal };
+                }else{
+                    return {grade:'',score: '' }
+                }
+                
             }
         },
     }

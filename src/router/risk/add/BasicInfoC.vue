@@ -26,7 +26,7 @@
                     :title="'省市区'" 
                     v-model="addressValue" 
                     raw-value 
-                    :list="addressData" 
+                    :list="areaData" 
                     value-text-align="left"
                 ></x-address>
 
@@ -68,8 +68,7 @@
         },
         data(){
             return {
-                addressValue: ['广东省', '深圳市', '福田区'],
-                addressData: ChinaAddressV3Data,
+                addressValue: [],
                 basicInfoCPopup: false,
                 confirmShow: false,
                 defaultDutyIndex:'',
@@ -77,24 +76,46 @@
                     "RiskDutyName":'',        // 责任主体名称
                     "RiskDutyContactMan":'',  // 责任主体联系人
                     "RiskDutyContactTel":'',  // 责任主体电话
+                    'RiskDutyAreaName1':'',
+                    'RiskDutyAreaName2':'',
+                    'RiskDutyAreaName3':'',
+                    'RiskDutyAreaName4':'',
+                    'RiskDutyAreaName5':'',
                     "RiskDutyArea1":'',
                     "RiskDutyArea2":'',
                     "RiskDutyArea3":'',
-                    "RiskDutyAddress":''
+                    'RiskDutyArea4':'',
+                    'RiskDutyArea5':'',
+                    "RiskDutyAddress":'',
                 },
             }
         },
         watch:{
             addressValue(val){
-                let addres = value2name(val, ChinaAddressV3Data).split(' ');
-                this.defaultDuty.RiskDutyArea1 = addres[0];
-                this.defaultDuty.RiskDutyArea2 = addres[1];
-                this.defaultDuty.RiskDutyArea3 = addres[2];
+
+                console.log(val);
+
+                let addres = value2name(val, this.areaData).split(' ');
+                let defaults = this.defaultDuty;
+
+                defaults.RiskDutyAreaName1 = addres[0];
+                defaults.RiskDutyAreaName2 = addres[1];
+                defaults.RiskDutyAreaName3 = addres[2];
+                defaults.RiskDutyAreaName4 = addres[3];
+                defaults.RiskDutyAreaName5 = addres[4];
+                
+                defaults.RiskDutyArea1 = val[0];
+                defaults.RiskDutyArea2 = val[1];
+                defaults.RiskDutyArea3 = val[2];
+                defaults.RiskDutyArea4 = val[3];
+                defaults.RiskDutyArea5 = val[4];
+
             }
         },
         computed:{
             ...mapState({
-                ListRiskDuty: state => state.tiskAdd.postRiskAdd.ListRiskDuty
+                ListRiskDuty: state => state.tiskAdd.postRiskAdd.ListRiskDuty,
+                areaData: state => state.areaData
             })
         },
         methods:{
@@ -128,6 +149,8 @@
                     this.basicInfoCPopup = true;
                 }else if(type=='edit'){
 
+                    console.log(this.ListRiskDuty[index]);
+
                     this.defaultDutyIndex = index;
                     this.defaultDuty = {
                         "RiskDutyName":this.ListRiskDuty[index].RiskDutyName,
@@ -136,10 +159,13 @@
                         "RiskDutyArea1":this.ListRiskDuty[index].RiskDutyArea1,
                         "RiskDutyArea2":this.ListRiskDuty[index].RiskDutyArea2,
                         "RiskDutyArea3":this.ListRiskDuty[index].RiskDutyArea3,
+                        "RiskDutyArea4":this.ListRiskDuty[index].RiskDutyArea4,
+                        "RiskDutyArea5":this.ListRiskDuty[index].RiskDutyArea5,
                         "RiskDutyAddress":this.ListRiskDuty[index].RiskDutyAddress,
                     };
-                    this.addressValue = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3];
+                    this.addressValue = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3,this.defaultDuty.RiskDutyArea4,this.defaultDuty.RiskDutyArea5];
                     this.basicInfoCPopup = true;
+
                 }else if(type=='close'){
                     this.clearData();
                     this.basicInfoCPopup = false;
@@ -186,6 +212,8 @@
                     "RiskDutyArea1":this.defaultDuty.RiskDutyArea1,
                     "RiskDutyArea2":this.defaultDuty.RiskDutyArea2,
                     "RiskDutyArea3":this.defaultDuty.RiskDutyArea3,
+                    "RiskDutyArea4":this.defaultDuty.RiskDutyArea4,
+                    "RiskDutyArea5":this.defaultDuty.RiskDutyArea5,
                     "RiskDutyAddress":this.defaultDuty.RiskDutyAddress,
                 }
 

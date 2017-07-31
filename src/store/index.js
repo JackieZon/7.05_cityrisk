@@ -8,6 +8,7 @@ import evaluation from "./risk/evaluation"
 import myAuditInfo from "./risk/myAuditInfo"
 import myAuditList from "./risk/myAuditList"
 import {getArea} from './../servers/api'
+import {countAreas} from './../utils/areas'
 
 Vue.use(Vuex);
 
@@ -42,9 +43,8 @@ export const store = new Vuex.Store({
     },
     getArea({commit,dispatch,getters,state}){
       getArea().then((data)=>{
-        console.log('得到省市区地址*********************************************************');
-        console.log(data.info);
-        commit('saveArea',data.info);
+        const allAreas = countAreas(data.info);
+        commit('saveArea',allAreas);
       })
     }
     // http://wx-cityrisk.subei88.com:8080/api/Area

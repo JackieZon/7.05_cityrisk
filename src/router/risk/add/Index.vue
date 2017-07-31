@@ -1,5 +1,5 @@
 <template>
-    <div class="addrisk">
+    <div id="addrisk">
         <Heads :noBack="true" :goBack="'home'" :title="'新增风险源'"></Heads>
         <tab :line-width=2 active-color='#33CC99' v-model="index">
             <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
@@ -51,7 +51,7 @@
     }
 </script>
 <style lang="less" scoped>
-    .addrisk{
+    #addrisk{
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -60,6 +60,11 @@
             .vux-swiper{
                 height: 100%!important;
             }
+        }
+        .vux-center{
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
     .weui-label{

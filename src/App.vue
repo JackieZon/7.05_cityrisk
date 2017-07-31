@@ -3,9 +3,9 @@
     <transition v-bind:enter-active-class="animated +' '+'animated'">
       <router-view></router-view>
     </transition>
-    <loading v-model="isLoading"></loading>
-    <toast v-model="toastState" type="text" width="15em" :time="1500" class="toast" is-show-mask :text="toastValue" position="middle">{{ toastValue }}</toast>     
-    <confirm v-model="confirmState"
+    <loading v-model="isLoadingStatus"></loading>
+    <toast v-model="toastStateState" type="text" width="15em" :time="1500" class="toast" is-show-mask :text="toastValue" position="middle">{{ toastValue }}</toast>     
+    <confirm v-model="confirmStateState"
         :title="'温馨提示'"
         @on-confirm="isConfirm"
         @on-cancel="openConfirm({state: false})">
@@ -23,6 +23,9 @@ export default {
   data(){
     return {
       animated: 'fadeInRight',
+      isLoadingStatus:false,
+      confirmStateState: false,
+      toastStateState:false,
     }
   },
   components:{
@@ -30,7 +33,7 @@ export default {
     Toast,
     Confirm
   },
-  created(){
+  mounted(){
   },
   computed: {
     ...mapState({
@@ -51,6 +54,15 @@ export default {
       }else{
         this.animated = toDepth < fromDepth ? 'fadeInLeft' : 'fadeInRight';
       }
+    },
+    isLoading(){
+      this.isLoadingStatus = this.isLoading;
+    },
+    confirmState(){
+      this.confirmStateState = this.confirmState;
+    },
+    toastState(){
+      this.toastStateState = this.toastState;
     }
   },
   methods:{
