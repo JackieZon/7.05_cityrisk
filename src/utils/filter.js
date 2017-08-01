@@ -74,7 +74,7 @@ Vue.component('no-data',{
               console.log('come in!');
             },
             style:{
-                background: 'url("http://app-forklift.subei88.com/Upload/conmonImg/no-data.png") 50% 28% no-repeat',
+                background: 'url("http://wx-cityrisk.subei88.com/Upload/no-data.png") 50% 28% no-repeat',
                 backgroundSize: '35%',
                 display: 'flex',
                 justifyContent: 'center',
@@ -85,7 +85,7 @@ Vue.component('no-data',{
                 width:'100%',
                 height:screen.availHeight * 0.65 + 'px',
             },
-            imgSrc:'http://app-forklift.subei88.com/Upload/conmonImg/refresh-icon.png',
+            imgSrc:'http://wx-cityrisk.subei88.com/Upload/refresh-icon.png',
             imgStyle:{width:'28px',height:'28px'},
             refresh:{
               width:'100%',

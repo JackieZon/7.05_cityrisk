@@ -10,10 +10,13 @@
         <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 : {{ item.RiskName | s_toStr}}</p>
         <p><Icon class="Icon" :name="'address'" style="color:#33CC99" />地址 : {{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</p>
       </div>
-      <div>
-        <p style="float: left;">{{ item.RiskAddDate | s_toDate}}</p>
-        <p style="float: right;">纬度: {{ item.RiskLng | s_toStr }}</p>
-        <p style="float: right;margin-right:10px;">经度: {{ item.RiskLat | s_toStr }}</p>
+      <div class="dateFot">
+
+        <p class="date">{{ item.RiskAddDate | s_toDate}}</p>
+        <div class="lngAndlat">
+          <div class="lng">经纬度: {{ item.RiskLng | s_toStr }}/{{ item.RiskLat | s_toStr }}</div>
+        </div>
+        
       </div>
     </group>
   </div>
@@ -42,11 +45,26 @@
     box-sizing: border-box;
 
     .weui-cells{
-      padding: 10px 15px;
+      padding: 10px;
       background: #fff!important;
       margin:0px!important;
     }
 
+    .dateFot{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .date{
+        font-size:10px!important;
+      }
+      .lngAndlat{
+        float: right;
+        .lng{
+          font-size:12px!important;
+        }
+      }
+
+    }
     .Icon{
       margin-right: 5px;
     }

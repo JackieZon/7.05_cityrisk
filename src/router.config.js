@@ -6,6 +6,7 @@ const Index = resolve => require(['./router/index/Index.vue'], resolve)
 const RiskList = resolve => require(['./router/riskList/Index.vue'], resolve)
 const RiskInfo = resolve => require(['./router/riskList/RiskInfo.vue'], resolve)
 const RiskDanger = resolve => require(['./router/riskList/RiskDanger.vue'], resolve)
+const RiskDangerList = resolve => require(['./router/riskList/RiskDangerList.vue'],resolve)
 const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo = resolve => require(['./router/my/MyInfo.vue'], resolve)
 const AuditList = resolve => require(['./router/my/AuditList.vue'], resolve)
@@ -27,6 +28,7 @@ const EvaluationInfo = resolve => require(['./router/riskList/evaluationInfo.vue
 const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue'], resolve)
 const GetLngLat = resolve => require(['./components/common/GetLngLat.vue'], resolve)
 const MyAssessAuditList = resolve => require(['./router/my/MyAssessAuditList.vue'], resolve)
+const MyAssessAuditInfo = resolve => require(['./router/my/MyAssessAuditInfo.vue'], resolve)
 export default {
   routes: [{
     path: '/',
@@ -99,9 +101,14 @@ export default {
     component: RiskInfo
   },
   {
-    path: '/Index/RiskList/RiskInfo/RiskDanger/:id',
+    path: '/Index/RiskList/RiskInfo/RiskDangerList/RiskDanger/:id',
     name: 'riskDanger',
     component: RiskDanger
+  },
+  {
+    path: '/Index/RiskList/RiskInfo/RiskDangerList/:id',
+    name: 'riskDangerList',
+    component: RiskDangerList
   },
   {
     path: "/Index/RiskList/RiskInfo/EvaluationList/:id",
@@ -147,6 +154,11 @@ export default {
     path: '/Index/My/MyAssessAuditList',
     name: 'myAssessAuditList',
     component: MyAssessAuditList
+  },
+  {
+    path: '/Index/My/MyAssessAuditInfo',
+    name: 'myAssessAuditInfo',
+    component: MyAssessAuditInfo
   },
   {
     path: '/Index/My/AuditInfo',

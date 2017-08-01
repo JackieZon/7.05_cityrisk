@@ -8,7 +8,7 @@
                         <swipeout-button @click.native="oepnRegulatory('delete',index)" type="warn">{{'删除'}}</swipeout-button>
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
-                        <cell :title="item.RiskRegulatoryName" :inline-desc="item.RiskRegulatoryArea1+item.RiskRegulatoryArea2+item.RiskRegulatoryArea3+item.RiskRegulatoryAddress">
+                        <cell :title="item.RiskRegulatoryName" :inline-desc="  `${item.RiskRegulatoryAreaName1} ${item.RiskRegulatoryAreaName2} ${item.RiskRegulatoryAreaName3} ${item.RiskRegulatoryAreaName4} ${item.RiskRegulatoryAreaName5}`">
                             <Icon slot="icon" class="flexBox" :name="'my-team'" :width="'35'" :height="'35'" style="color:#33CC99"/>
                         </cell>
                     </div>
@@ -148,7 +148,7 @@
                 if(type=='open'){
                     this.basicInfoDPopup = true;
                 }else if(type=='edit'){
-
+                    console.log(this.ListRiskRegulatory[index]);
                     this.defaultRegulatory = {
                         "RiskRegulatoryContactMan":this.ListRiskRegulatory[index].RiskRegulatoryContactMan,
                         "RiskRegulatoryName":this.ListRiskRegulatory[index].RiskRegulatoryName,
@@ -160,7 +160,21 @@
                         "RiskRegulatoryArea5":this.ListRiskRegulatory[index].RiskRegulatoryArea5,
                         "RiskRegulatoryAddress":this.ListRiskRegulatory[index].RiskRegulatoryAddress,
                     };
-                    this.addressValue = [this.ListRiskRegulatory[index].RiskRegulatoryArea1, this.ListRiskRegulatory[index].RiskRegulatoryArea2, this.ListRiskRegulatory[index].RiskRegulatoryArea3, this.ListRiskRegulatory[index].RiskRegulatoryArea4,, this.ListRiskRegulatory[index].RiskRegulatoryArea5];
+                    
+                    let allAreas = [this.ListRiskRegulatory[index].RiskRegulatoryArea1, this.ListRiskRegulatory[index].RiskRegulatoryArea2, this.ListRiskRegulatory[index].RiskRegulatoryArea3, this.ListRiskRegulatory[index].RiskRegulatoryArea4,, this.ListRiskRegulatory[index].RiskRegulatoryArea5];
+                    let addressValues;
+                    if(typeof(this.ListRiskRegulatory[index].RiskRegulatoryArea1)=='number'){
+                        addressValues = allAreas.map((val)=>{
+                            return String(val);
+                        })
+                    }else{
+                        addressValues = allAreas;
+                    }
+
+                    this.addressValue = addressValues;
+                    
+
+                    
                     this.basicInfoDPopup = true;
                 }else if(type=='close'){
                     this.clearData();
@@ -210,6 +224,13 @@
                     "RiskRegulatoryArea3":regulatory.RiskRegulatoryArea3,
                     "RiskRegulatoryArea4":regulatory.RiskRegulatoryArea4,
                     "RiskRegulatoryArea5":regulatory.RiskRegulatoryArea5,
+
+                    "RiskRegulatoryAreaName1":regulatory.RiskRegulatoryAreaName1,
+                    "RiskRegulatoryAreaName2":regulatory.RiskRegulatoryAreaName2,
+                    "RiskRegulatoryAreaName3":regulatory.RiskRegulatoryAreaName3,
+                    "RiskRegulatoryAreaName4":regulatory.RiskRegulatoryAreaName4,
+                    "RiskRegulatoryAreaName5":regulatory.RiskRegulatoryAreaName5,
+
                     "RiskRegulatoryAddress":regulatory.RiskRegulatoryAddress,
                 }
 

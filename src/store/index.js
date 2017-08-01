@@ -7,6 +7,8 @@ import riskInfo from './map/riskInfo'
 import evaluation from "./risk/evaluation"
 import myAuditInfo from "./risk/myAuditInfo"
 import myAuditList from "./risk/myAuditList"
+import myAssessAuditList from "./my/myAssessAuditList"
+import riskDangerList from './risk/riskDangerList'
 import {getArea} from './../servers/api'
 import {countAreas} from './../utils/areas'
 
@@ -69,6 +71,8 @@ export const store = new Vuex.Store({
     riskList,
     riskInfo,
     myAuditInfo,
-    myAuditList
+    myAuditList,
+    myAssessAuditList,
+    riskDangerList,
   }
 });

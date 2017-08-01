@@ -27,7 +27,7 @@
         </group>
         <group>
             <cell is-link title="风险审核" @click.native="goPages('myAuditList')"></cell>
-            <cell is-link title="评估审核" @click.native="goPages('myAuditList')"></cell>
+            <cell is-link title="评估审核" @click.native="goPages('myAssessAuditList')"></cell>
             <cell is-link title="隐患审核" @click.native="goPages('myAuditList')"></cell>
         </group>
     </div>

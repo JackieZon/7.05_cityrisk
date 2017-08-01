@@ -8,7 +8,7 @@
                         <swipeout-button @click.native="oepnRiskDuty('delete',index)" type="warn">{{'删除'}}</swipeout-button>
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
-                        <cell :title="item.RiskDutyName" :inline-desc="item.RiskDutyArea1+item.RiskDutyArea2+item.RiskDutyArea3+item.RiskDutyAddress">
+                        <cell :title="item.RiskDutyName" :inline-desc="`${item.RiskDutyAreaName1} ${item.RiskDutyAreaName2} ${item.RiskDutyAreaName3} ${item.RiskDutyAreaName4} ${item.RiskDutyAreaName5}`">
                             <Icon slot="icon" class="flexBox" :name="'trust-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
                         </cell>
                     </div>
@@ -163,14 +163,24 @@
                         "RiskDutyArea5":this.ListRiskDuty[index].RiskDutyArea5,
                         "RiskDutyAddress":this.ListRiskDuty[index].RiskDutyAddress,
                     };
-                    this.addressValue = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3,this.defaultDuty.RiskDutyArea4,this.defaultDuty.RiskDutyArea5];
+
+                    let allAreas = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3,this.defaultDuty.RiskDutyArea4,this.defaultDuty.RiskDutyArea5];
+                    let addressValues;
+                    if(typeof(this.defaultDuty.RiskDutyArea1)=='number'){
+                        addressValues = allAreas.map((val)=>{
+                            return String(val);
+                        })
+                    }else{
+                        addressValues = allAreas;
+                    }
+
+                    this.addressValue = addressValues;
                     this.basicInfoCPopup = true;
 
                 }else if(type=='close'){
                     this.clearData();
                     this.basicInfoCPopup = false;
                 }else if(type=='delete'){
-
                     this.openConfirm({state:true,msg:'确定要删除吗？',control: ()=>{
                         this.deleteListRiskDuty({index: index});
                     }});
@@ -214,6 +224,13 @@
                     "RiskDutyArea3":this.defaultDuty.RiskDutyArea3,
                     "RiskDutyArea4":this.defaultDuty.RiskDutyArea4,
                     "RiskDutyArea5":this.defaultDuty.RiskDutyArea5,
+
+                    "RiskDutyAreaName1":this.defaultDuty.RiskDutyAreaName1,
+                    "RiskDutyAreaName2":this.defaultDuty.RiskDutyAreaName2,
+                    "RiskDutyAreaName3":this.defaultDuty.RiskDutyAreaName3,
+                    "RiskDutyAreaName4":this.defaultDuty.RiskDutyAreaName4,
+                    "RiskDutyAreaName5":this.defaultDuty.RiskDutyAreaName5,
+
                     "RiskDutyAddress":this.defaultDuty.RiskDutyAddress,
                 }
 

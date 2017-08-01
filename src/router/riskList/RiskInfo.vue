@@ -52,9 +52,16 @@
                     <p class="p_center">
                         <Icon slot="icon" class="icon" :name="'auditor'" style="color:#33CC99" />审核人: {{riskInfo.ListRiskAssess[0].RiskAssessAuditManName | s_toStr}}</p>
                     <p style="float: right; margin-top: -31px;">审核状态: {{RiskAssessStatusName[riskInfo.ListRiskAssess[0].RiskAssessStatus]}}</p>
-
+                    <div style="clear: both;"></div>
                 </div>
             </div>
+        </div>
+        
+        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
+            <div class="title">风险隐患<span class="more" @click="goPage('riskDangerList',{id:250})"> 查看全部</span></div>
+            
+            <HidDanger />
+
         </div>
 
         <div v-if="riskInfo.RiskStatus == 1 || riskInfo.RiskStatus == 0" style="width: 100%;height: 60px;"></div>
@@ -73,24 +80,26 @@
             </popup>
         </div>
 
-        <flexbox :style="{'display':($route.params.editStatus==0?'none':(riskInfo.RiskStatus==3?'none':''))}">
-            <flexbox-item>
+        <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
+        <div class="review" v-if="JSON.stringify(menuStatus)!=='[]'">
+            <div>
                 <x-button @click.native="editMenuStatus = true;">{{menuStatus[0]}}</x-button>
                 <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
-            </flexbox-item>
+            </div>
             <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
                 <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
             </flexbox-item>-->
-        </flexbox>
-
-        <div v-transfer-dom>
-            <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
         </div>
+
+        <!--<div v-transfer-dom>
+            <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
+        </div>-->
 
     </div>
 </template>
 <script>
     import Heads from './../../components/Heads.vue'
+    import HidDanger from './../../components/common/HidDanger.vue'
     import { TransferDom,Actionsheet, Tab, TabItem, Sticky, Divider, XButton, Flexbox, FlexboxItem, Radio, Swiper, SwiperItem, XInput, Selector, Group, Popup, XTextarea } from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
     const list = () => ['基本信息', '评估信息', '责任主体', '监管机构']
@@ -116,7 +125,8 @@
             Flexbox,
             FlexboxItem,
             Radio,
-            Actionsheet
+            Actionsheet,
+            HidDanger,
         },
         watch: {
             status(val, oldVal) {
@@ -153,13 +163,15 @@
                 this.menuStatus = menuStatus;
                 this.editMenu = menuStatus;
 
+                console.log(`我是风险的状态${this.riskInfo.RiskStatus}***这是我的状态${menuStatus}`);
+                
+
             }
         },
         mounted() {
 
             this.getRiskInfo(this.$route.params.id);
-            // console.log(this.$route.params);
-            console.log(`我是风险的状态${this.riskInfo.RiskStatus}`);
+            console.log(this.$route.params);
         },
         data() {
             return {
@@ -194,6 +206,12 @@
                 'openConfirm',
                 'editRisk'
             ]),
+            goPage(name,param){
+                console.log(param);
+                
+                this.$router.push({name:name});
+
+            },
             openEvaluationInfo(ID) {
                 this.$router.push({ name: 'evaluationInfo',params:{infoId:this.riskInfo.ListRiskAssess[0].ID} });
             },
@@ -290,6 +308,10 @@
     #riskInfo {
         background: #f1f1f1;
         box-sizing: border-box;
+        .review{
+            padding: 10px;
+            background:#fff;
+        }
         .displayFlex {
             display: flex;
             justify-content: center;
@@ -324,7 +346,7 @@
             position: absolute;
             right: 15px;
             font-size: 14px;
-            color: #A9A9A9;
+            color: #666;
         }
         .BasicInfoA {
             margin-top: 15px;

@@ -14,10 +14,10 @@
         <div class="map">
             <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="readyMap">
             
-                <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
+                <!--<bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
                 <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
 
-                <!--<bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
+                <bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
                 </bm-marker>-->
     
@@ -56,9 +56,8 @@
         props:['callback'],
         data(){
             return {
-                availHeight:window.screen.availHeight,
-                zoom: 16,
-                center: {lng: 114.024772, lat: 22.546697},
+                zoom: 15,
+                center: {lng: 0, lat: 0},
                 mapShow:false,
                 nowLngLat:{},
                 msg:'',
@@ -87,11 +86,9 @@
             },
             readyMap({BMap, map}){
 
-                setTimeout(()=>{
-                    this.center.lng = 114.024773
-                    this.center.lat = 22.546698
-                },1000)
-                
+                this.center.lng = 114.024773;
+                this.center.lat = 22.546698;
+
                 map.addEventListener("moveend", (e)=>{
 
                     this.nowLngLat = {lng:map.getCenter().lng, lat:map.getCenter().lat};
@@ -100,6 +97,7 @@
 
                     geocoder.getLocation(point,(data)=>{
                         this.msg=data.address;
+                        console.log(`我是详细地址${this.msg}`);
                     });
 
                 });

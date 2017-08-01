@@ -88,13 +88,30 @@
         watch:{
             addressValue(val){
                 
+                console.log(`我的地址改变了${typeof(val[0])}`);
+
                 let addres = value2name(val, this.areaData).split(' ');
 
                 console.log(addres);
 
-                this.upRiskAdd({RiskArea1: val[0],RiskArea2: val[1],RiskArea3: val[2],RiskArea4: val[3],RiskArea5: val[4],RiskAreaIDsArray:val});
+                this.upRiskAdd({
 
-            }
+                    RiskArea1: val[0],
+                    RiskArea2: val[1],
+                    RiskArea3: val[2],
+                    RiskArea4: val[3],
+                    RiskArea5: val[4],
+
+                    RiskAreaIDsArray: val,
+                    RiskAreaName1: addres[0],
+                    RiskAreaName2: addres[1],
+                    RiskAreaName3: addres[2],
+                    RiskAreaName4: addres[3],
+                    RiskAreaName5: addres[4],
+
+                });
+
+            },
         },
         mounted(){
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
@@ -107,7 +124,10 @@
             if(postRiskAdd.RiskCategory){
                 this.riskTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskCategory;
             }
-            this.addressValue = postRiskAdd.RiskAreaIDsArray;
+            let addressValues = postRiskAdd.RiskAreaIDsArray.map((val)=>{
+                return String(val);
+            });
+            this.addressValue = addressValues;
         },
         computed: {
             ...mapState({

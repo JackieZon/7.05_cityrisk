@@ -90,3 +90,23 @@ export const updateRiskStatusRecall = async (param) => {
   const data = await axiosApi(`${param_baseUrl}UpdateRiskStatus_Recall?ID=${param}`,'post');
   return data;
 }
+
+// 获取隐患列表
+// http://wx-cityrisk.subei88.com:8080/api/RiskHidden
+
+export const getRiskHidden = async (param) => {
+
+  const data = await axiosApi(`${param_baseUrl}RiskHidden?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+  return data;
+
+}
+
+// 获取隐患详情
+// http://wx-cityrisk.subei88.com:8080/api/RiskHiddenInfo
+
+export const getRiskHiddenInfo = async (param) => {
+
+  const data = await axiosApi(`${param_baseUrl}RiskHiddenInfo`,'post',param);
+  return data;
+
+}

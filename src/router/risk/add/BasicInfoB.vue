@@ -2,7 +2,7 @@
     <div id="basicInfoB">
         <div class="enter">
             <div class="enterInfo">
-                <x-input title="等级/分值" :disabled="true" :value="countTotal.grade?`( ${countTotal.grade} ) / ( ${countTotal.score} )`:'请先添加评估'" placeholder="风险等级"></x-input>
+                <x-input title="等级分值:" :disabled="true" :value="scoreData.RiskAssessScore?`( ${scoreData.RiskAssessLvName} ) / ( ${scoreData.RiskAssessScore} )`:'请先添加评估'" placeholder="风险等级"></x-input>
 
                 <x-textarea title="风险描述" 
                     placeholder="风险描述" 
@@ -124,6 +124,7 @@
                 assessType: '',
                 assessIndex:'',
                 riskIntro:'',
+                scoreData:{},
                 status:['极高','高','中等','低','可忽略'],
                 RiskAssessDetailLv:'',
                 defalutAssess:{
@@ -154,7 +155,11 @@
         // RiskAssessC
         // RiskAssessType
 
-        watch:{},
+        watch:{
+            // countTotal(val){
+            //     this.upRiskAdd({RiskLv:val.RiskLv, RiskScore:val.score });
+            // }
+        },
         methods:{
             ...mapMutations([
                 'openConfirm',
@@ -164,12 +169,41 @@
                 'editAssessDetail',
                 'saveAssess',
                 'updateLoadingStatus',
+                'upAssessData'
             ]),
 
             ...mapActions([
                 'showToast',
                 'postRiskAdd'
             ]),
+
+            getScore(){
+                let list = this.ListRiskAssessDetail;
+                let scoreArr = [];
+                for(let val in this.ListRiskAssessDetail){
+                    scoreArr.push(this.ListRiskAssessDetail[val].RiskAssessDetailScore)
+                }
+                console.log(scoreArr)
+                
+
+                const countVal = scoreArr.sort(function(a,b){return a<b?1:-1})[0];
+
+                let status = ['极高','高','中等','低','可忽略'];
+                let state;
+                if(countVal<=70){
+                    state = 4;
+                }else if(countVal>=70 && countVal<150){
+                    state = 3;
+                }else if(countVal>=150 && countVal<240){
+                    state = 2;
+                }else if(countVal>=240 && countVal<720){
+                    state = 1;
+                }else if(countVal>=720){
+                    state = 0;
+                }
+                return {RiskAssessLv: state,RiskAssessScore: countVal, RiskAssessLvName: status[state]}
+            },
+
 
             RiskAssessTypeChoose(val){
                 for(let key in this.RiskAssessType){
@@ -222,7 +256,9 @@
             },
             upDataRiskAdd(type){
 
-                this.upRiskAdd({RiskStatus:type})
+                console.log(this.$store.state.tiskAdd.postRiskAdd);
+
+                this.upRiskAdd({RiskStatus:type});
 
                 const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
                 const ListRiskDuty = this.$store.state.tiskAdd.postRiskAdd.ListRiskDuty; //责任主体
@@ -398,11 +434,19 @@
                     });
                     this.clearData();
                     this.assess = false;
+                    const score = this.getScore();
+                    this.scoreData = score;
+                    this.upAssessData({RiskAssessLv:score.RiskAssessLv ,RiskAssessScore:score.RiskAssessScore, RiskAssessLvName:score.RiskAssessLvName });
+
                 }else{
                     this.pushAssessDetail(assessUpData);
                     this.clearData();
                     this.assess = false;
                 }
+                
+                const score = this.getScore();
+                this.scoreData = score;
+                this.upAssessData({RiskAssessLv:score.RiskAssessLv ,RiskAssessScore:score.RiskAssessScore, RiskAssessLvName:score.RiskAssessLvName });
 
             },
         },
@@ -410,6 +454,11 @@
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
             this.riskIntro = postRiskAdd.ListRiskAssess[0].RiskAssessIntro;
             // console.log(JSON.stringify(postRiskAdd));
+            
+            const score = this.getScore();
+            this.scoreData = score;
+            this.upAssessData({RiskAssessLv:score.RiskAssessLv ,RiskAssessScore:score.RiskAssessScore, RiskAssessLvName:score.RiskAssessLvName });
+            
         },
         computed: {
             ...mapState({
@@ -479,6 +528,21 @@
                 ListRiskAssessDetail(state){
                     const ListRiskAssessDetail = state.tiskAdd.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail;
                     return ListRiskAssessDetail;
+                },
+                getListRiskAssess(state){
+                    const getListRiskAssess = state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessLvName;
+                    const RiskAssessLv = state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessLv;
+                    const RiskAssessScore = state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessScore;
+                    return {getListRiskAssess,RiskAssessLv,RiskAssessScore}
+                },
+                RiskAssessLv(state){
+                    return state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessLv;
+                },
+                RiskAssessScore(state){
+                    return state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessScore;
+                },
+                RiskAssessLvName(state){
+                    return state.tiskAdd.postRiskAdd.ListRiskAssess[0].RiskAssessLvName;
                 }
             }),
             nuwData(){
@@ -510,17 +574,19 @@
             },
             countTotal(){
                 if(JSON.stringify(this.ListRiskAssessDetail)!=='[]'){
-
+                    let assessLength = this.ListRiskAssessDetail.length;
                     let list = this.ListRiskAssessDetail;
                     let scoreArr = [];
                     for(let val in this.ListRiskAssessDetail){
                         scoreArr.push(this.ListRiskAssessDetail[val].RiskAssessDetailScore)
                     }
                     console.log(scoreArr)
-                    const countVal = scoreArr.sort()[0];
+                    
+                    const countVal = scoreArr.sort(function(a,b){return a<b?1:-1})[0];
 
                     let status = ['极高','高','中等','低','可忽略'];
                     let state;
+
                     if(countVal<=70){
                         state = 4;
                     }else if(countVal>=70 && countVal<150){
@@ -532,11 +598,13 @@
                     }else if(countVal>=720){
                         state = 0;
                     }
+                    this.upAssessData({RiskAssessLv:state ,RiskAssessScore:countVal, RiskAssessLvName: status[state] });
 
-                    return {grade:status[state],score: countVal };
+                    return { RiskAssessLvName:status[state], RiskAssessLv:state, RiskAssessScore: countVal };
                 }else{
                     return {grade:'',score: '' }
                 }
+                
                 
             }
         },

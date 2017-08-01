@@ -21,7 +21,7 @@
 			ref="scrollerRef"
 		>
 			<div class="listItem" style="height:100%;">
-				<RiskList v-for="(item,index) in riskList" :key="index" class="riskList" :item="item" @click.native="goPage('riskInfo',item,1)"></RiskList>
+				<RiskList v-for="(item,index) in riskList" :key="item.ID" :dataId="item.ID" class="riskList" :item="item" @click.native="goPage('riskInfo',item,1)"></RiskList>
 				<div v-show="false" style="display:flex;justify-content: center;align-items: center;margin:10px 0;"><spinner type="crescent" style="margin-right:10px;"></spinner>加载中...</div>
 			</div>
 			<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">

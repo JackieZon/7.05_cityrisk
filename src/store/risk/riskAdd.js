@@ -62,6 +62,7 @@ const state = {
             "RiskAssessTypeNames": "",
             "RiskAssessLv": 0,
             "RiskAssessScore": 0,
+            "RiskAssessLvName":'',
             "RiskAssessManID": 0,
             "RiskAssessManName": "",
             "RiskAssessManNameTel": "",
@@ -178,7 +179,7 @@ const actions = {
                 text: (state.postRiskAdd.RiskStatus==0?'保存成功':'提交成功'),
                 type: 'success',
                 onHide(){
-                    $router.push({name:'riskList'})
+                    $router.push({name:'auditList'})
                 }
             });
 
@@ -234,9 +235,14 @@ const mutations = {
     },
     editAssessDetail: (state, payload)=>{
         state.postRiskAdd.ListRiskAssess[0].ListRiskAssessDetail[payload.index] = payload.list;
-	},
+    },
 	saveAssess: (state, payload)=>{
 		state.postRiskAdd.ListRiskAssess[0].RiskAssessIntro = payload.RiskAssessIntro;
+    },
+    upAssessData: (state, payload)=>{
+        state.postRiskAdd.ListRiskAssess[0].RiskAssessLv = payload.RiskAssessLv;
+        state.postRiskAdd.ListRiskAssess[0].RiskAssessScore = payload.RiskAssessScore;
+        state.postRiskAdd.ListRiskAssess[0].RiskAssessLvName = payload.RiskAssessLvName;
     },
     
     // 用户编辑风险

@@ -67,6 +67,7 @@
 				}
 			},
 			item(val,vals){
+				console.log(val.length);
 				if(val.length<vals.length){
 					this.$nextTick(() => {
 						this.$refs.scrollerRef.reset({
