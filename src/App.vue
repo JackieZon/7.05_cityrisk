@@ -8,7 +8,8 @@
     <confirm v-model="confirmStateState"
         :title="'温馨提示'"
         @on-confirm="isConfirm"
-        @on-cancel="openConfirm({state: false})">
+        @on-cancel="openConfirm({state: false})"
+    >
             <p style="text-align:center;">{{ confirmMsg }}</p>
     </confirm>
   </div>
@@ -141,5 +142,12 @@ body {
 .weui-search-bar__cancel-btn{
   color:#33CC99!important;
 }
-
+.footerBox{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 15px;
+    background: #fff;
+}
 </style>

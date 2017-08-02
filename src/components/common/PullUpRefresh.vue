@@ -68,15 +68,16 @@
 			},
 			item(val,vals){
 				console.log(val.length);
-				if(val.length<vals.length){
-					this.$nextTick(() => {
-						this.$refs.scrollerRef.reset({
-							top: 0
-						})
-					})
-				}else{
+				
+				// if(val.length<vals.length){
+				// 	this.$nextTick(() => {
+				// 		this.$refs.scrollerRef.reset({
+				// 			top: 0
+				// 		})
+				// 	})
+				// }else{
 					this.$nextTick(() => {this.$refs.scrollerRef.reset()});
-				}
+				// }
 				
 			},
 			default(){
@@ -104,7 +105,7 @@
 				if (this.onFetching) {
 					// do nothing
 				} else {
-					// console.log('下一页');
+					console.log(`下一页${this.default.total}***${this.item.length}`);
 					if(this.default.total>this.item.length){
 						this.updateLoadingStatus({isLoading:true});
 					}

@@ -23,7 +23,9 @@
         </card>
         <group>
             <cell is-link title="我的资料" @click.native="goPages('myInfo')"></cell>
-            <cell is-link title="审核列表" @click.native="goPages('auditList')"></cell>
+            <cell is-link title="风险列表" @click.native="goPages('auditList')"></cell>
+            <!--<cell is-link title="隐患列表" @click.native="goPages('riskDangerList')"></cell>
+            <cell is-link title="隐患整改列表" @click.native="goPages('auditList')"></cell>-->
         </group>
         <group>
             <cell is-link title="风险审核" @click.native="goPages('myAuditList')"></cell>

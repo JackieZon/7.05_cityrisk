@@ -4,13 +4,17 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import routerConfig from './router.config'
+import BaiduMap from 'vue-baidu-map'
 import {store} from './../src/store/index'
 import './../config/components.config'
 import './assets/css/animate.css'
-import BaiduMap from 'vue-baidu-map'
 import './utils/filter.js'
+import {wxInit} from './utils/weixin'
 
-Vue.use(ToastPlugin)
+//微信api初始化
+// wxInit();
+
+Vue.use(ToastPlugin);
 
 // requires and returns all modules that match 
 const requireAll = requireContext => requireContext.keys().map(requireContext);

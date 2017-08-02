@@ -1,7 +1,7 @@
 <template>
     <div id="riskDangerList">
         <div class="upper">
-            <Heads :title="'隐患列表'"></Heads>
+            <Heads :title="'隐患列表'" :isRiskDangerAdd="true"></Heads>
             <tab :line-width=2 active-color='#33CC99'>
                 <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
                 <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
@@ -116,7 +116,8 @@
                 this.getRiskHidden();
             },
             goInfo(item){
-                this.$router.push({ name: 'riskDanger',params:{id: item.ID} });
+                console.log(this.$route.params);
+                this.$router.push({ name: 'riskDanger',params:{id: item.ID, riskId: this.$route.params.id} });
             }
         }
     }

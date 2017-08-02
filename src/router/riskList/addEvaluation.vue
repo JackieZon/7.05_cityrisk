@@ -7,70 +7,67 @@
             <x-input title="联系电话" :disabled="true" value="15070713710（系统默认值）" placeholder="联系电话"></x-input>
             <x-input title="评估时间" :disabled="true" :value="nuwData" placeholder="评估时间"></x-input>-->
 
-            <x-input title="等级/分值" :disabled="true" value="(待设置) / (待设置)" placeholder="风险等级"></x-input>
-
-            <x-textarea title="风险描述" placeholder="风险描述" :show-counter="false" :value="riskIntro" @on-change="changeRiskIntro"></x-textarea>
-
+            <x-input title="等级/分值" :disabled="true" :value="`${status[formInfo.RiskAssessLv]}/${formInfo.RiskAssessScore}`" placeholder="风险等级"></x-input>
+            <x-textarea title="评估描述" placeholder="评估描述" :show-counter="false" v-model="formInfo.RiskAssessIntro"></x-textarea>
             <group>
                 <swipeout>
-                    <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskAssessDetail" :key="index">
+                    <swipeout-item transition-mode="follow" v-for="(item,index) in formInfo.ListRiskAssessDetail" :key="index">
                         <div slot="right-menu">
-                            <swipeout-button @click.native="oepnAssess('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
-                            <swipeout-button @click.native="oepnAssess('delete',index)" type="warn">{{'删除'}}</swipeout-button>
+                            <swipeout-button @click.native="oepnAssess('edit',index,item)" type="primary">{{'编辑'}}</swipeout-button>
+                            <swipeout-button @click.native="oepnAssess('delete',index,item)" type="warn">{{'删除'}}</swipeout-button>
                         </div>
                         <div slot="content" class="demo-content vux-1px-t">
                             <cell :title="item.RiskAssessTypeName" :inline-desc="`等级:${status[item.RiskAssessDetailLv]}  分值:${item.RiskAssessDetailScore}`">
-                                <Icon slot="icon" class="flexBox" :name="'assess-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
+                                <Icon slot="icon" class="flexBox" :name="'assess-icon'" :width="'40'" :height="'40'" style="color:#33CC99" />
                             </cell>
                         </div>
                     </swipeout-item>
                 </swipeout>
             </group>
-            <!--<group class="group">
-                    <swipeout>
-                        <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskAssessDetail">
-                            <div slot="right-menu">
-                                <swipeout-button @click.native="oepnAssess('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
-                                <swipeout-button @click.native="oepnAssess('delete',index)" type="warn">{{'删除'}}</swipeout-button>
-                            </div>
-                            <div slot="content" class="demo-content vux-1px-t">
-                                <cell :title="item.RiskAssessTypeName" :inline-desc="`等级:${status[item.RiskAssessDetailLv]}  分值:${item.RiskAssessDetailScore}`">
-                                    <img slot="icon" width="40" style="display:block;margin-right:10px;" src="./../../../assets/icon/assess-icon.svg">
-                                </cell>
-                            </div>
-                        </swipeout-item>
-                    </swipeout>
-                </group>-->
             <div class="next">
-                <load-more v-if="JSON.stringify(ListRiskAssessDetail)=='[]'" :show-loading="false" :tip="'暂无评估'" background-color="#fbf9fe"></load-more>
+                <load-more v-if="formInfo.ListRiskAssessDetail.length == 0" :show-loading="false" :tip="'暂无评估'" background-color="#fbf9fe"></load-more>
             </div>
 
-            <div class="next">
-                <x-button @click.native="evaluation = true">增加</x-button>
-                <x-button @click.native="upDataRiskAdd">提交评估</x-button>
-            </div>
 
-            <popup v-model="evaluation" :hide-on-blur="false">
+            <popup v-model="ShowEditDetial" :hide-on-blur="false">
                 <div class="evaluation">
-                    <selector title="评估类型" :options="RiskAssessType" v-model="defalutAssess.RiskAssessTypeID" @on-change="RiskAssessTypeChoose"></selector>
-                    <selector title="频繁程度" :options="RiskAssessE" v-model="defalutAssess.RiskAssessEScore" @on-change="RiskAssessEChoose"></selector>
-                    <selector title="事故后果" :options="RiskAssessC" v-model="defalutAssess.RiskAssessCScore" @on-change="RiskAssessCChoose"></selector>
-                    <selector title="可能性" :options="RiskAssessL" v-model="defalutAssess.RiskAssessLScore" @on-change="RiskAssessLChoose"></selector>
+                    <selector title="评估类型" :options="RiskAssessType" v-model="TmpRiskAssessDetail.RiskAssessTypeID" @on-change="RiskAssessTypeChoose"></selector>
+                    <selector title="频繁程度" :options="RiskAssessE" v-model="TmpRiskAssessDetail.RiskAssessEScore" @on-change="RiskAssessEChoose"></selector>
+                    <selector title="事故后果" :options="RiskAssessC" v-model="TmpRiskAssessDetail.RiskAssessCScore" @on-change="RiskAssessCChoose"></selector>
+                    <selector title="可能性" :options="RiskAssessL" v-model="TmpRiskAssessDetail.RiskAssessLScore" @on-change="RiskAssessLChoose"></selector>
                     <x-input title="风险等级" :disabled="true" :value="RiskAssessDetailLv" placeholder="等级"></x-input>
                     <x-input title="风险分值" :value="countScore" :disabled="true" placeholder="分值"></x-input>
                     <div class="next1">
                         <x-button @click.native="addAssess">确定</x-button>
-                        <x-button @click.native="oepnAssess('close')">关闭</x-button>
+                        <x-button @click.native="ShowEditDetial = false">关闭</x-button>
                     </div>
                 </div>
             </popup>
 
         </div>
+        <div class="lower">
+
+            <div class="next">
+                <x-button @click.native="oepnAssess('open',-1)">增加</x-button>
+            </div>
+            <div class="next2">
+                <flexbox>
+                    <flexbox-item>
+                        <x-button @click.native="upDataRiskAdd(0)">保存</x-button>
+                    </flexbox-item>
+                    <flexbox-item>
+                        <x-button @click.native="upDataRiskAdd(1)">提交评估</x-button>
+                    </flexbox-item>
+                </flexbox>
+            </div>
+            
+        </div>
     </div>
 </template>
 <script>
-    import { LoadMore, XInput, Group, Cell, XAddress, ChinaAddressV3Data, XButton, Selector, Value2nameFilter as value2name, XTextarea, Popup, Confirm, XSwitch, TransferDomDirective as TransferDom, GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
-    import { mapMutations, mapState, mapActions } from 'vuex'
+    import { LoadMore, XInput, Group, Cell, XAddress, ChinaAddressV3Data, Flexbox, FlexboxItem, XButton, Selector, Value2nameFilter as value2name, XTextarea, Popup, Confirm, XSwitch, TransferDomDirective as TransferDom, GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
+    import { mapMutations, mapState, mapActions, mapGetters } from 'vuex'
+    import { api } from './../../servers/api'
     import Heads from './../../components/Heads.vue'
     export default {
         components: {
@@ -90,17 +87,25 @@
             SwipeoutItem,
             SwipeoutButton,
             Heads,
-            LoadMore
+            LoadMore,
+            Flexbox,
+            FlexboxItem
         },
         data() {
             return {
-                evaluation: false,
+                ShowEditDetial: false,
                 riskIntro: '',
                 assessType: '',
                 assessIndex: '',
                 status: ['极高', '高', '中等', '低', '可忽略'],
                 RiskAssessDetailLv: '',
-                defalutAssess: {
+                formInfo: {
+                    ListRiskAssessDetail: [],
+                    RiskAssessLv: 4,
+                    RiskAssessScore: 0,
+                    RiskAssessStatus: 0,
+                },
+                TmpRiskAssessDetail: {
 
                     "ID": 1025,
                     "RiskID": 1022,
@@ -126,17 +131,21 @@
             }
         },
         methods: {
+
             ...mapMutations([
                 'openConfirm',
                 'upRiskAdd',
                 'pushAssessDetails',
                 'deleteAssessDetails',
                 'editAssessDetails',
-                'saveAssesss'
+                'initData',
+                'saveAssesss',
+                'saveInfoId'
             ]),
             ...mapActions([
                 'showToast',
-                'postRiskAdds'
+                // 'postRiskAdds',
+                'reloadRiskAssess'
             ]),
             changeRiskIntro(e) {
                 this.saveAssesss({ RiskAssessIntro: e });
@@ -150,17 +159,17 @@
 
             RiskAssessTypeChoose(val) {
                 for (let key in this.RiskAssessType) {
-                    if (this.RiskAssessType[key].key == this.defalutAssess.RiskAssessTypeID) {
-                        this.defalutAssess.RiskAssessTypeName = this.RiskAssessType[key].value;
+                    if (this.RiskAssessType[key].key == this.TmpRiskAssessDetail.RiskAssessTypeID) {
+                        this.TmpRiskAssessDetail.RiskAssessTypeName = this.RiskAssessType[key].value;
                         break;
                     }
                 }
             },
             RiskAssessCChoose(data) {
                 for (let key in this.RiskAssessC) {
-                    if (this.RiskAssessC[key].key == this.defalutAssess.RiskAssessCScore) {
-                        this.defalutAssess.RiskAssessCID = this.RiskAssessC[key].id;
-                        this.defalutAssess.RiskAssessCName = this.RiskAssessC[key].value;
+                    if (this.RiskAssessC[key].key == this.TmpRiskAssessDetail.RiskAssessCScore) {
+                        this.TmpRiskAssessDetail.RiskAssessCID = this.RiskAssessC[key].id;
+                        this.TmpRiskAssessDetail.RiskAssessCName = this.RiskAssessC[key].value;
                         break;
                     }
                 }
@@ -168,171 +177,152 @@
 
             RiskAssessLChoose(data) {
                 for (let key in this.RiskAssessL) {
-                    if (this.RiskAssessL[key].key == this.defalutAssess.RiskAssessLScore) {
-                        this.defalutAssess.RiskAssessLID = this.RiskAssessL[key].id;
-                        this.defalutAssess.RiskAssessLName = this.RiskAssessL[key].value;
+                    if (this.RiskAssessL[key].key == this.TmpRiskAssessDetail.RiskAssessLScore) {
+                        this.TmpRiskAssessDetail.RiskAssessLID = this.RiskAssessL[key].id;
+                        this.TmpRiskAssessDetail.RiskAssessLName = this.RiskAssessL[key].value;
                         break;
                     }
                 }
             },
             RiskAssessEChoose(data) {
                 for (let key in this.RiskAssessE) {
-                    if (this.RiskAssessE[key].key == this.defalutAssess.RiskAssessEScore) {
+                    if (this.RiskAssessE[key].key == this.TmpRiskAssessDetail.RiskAssessEScore) {
                         console.log(`${this.RiskAssessE[key].value}||${this.RiskAssessE[key].key}||${this.RiskAssessE[key].id}`);
-                        this.defalutAssess.RiskAssessEID = this.RiskAssessE[key].id;
-                        this.defalutAssess.RiskAssessEName = this.RiskAssessE[key].value;
+                        this.TmpRiskAssessDetail.RiskAssessEID = this.RiskAssessE[key].id;
+                        this.TmpRiskAssessDetail.RiskAssessEName = this.RiskAssessE[key].value;
                         break;
                     }
                 }
-
             },
             clearData() {
-                this.defalutAssess.RiskAssessTypeID = '';
-                this.defalutAssess.RiskAssessTypeName = '';
-                this.defalutAssess.RiskAssessLID = '';
-                this.defalutAssess.RiskAssessLName = '';
-                this.defalutAssess.RiskAssessLScore = '';
-                this.defalutAssess.RiskAssessEID = '';
-                this.defalutAssess.RiskAssessEName = '';
-                this.defalutAssess.RiskAssessEScore = '';
-                this.defalutAssess.RiskAssessCID = '';
-                this.defalutAssess.RiskAssessCName = '';
-                this.defalutAssess.RiskAssessCScore = '';
-                this.defalutAssess.RiskAssessDetailLv = '';
-                this.defalutAssess.RiskAssessDetailScore = '';
+                for (let key in this.TmpRiskAssessDetail) {
+                    this.TmpRiskAssessDetail[key] = '';
+                }
             },
-
+            calcScore() {
+                this.formInfo.RiskAssessScore = 0;
+                this.formInfo.RiskAssessLv = 4;
+                this.formInfo.ListRiskAssessDetail.forEach((item) => {
+                    if (item.RiskAssessDetailScore > this.formInfo.RiskAssessScore) {
+                        this.formInfo.RiskAssessScore = item.RiskAssessDetailScore;
+                        this.formInfo.RiskAssessLv = item.RiskAssessDetailLv
+                    }
+                })
+            },
             addAssess() {
-                const defaultData = this.defalutAssess;
+                const tmpdata = { ...{}, ...this.TmpRiskAssessDetail };
 
-                if (!defaultData.RiskAssessTypeID) {
+                if (!tmpdata.RiskAssessTypeID) {
                     this.showToast({ toastState: true, toastValue: '请选择评估类型' })
                     return;
                 }
 
-                if (!defaultData.RiskAssessEID) {
+                if (!tmpdata.RiskAssessEID) {
                     this.showToast({ toastState: true, toastValue: '请选择频繁程度' })
                     return;
                 }
 
-                if (!defaultData.RiskAssessCID) {
+                if (!tmpdata.RiskAssessCID) {
                     this.showToast({ toastState: true, toastValue: '请选择事故后果' })
                     return;
                 }
 
-                if (!defaultData.RiskAssessLID) {
+                if (!tmpdata.RiskAssessLID) {
                     this.showToast({ toastState: true, toastValue: '请选择可能性' })
                     return;
                 }
 
-                const assessUpData = {
-                    RiskAssessTypeID: this.defalutAssess.RiskAssessTypeID,
-                    RiskAssessTypeName: this.defalutAssess.RiskAssessTypeName,
-                    RiskAssessLID: this.defalutAssess.RiskAssessLID,
-                    RiskAssessLName: this.defalutAssess.RiskAssessLName,
-                    RiskAssessLScore: this.defalutAssess.RiskAssessLScore,
-                    RiskAssessEID: this.defalutAssess.RiskAssessEID,
-                    RiskAssessEName: this.defalutAssess.RiskAssessEName,
-                    RiskAssessEScore: this.defalutAssess.RiskAssessEScore,
-                    RiskAssessCID: this.defalutAssess.RiskAssessCID,
-                    RiskAssessCName: this.defalutAssess.RiskAssessCName,
-                    RiskAssessCScore: this.defalutAssess.RiskAssessCScore,
-                    RiskAssessDetailLv: this.defalutAssess.RiskAssessDetailLv,
-                    RiskAssessDetailScore: this.defalutAssess.RiskAssessDetailScore
-                }
-                console.log(assessUpData);
                 if (this.assessType == 'edit') {
-                    this.editAssessDetails({
-                        index: this.assessIndex,
-                        list: assessUpData
-                    });
-                    this.clearData();
-                    this.evaluation = false;
+                    this.formInfo.ListRiskAssessDetail[this.assessIndex] = tmpdata;
                 } else {
-                    // this.openConfirm({
-                    //     state: true, msg: '您确定要新增吗？', control: () => {
-                            this.pushAssessDetails(assessUpData);
-                            this.clearData();
-                            this.evaluation = false;
-                    //     }
-                    // })
+                    this.formInfo.ListRiskAssessDetail.push(tmpdata);
                 }
-
-
+                this.calcScore()
+                this.ShowEditDetial = false;
             },
 
-            oepnAssess(type, index) {
+            oepnAssess(type, index, item) {
 
                 this.assessType = type;
                 this.assessIndex = index;
-
+                //先清空
+                this.clearData();
                 if (type == 'open') {
-                    this.evaluation = true;
+                    this.ShowEditDetial = true;
                 } else if (type == 'edit') {
-
-                    this.defalutAssess.RiskAssessTypeID = this.ListRiskAssessDetail[index].RiskAssessTypeID;
-                    this.defalutAssess.RiskAssessTypeName = this.ListRiskAssessDetail[index].RiskAssessTypeName;
-                    this.defalutAssess.RiskAssessLID = this.ListRiskAssessDetail[index].RiskAssessLID;
-                    this.defalutAssess.RiskAssessLName = this.ListRiskAssessDetail[index].RiskAssessLName;
-                    this.defalutAssess.RiskAssessLScore = this.ListRiskAssessDetail[index].RiskAssessLScore;
-                    this.defalutAssess.RiskAssessEID = this.ListRiskAssessDetail[index].RiskAssessEID;
-                    this.defalutAssess.RiskAssessEName = this.ListRiskAssessDetail[index].RiskAssessEName;
-                    this.defalutAssess.RiskAssessEScore = this.ListRiskAssessDetail[index].RiskAssessEScore;
-                    this.defalutAssess.RiskAssessCID = this.ListRiskAssessDetail[index].RiskAssessCID;
-                    this.defalutAssess.RiskAssessCName = this.ListRiskAssessDetail[index].RiskAssessCName;
-                    this.defalutAssess.RiskAssessCScore = this.ListRiskAssessDetail[index].RiskAssessCScore;
-                    this.defalutAssess.RiskAssessDetailLv = this.ListRiskAssessDetail[index].RiskAssessDetailLv;
-                    this.defalutAssess.RiskAssessDetailScore = this.ListRiskAssessDetail[index].RiskAssessDetailScore;
-
-                    this.evaluation = true;
-
-                } else if (type == 'close') {
-                    this.clearData();
-                    this.evaluation = false;
+                    this.TmpRiskAssessDetail = { ...{}, ...item }
+                    this.ShowEditDetial = true;
                 } else if (type == 'delete') {
-                    this.deleteAssessDetails({ index: index });
+                    this.formInfo.ListRiskAssessDetail.splice(index, 1);
+                    this.calcScore()
                 }
-
             },
-            upDataRiskAdd() {
+            formPost(){
+                const params= {...{},...this.formInfo}
+                
+                        api.postRiskAssessAdd(params).then((data) => {
 
-                // const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
-                const ListRiskAssess = this.$store.state.evaluation.riskAssessData.ListRiskAssessDetail; //风险评估
+                          const  ret=data.all
+                             if (ret.status) {
+                                    this.$router.push({ name: 'evaluationList' });
+                                }
+                                else {
+                                    this.showToast({ toastState: true, toastValue: ret.info });
+                                    return;
+                                }
+                 })
+            },
+            upDataRiskAdd(state) {
 
-
-                if (ListRiskAssess.length == 0) {
+                if (this.formInfo.ListRiskAssessDetail.length == 0) {
                     this.showToast({ toastState: true, toastValue: '您至少添加一个风险评估！' });
                     return;
                 }
+                
 
-                if (!this.$store.state.evaluation.riskAssessData.RiskAssessIntro) {
+                if (!this.formInfo.RiskAssessIntro) {
                     this.showToast({ toastState: true, toastValue: '请填写评估描述！' });
                     return;
                 }
-
+              
                  this.openConfirm({
-                        state: true, msg: '您确定要提交吗？', control: () => {
-                         this.postRiskAdds();
-                        //  alert(this.$store.state.evaluation.openEvaluationList)
-                        setTimeout(() => {
-                            if(this.$store.state.evaluation.openEvaluationList){
-                             this.$router.push({ name: 'evaluationList' });
-                         }
-                        },1000)
-                            
-                        }
-                    })
+                    state: true, msg: `您确定要${state == 0 ? "保存" : "提交"}吗？`, control: () => { 
+                        this.formInfo.RiskAssessStatus = state;
+                        this.formPost()
+                    }
+                })
             }
         },
 
         mounted() {
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
             this.riskIntro = postRiskAdd.RiskIntro
+            if (this.$route.params.infoId) {
+                let tmpinfo = this.riskAssessList.filter(res => res.ID == this.$route.params.infoId)[0]
+                this.riskIntro = tmpinfo.RiskAssessIntro
+                tmpinfo.ListRiskAssessDetail.forEach((item) => {
+                    this.pushAssessDetails(item)
+                })
+            }
         },
 
         created() {
-            this.$store.dispatch("getRiskBaseType")
-            this.$store.commit("saveID",this.$route.params.id)
+            this.formInfo.RiskID=this.$route.params.id;
+
+            if (this.$route.params.ID){
+                this.$store.dispatch("getRiskAssessInfo", {
+                            data: {ID:this.$route.params.ID}, callback: (ret) => {
+                                if (ret.status) {
+                                     this.formInfo =  ret.info
+                                }
+                                else {
+                                    this.showToast({ toastState: true, toastValue: ret.info });
+                                    return;
+                                }
+                            }
+                        })
+                
+            }
         },
 
         computed: {
@@ -341,7 +331,6 @@
                 let now = new Date();
                 return `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}`
             },
-
             ...mapState({
                 RiskAssessType: state => {
                     let riskData = [];
@@ -403,15 +392,18 @@
 
                     return riskData;
                 },
-                ListRiskAssessDetail(state) {
-                    const ListRiskAssessDetail = state.evaluation.riskAssessData.ListRiskAssessDetail;
-                    return ListRiskAssessDetail;
-                }
+                // ListRiskAssessDetail(state) {
+                //     const ListRiskAssessDetail = state.evaluation.riskAssessData.ListRiskAssessDetail;
+                //     return ListRiskAssessDetail;
+                // },
+                // riskAssessList(state) {
+                //     return state.evaluation.riskAssessList;
+                // },
             }),
 
             countScore() {
-                this.defalutAssess.RiskAssessDetailScore = this.defalutAssess.RiskAssessLScore * this.defalutAssess.RiskAssessEScore * this.defalutAssess.RiskAssessCScore;
-                let countVal = this.defalutAssess.RiskAssessDetailScore;
+                this.TmpRiskAssessDetail.RiskAssessDetailScore = this.TmpRiskAssessDetail.RiskAssessLScore * this.TmpRiskAssessDetail.RiskAssessEScore * this.TmpRiskAssessDetail.RiskAssessCScore;
+                let countVal = this.TmpRiskAssessDetail.RiskAssessDetailScore;
 
                 let status = ['极高', '高', '中等', '低', '可忽略'];
                 let state;
@@ -428,9 +420,9 @@
                 }
 
                 this.RiskAssessDetailLv = status[state];
-                this.defalutAssess.RiskAssessDetailLv = state;
+                this.TmpRiskAssessDetail.RiskAssessDetailLv = state;
 
-                return this.defalutAssess.RiskAssessLScore * this.defalutAssess.RiskAssessEScore * this.defalutAssess.RiskAssessCScore;
+                return this.TmpRiskAssessDetail.RiskAssessLScore * this.TmpRiskAssessDetail.RiskAssessEScore * this.TmpRiskAssessDetail.RiskAssessCScore;
             }
 
         }
@@ -454,9 +446,15 @@
             padding: 2rem 15px 15px;
             background: #fbf9fe;
         }
+
         .next1 {
             box-sizing: border-box;
             padding: 2rem 15px 15px;
+        }
+        .next2 {
+            box-sizing: border-box;
+            padding: 0 15px 15px 15px;
+            background: #fbf9fe;
         }
         .weui-label {
             width: 5em!important;

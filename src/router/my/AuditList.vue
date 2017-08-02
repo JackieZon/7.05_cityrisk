@@ -1,7 +1,7 @@
 <template>
   <div id="audit">
     <div class="title">
-      <Heads :title="'审核列表'"></Heads>
+      <Heads :title="'风险列表'"></Heads>
       <tab :line-width=2 active-color='#33CC99'>
         <tab-item selected @on-item-click="changeTab(-1)">全部审核</tab-item>
         <tab-item @on-item-click="changeTab(0)">未提交</tab-item>

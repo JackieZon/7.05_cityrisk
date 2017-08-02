@@ -7,6 +7,8 @@ const RiskList = resolve => require(['./router/riskList/Index.vue'], resolve)
 const RiskInfo = resolve => require(['./router/riskList/RiskInfo.vue'], resolve)
 const RiskDanger = resolve => require(['./router/riskList/RiskDanger.vue'], resolve)
 const RiskDangerList = resolve => require(['./router/riskList/RiskDangerList.vue'],resolve)
+const RiskDangerAdd = resolve => require(['./router/riskList/RiskDangerAdd.vue'],resolve)
+
 const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo = resolve => require(['./router/my/MyInfo.vue'], resolve)
 const AuditList = resolve => require(['./router/my/AuditList.vue'], resolve)
@@ -29,6 +31,7 @@ const AddEvaluation = resolve => require(['./router/riskList/addEvaluation.vue']
 const GetLngLat = resolve => require(['./components/common/GetLngLat.vue'], resolve)
 const MyAssessAuditList = resolve => require(['./router/my/MyAssessAuditList.vue'], resolve)
 const MyAssessAuditInfo = resolve => require(['./router/my/MyAssessAuditInfo.vue'], resolve)
+
 export default {
   routes: [{
     path: '/',
@@ -95,8 +98,7 @@ export default {
   },
   {
     // editStatus == 0; 0仅查看信息，1带撤销和编辑，2带审核按钮
-    // /:add/:editStatus
-    path: '/Index/RiskList/RiskInfo/:id',
+    path: '/Index/RiskList/RiskInfo/:id/:add/:editStatus',
     name: 'riskInfo',
     component: RiskInfo
   },
@@ -109,6 +111,11 @@ export default {
     path: '/Index/RiskList/RiskInfo/RiskDangerList/:id',
     name: 'riskDangerList',
     component: RiskDangerList
+  },
+  {
+    path: '/Index/RiskList/RiskInfo/RiskDangerList/RiskDangerAdd/:id',
+    name: 'riskDangerAdd',
+    component: RiskDangerAdd
   },
   {
     path: "/Index/RiskList/RiskInfo/EvaluationList/:id",

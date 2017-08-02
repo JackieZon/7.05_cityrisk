@@ -41,7 +41,6 @@ export default {
     },
     methods:{
         go(){
-            
         },
         getText(){
             // getRiskObjectType().then((res)=>{

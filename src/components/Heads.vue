@@ -10,6 +10,7 @@
                 <div v-if="isDangerState" class="map" slot="right" v-on:click="showMenus = true"><span style="font-size: 20px;">+</span></div>
                 <!--<div v-if="isDangerState" class="map" slot="right">隐患</div>-->
                 <div @click="addEvaluation" v-if="isEvaluationListState" class="map" slot="right">新增</div>
+                <div @click="goPages('riskDangerAdd',{id: $route.params.id})" v-if="isRiskDangerAddState" class="map" slot="right">新增隐患</div>
                 <div v-if="isRightTitleState" class="map" slot="right">{{rightTitle}}</div>
 
                 <div v-transfer-dom>
@@ -34,7 +35,7 @@
             ButtonTab,
             ButtonTabItem
         },
-        props: ['title', 'back', 'noBack', 'goBack', 'isMap', 'isRiskAdd', 'isRightTitle', 'rightTitle', 'isRiskList', 'isDanger', 'isEvaluationList'],
+        props: ['title', 'back', 'noBack', 'goBack', 'isMap', 'isRiskAdd', 'isRightTitle', 'rightTitle', 'isRiskList', 'isDanger', 'isEvaluationList', 'isRiskDangerAdd'],
         data() {
             return {
                 backState: true,
@@ -46,6 +47,7 @@
                 isDangerState: false,
                 isDangerState: false,
                 isEvaluationListState: false,
+                isRiskDangerAddState: false,
                 menus: {
                     menu1: '新增隐患',
                     menu2: '新增评估'
@@ -64,16 +66,17 @@
             this.isDangerState = (this.isDanger == true ? true : false)
             this.isEvaluationListState = (this.isEvaluationList == true ? true : false)
             this.noBackState = (this.noBack == true ? true : false)
+            this.isRiskDangerAddState = (this.isRiskDangerAdd==true?true:false)
         },
         methods: {
             backChange(){
                 this.$router.push({ name: this.goBack });
             },
             openMenu(data) {
-
+                console.log(data);
                 if(data == "menu1"){
 
-                    this.$router.push({ name: "riskDanger" });
+                    this.$router.push({ name: "riskDangerAdd" });
                 }
 
                 if(data == "menu2"){
@@ -84,8 +87,11 @@
 
             },
             
-            goPages(name) {
-                this.$router.push({ name: name });
+            goPages(name,param) {
+
+                console.log(param);
+
+                this.$router.push({ name: name , params: param });
             },
 
             addEvaluation() {

@@ -9,7 +9,8 @@ import myAuditInfo from "./risk/myAuditInfo"
 import myAuditList from "./risk/myAuditList"
 import myAssessAuditList from "./my/myAssessAuditList"
 import riskDangerList from './risk/riskDangerList'
-import {getArea} from './../servers/api'
+import evaluationList from './risk/evaluationList'
+import {getArea, postUploadPhoto} from './../servers/api'
 import {countAreas} from './../utils/areas'
 
 Vue.use(Vuex);
@@ -48,6 +49,9 @@ export const store = new Vuex.Store({
         const allAreas = countAreas(data.info);
         commit('saveArea',allAreas);
       })
+    },
+    postUploadPhoto: async ({commit,dispatch,getters,state},payload) => {
+      return await postUploadPhoto(payload);
     }
     // http://wx-cityrisk.subei88.com:8080/api/Area
   },
@@ -74,5 +78,6 @@ export const store = new Vuex.Store({
     myAuditList,
     myAssessAuditList,
     riskDangerList,
+    evaluationList,
   }
 });

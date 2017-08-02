@@ -1,11 +1,12 @@
-import { getRiskBaseType, postRiskAssessAdd, getRiskAssess } from './../../servers/api'
+import { getRiskBaseType, postRiskAssessAdd, getRiskAssess, getRisk, updateRiskAssessStatusRecall, getRiskAssessInfo, api } from './../../servers/api'
 const state = {
 
     evaluatioList: [],
     riskAssessList: [],
+    assessmentId:0, //审核撤回ID
     defaultData:{
         "RiskID": 0,
-        // "RiskAssessStatus": 0,
+        "RiskAssessStatus": -1,
         pageIndex: 1 ,
         pageSize: 10,
         total: 0,
@@ -31,7 +32,7 @@ const state = {
             //     "RiskAssessDetailScore": 0
             // }
         ],
-        "ID": 0,
+        // "ID": 0,
         "RiskID": 1022,
         "RiskAgencyID": 0,
         "RiskAssessIntro": "",
@@ -43,7 +44,7 @@ const state = {
         "RiskAssessManName": "Tomy",
         "RiskAssessManTel": "15920970565",
         "RiskAssessDate": "2017-07-25T07:17:03.982Z",
-        "RiskAssessStatus": 0,
+        "RiskAssessStatus": 1,
     },
 
     RiskType: {},
@@ -58,7 +59,6 @@ const mutations = {
 
     saveID: (state, payload) => {
         state.riskAssessData.RiskID = payload;
-        // state.riskAssessData.ListRiskAssessDetail.RiskID = payload;
     },
 
     saveEvaluatioList: (state, payload) => {
@@ -89,26 +89,54 @@ const mutations = {
     editAssessDetails: (state, payload) => {
         state.riskAssessData.ListRiskAssessDetail[payload.index] = payload.list;
     },
+    
+    initAssessDetails: (state, payload) => {
+        state.riskAssessData.ListRiskAssessDetail[payload.index] = payload.list;
+    },
+
     saveAssesss: (state, payload) => {
         state.riskAssessData.RiskAssessIntro = payload.RiskAssessIntro;
     },
+
     saveDefaultData: (state, payload)=>{
         // console.log(payload);
         state.defaultData = {...state.defaultData, ...payload}
     },
-    saveRiskAssessList(state, payload){
 
-        if(payload.type==0){
-            state.riskAssessList = [];
-            state.riskAssessList = state.riskAssessList.concat(payload.res);
-        }else if(payload.type==1){
-            state.riskAssessList = state.riskAssessList.concat(payload.res);
-        }
+    initData (state){
+        state.riskAssessData.ListRiskAssessDetail = [];
+        state.riskAssessData.RiskAssessTypeNames = '';
+        state.riskAssessData.RiskAssessIntro = '';
+    },
+
+    // saveRiskAssessList(state, payload){
+
+    //     if(payload.type==0){
+    //         state.riskAssessList = [];
+    //         state.riskAssessList = state.riskAssessList.concat(payload.res);
+    //     }else if(payload.type==1){
+    //         state.riskAssessList = state.riskAssessList.concat(payload.res);
+    //     }
         
+    // },
+
+    // deleteRiskAssessList(state){
+    //     state.riskAssessList = [];
+    // },
+
+    changeState(state,payload){
+        state.riskAssessData.RiskAssessStatus = payload; 
     },
-    deleteRiskAssessList(){
-        state.riskAssessList = [];
+
+    changeAssessmentId(state,payload){
+        state.assessmentId = payload;
     },
+
+    saveInfoId(state,payload){
+        // alert(payload)
+        state.riskAssessData.ID = payload;
+    }
+
 }
 const actions = {
 
@@ -128,32 +156,64 @@ const actions = {
 
         })
     },
-
-    postRiskAdds({ commit, state }) {
-        // console.log(JSON.stringify(state.riskAssessData))
-        postRiskAssessAdd(state.riskAssessData).then((data) => {
-            if(data.all.status){
-                state.openEvaluationList = true
-            }
-            console.log(JSON.stringify(data))
-        })
+  getRiskAssessInfo({ commit, state },payload) {
+           
+         getRiskAssessInfo(payload.data).then((data) => {
+            payload.callback(data.all)
+         })
+    },
+    postRiskAdds({ commit, state },payload) {
+      
+         postRiskAssessAdd(payload.data).then((data) => {
+            // if(data.all.status){
+            //     state.openEvaluationList = true
+           //  }
+                payload.callback(data.all)
+         })
     },
 
     getRiskAssess({commit, state},payload){
         getRiskAssess(state.defaultData).then((data)=>{
-
-            console.log(`我是评估列表${payload.type}`);
-            console.log(JSON.stringify(data));
-            
             commit('saveDefaultData',{total:data.all.total});
-            commit('saveRiskAssessList',{res:data.info,type: payload.type,});
+            // commit('saveRiskAssessList',{res:data.info,type: payload.type,})
         })
+    },
+
+    reloadRiskAssess({commit,dispatch,getters,state}){
+
+
+        getRisk(state.defaultData).then((data)=>{
+            commit('saveDefaultData',{total: data.all.total})
+            // commit('saveRiskAssessList',data.info);
+
+        });
+    },
+
+    //风险评估审核撤回
+    updateRiskAssessStatusRecalls({state},payload){
+        alert(payload)
+        // updateRiskAssessStatusRecall(state.assessmentId).then((data)=>{
+        //     console.log(data)
+        // })
+    },
+
+    submitAudit ({state},payload) {
+        console.log(JSON.stringify(payload))
+        postRiskAssessAdd(payload).then((res)=>{
+            console.log(res)
+        })
+
     }
 
 
 }
 
 const getters = {
+
+    // getRiskAssessLists: state => {
+    //     return state.riskAssessList.filter( res => res.ID ==  1096)
+    // },
+
 
 }
 

@@ -57,10 +57,10 @@
             </div>
         </div>
         
-        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
-            <div class="title">风险隐患<span class="more" @click="goPage('riskDangerList',{id:250})"> 查看全部</span></div>
+        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskHidden)!=='[]'">
+            <div class="title"><span>风险隐患</span> <span class="allHidDan"> <span @click="goPage('riskDangerList',{id:250})">全部隐患</span><span @click="goPage('riskDangerList',{id:250})">全部整改</span></span></div>
             
-            <HidDanger />
+            <HidDanger :item="(riskInfo.ListRiskHidden?riskInfo.ListRiskHidden[0]:[])" />
 
         </div>
 
@@ -81,9 +81,9 @@
         </div>
 
         <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
-        <div class="review" v-if="JSON.stringify(menuStatus)!=='[]'">
+        <div class="footerBox" v-if="JSON.stringify(menuStatus)!=='[]'">
             <div>
-                <x-button @click.native="editMenuStatus = true;">{{menuStatus[0]}}</x-button>
+                <x-button @click.native="editMenuStatus = true;">操作</x-button>
                 <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
             </div>
             <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
@@ -91,9 +91,9 @@
             </flexbox-item>-->
         </div>
 
-        <!--<div v-transfer-dom>
+        <div v-transfer-dom>
             <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
-        </div>-->
+        </div>
 
     </div>
 </template>
@@ -133,7 +133,8 @@
             },
 
             riskInfo() {
-
+                
+                this.addOperation = this.$route.params.add==1;
                 this.$store.commit("setRiskId", this.riskInfo.ID)
 
                 // editStatus     0是查看详情  1是用户编辑 或 撤回   2是审核
@@ -149,7 +150,7 @@
                 }else if(editStatus == 1){
                     
                     if(this.riskInfo.RiskStatus==0||this.riskInfo.RiskStatus==2){
-                        menuStatus = ['编辑']
+                        menuStatus = ['编辑','删除']
                     }else if(this.riskInfo.RiskStatus==1){
                         menuStatus = ['撤回']
                     }
@@ -233,12 +234,12 @@
 
                 if(this.menuStatus[0] == '编辑'){
 
-                    this.openConfirm({state:true,msg:'确定要编辑吗？',control: ()=>{
+                    // this.openConfirm({state:true,msg:'确定要编辑吗？',control: ()=>{
                         this.$router.push({name:'riskAdd',params:{id:this.riskInfo.ID}});
 
                         this.editRisk(this.riskInfo);
 
-                    }});
+                    // }});
 
                 }else if(this.menuStatus[0] == '撤回'){
 
@@ -308,6 +309,7 @@
     #riskInfo {
         background: #f1f1f1;
         box-sizing: border-box;
+        height: 100%;
         .review{
             padding: 10px;
             background:#fff;
@@ -337,10 +339,16 @@
         .title {
             background: #fff;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             line-height: 45px;
             border-bottom: 2px solid #33CC99;
+            padding: 0 15px;
+            .allHidDan{
+                span{
+                    margin-left:15px;
+                }
+            }
         }
         .more {
             position: absolute;

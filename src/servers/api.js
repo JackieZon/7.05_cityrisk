@@ -1,6 +1,7 @@
 import axiosApi from './../utils/axios.js'
 import {
-  param_baseUrl
+  param_baseUrl,
+  param_baseUrls,
 } from './../utils/subei_config'
 
 // JackieZon 账户的信息
@@ -14,6 +15,15 @@ export const getJackieZon = () => {
       })
   });
   return author;
+}
+
+// 获取图片链接
+// http://wx-cityrisk.subei88.com/Common/UploadPhoto?type=RiskHidden
+export const postUploadPhoto = async (param) => {
+  console.log('在api文件');
+  console.log(param.formData);
+  const data = await axiosApi(`${param_baseUrls}Common/UploadPhoto?type=${param.type}`, 'postFile', param.formData);
+  return data;
 }
 
 // 得到城市地址
@@ -49,6 +59,13 @@ export const postRiskAdd = async (param) => {
 export const postRiskAssessAdd = async (param) => {
   const data = await axiosApi(`${param_baseUrl}RiskAssessAdd`, "post", param);
   return data
+}
+
+// http://wx-cityrisk.subei88.com:8080/api/RiskAssessInfo
+// 风险评估-详情
+export const getRiskAssessInfo = async (param) => {
+    const data = await axiosApi(`${param_baseUrl}RiskAssessInfo`, 'post', param);
+    return data;
 }
 
 // 风险列表
@@ -93,20 +110,75 @@ export const updateRiskStatusRecall = async (param) => {
 
 // 获取隐患列表
 // http://wx-cityrisk.subei88.com:8080/api/RiskHidden
-
 export const getRiskHidden = async (param) => {
-
   const data = await axiosApi(`${param_baseUrl}RiskHidden?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
   return data;
-
 }
 
 // 获取隐患详情
 // http://wx-cityrisk.subei88.com:8080/api/RiskHiddenInfo
-
 export const getRiskHiddenInfo = async (param) => {
-
   const data = await axiosApi(`${param_baseUrl}RiskHiddenInfo`,'post',param);
   return data;
+}
 
+// 添加隐患
+// http://wx-cityrisk.subei88.com:8080/api/RiskHiddenAdd
+export const postRiskHiddenAdd = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}RiskHiddenAdd`,'post',param);
+  return data;
+}
+
+// 删除隐患
+// http://wx-cityrisk.subei88.com:8080/api/RiskHiddenDelete?ID=1062
+export const postRiskHiddenDelete = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}RiskHiddenDelete?ID=${param}`,'post',{});
+  return data;
+}
+
+// 撤回隐患
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskHiddenStatus_Recall?ID=1054
+export const postUpdateRiskHiddenStatus_Recall = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}UpdateRiskHiddenStatus_Recall?ID=${param}`,'post',{});
+  return data;
+}
+
+//风险评估-撤回审核
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskAssessStatus_Recall
+
+export const updateRiskAssessStatusRecall = async (param) => {
+    const data = await axiosApi(`${param_baseUrl}UpdateRiskAssessStatus_Recall?ID=${param}`,'post');
+    return data;
+
+}
+
+export const api =
+{
+
+
+    updateRiskAssessStatusRecall : async (param) => {
+    const data = await axiosApi(`${param_baseUrl}UpdateRiskAssessStatus_Recall?ID=${param}`,'post');
+    return data;
+
+    },
+
+     getRiskAssessInfo : async (param) => {
+    const data = await axiosApi(`${param_baseUrl}RiskAssessInfo`, 'post', param);
+    return data;
+},
+
+// 新增风险评估
+// http://wx-cityrisk.subei88.com:8080/api/RiskAssessAdd
+      postRiskAssessAdd : async (param) => {
+        const data = await axiosApi(`${param_baseUrl}RiskAssessAdd`, "post", param);
+      return data
+},
+
+      riskAssessDelete : async (param) => {
+    const data = await axiosApi(`${param_baseUrl}RiskAssessDelete?ID=${param}`,'post');
+      return data
+},
+
+ 
+  
 }
