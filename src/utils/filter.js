@@ -65,6 +65,8 @@ Vue.filter('s_toDate', function (val) {
 
 });
 
+
+
 Vue.component('no-data',{
     template:'<div v-if="item.length==0||JSON.stringify(item)==\'{}\'||JSON.stringify(item)==\'[]\'" :style="style" @click="say"><div @click="loadFun" :style="refresh"><img :src="imgSrc" :style="imgStyle"/>刷新</div></div>',
     props:['item','load'],

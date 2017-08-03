@@ -6,14 +6,22 @@
             <p class="p_center"><Icon slot="icon" class="icon" :name="'phone-icon'" style="color:#33CC99" />联系电话: {{ item.RiskChangedAddManTel | s_toStr}}</p>
             <p class="p_center"><Icon slot="icon" class="icon" :name="'time2'" style="color:#33CC99" />添加时间: {{ item.RiskHiddenDate | s_toDate}}</p>
 
-            <p class="p_center "><span class="status"> <span class="auditorIcon"><Icon class="icon" :name="'auditor'" style="color:#33CC99" /><span>审核人:{{ item.RiskHiddenAuditManName | s_toStr}}</span></span> <span>审核状态: {{ item.RiskHiddenStatusName | s_toStr}}</span> </span></p>
+            <p class="p_center ">
+            <span class="status"> 
+                <span class="auditorIcon">
+                    <Icon class="icon" :name="'auditor'" style="color:#33CC99" />
+                    <span>审核人:{{ item.RiskHiddenAuditManName | s_toStr}}</span>
+                </span> 
+                <span>审核状态: {{ (isModify?item.RiskChangedStatusName:item.RiskHiddenStatusName) }}</span> 
+            </span>
+            </p>
         
         </div>
     </div>
 </template>
 <script>
     export default {
-        props:['item'],
+        props:['item','isModify'],
         data(){
             return {
                 riskStatus: ['极高', '高', '中等', '低', '可忽略'],

@@ -115,6 +115,13 @@ export const getRiskHidden = async (param) => {
   return data;
 }
 
+// 获取隐患整改列表
+// http://wx-cityrisk.subei88.com:8080/api/RiskHiddenChanged
+export const getRiskHiddenChanged = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}RiskHiddenChanged?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+  return data;
+}
+
 // 获取隐患详情
 // http://wx-cityrisk.subei88.com:8080/api/RiskHiddenInfo
 export const getRiskHiddenInfo = async (param) => {
@@ -143,9 +150,22 @@ export const postUpdateRiskHiddenStatus_Recall = async (param) => {
   return data;
 }
 
+//撤回整改隐患整改
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskHiddenChangedStatus_Recall?ID=1111
+export const postUpdateRiskHiddenChangedStatus_Recall = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}UpdateRiskHiddenChangedStatus_Recall?ID=${param}`,'post',{});
+  return data;
+}
+
+// 审核隐患
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskHiddenStatus_Audit
+export const postUpdateRiskHiddenStatus_Audit = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}UpdateRiskHiddenStatus_Audit`,'post',param);
+  return data;
+}
+
 //风险评估-撤回审核
 // http://wx-cityrisk.subei88.com:8080/api/UpdateRiskAssessStatus_Recall
-
 export const updateRiskAssessStatusRecall = async (param) => {
     const data = await axiosApi(`${param_baseUrl}UpdateRiskAssessStatus_Recall?ID=${param}`,'post');
     return data;

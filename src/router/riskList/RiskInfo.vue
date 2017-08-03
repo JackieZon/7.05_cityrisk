@@ -1,100 +1,104 @@
 <template>
     <div id="riskInfo" v-cloak>
         <Heads :title="'风险详情'" :isDanger="addOperation"></Heads>
-        <div class="BasicInfoA">
-            <div class="title">基本信息</div>
-            <x-input title="险源名称" :disabled="true" placeholder="暂无" :value="riskInfo.RiskName"></x-input>
-            <x-input title="对象类型" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskObjectTypeName1} - ${riskInfo.RiskObjectTypeName2}`"></x-input>
-            <x-input title="经度/纬度" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskLat?riskInfo.RiskLat:'无'} / ${riskInfo.RiskLng?riskInfo.RiskLng:'无'}`"></x-input>
+        <div class="main">
+        
+            <div class="BasicInfoA">
+                <div class="title">基本信息</div>
+                <x-input title="险源名称" :disabled="true" placeholder="暂无" :value="riskInfo.RiskName"></x-input>
+                <x-input title="对象类型" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskObjectTypeName1} - ${riskInfo.RiskObjectTypeName2}`"></x-input>
+                <x-input title="经度/纬度" :disabled="true" placeholder="暂无" :value="`${riskInfo.RiskLat?riskInfo.RiskLat:'无'} / ${riskInfo.RiskLng?riskInfo.RiskLng:'无'}`"></x-input>
 
-            <x-input title="风险地址" :disabled="true" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
-                placeholder="暂无"></x-input>
+                <x-input title="风险地址" :disabled="true" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
+                    placeholder="暂无"></x-input>
 
-            <x-textarea v-show="false" title="风险地址" placeholder="风险地址" :readonly="true" :show-counter="false" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"></x-textarea>
+                <x-textarea v-show="false" title="风险地址" placeholder="风险地址" :readonly="true" :show-counter="false" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"></x-textarea>
 
-        </div>
+            </div>
 
-        <div class="BasicInfoC" v-if="JSON.stringify(riskInfo.ListRiskDuty)!=='[]'" v-for="item in riskInfo.ListRiskDuty">
-            <div class="title">责任主体</div>
-            <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskDutyName"></x-input>
-            <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="`${item.RiskDutyAreaName1}-${item.RiskDutyAreaName2}-${item.RiskDutyAreaName3}-${item.RiskDutyAddress}`"></x-input>
-            <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactMan"></x-input>
-            <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactTel"></x-input>
-        </div>
+            <div class="BasicInfoC" v-if="JSON.stringify(riskInfo.ListRiskDuty)!=='[]'" v-for="item in riskInfo.ListRiskDuty">
+                <div class="title">责任主体</div>
+                <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskDutyName"></x-input>
+                <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="`${item.RiskDutyAreaName1}-${item.RiskDutyAreaName2}-${item.RiskDutyAreaName3}-${item.RiskDutyAddress}`"></x-input>
+                <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactMan"></x-input>
+                <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskDutyContactTel"></x-input>
+            </div>
 
-        <div class="BasicInfoD" v-if="JSON.stringify(riskInfo.ListRiskRegulatory)!=='[]'" v-for="item in riskInfo.ListRiskRegulatory">
-            <div class="title">监管机构</div>
-            <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryName"></x-input>
-            <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="item.RiskFullRegulatoryAddress"></x-input>
-            <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactMan"></x-input>
-            <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactTel"></x-input>
-        </div>
+            <div class="BasicInfoD" v-if="JSON.stringify(riskInfo.ListRiskRegulatory)!=='[]'" v-for="item in riskInfo.ListRiskRegulatory">
+                <div class="title">监管机构</div>
+                <x-input title="单位名称" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryName"></x-input>
+                <x-input title="单位地址" :disabled="true" placeholder="暂无" :value="item.RiskFullRegulatoryAddress"></x-input>
+                <x-input title="联系人" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactMan"></x-input>
+                <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactTel"></x-input>
+            </div>
 
-        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
-            <div class="title">评估列表<span class="more" v-on:click="openEvaluation">查看全部</span></div>
-            <div class="evaluationList" v-on:click="openEvaluationInfo">
-                <div style="font-size: 14px;" v-if="riskInfo.ListRiskAssess">
+            <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
+                <div class="title">评估列表<span class="more" v-on:click="openEvaluation">查看全部</span></div>
+                <div class="evaluationList" v-on:click="openEvaluationInfo">
+                    <div style="font-size: 14px;" v-if="riskInfo.ListRiskAssess">
 
-                    <div style="position: absolute; right: 10px; top: 10px;">
-                        <p class="p_center" :style="{'color':fontColor[riskInfo.ListRiskAssess[0].RiskAssessLv]}">
-                            <Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[riskInfo.ListRiskAssess[0].RiskAssessLv] }}</p>
+                        <div style="position: absolute; right: 10px; top: 10px;">
+                            <p class="p_center" :style="{'color':fontColor[riskInfo.ListRiskAssess[0].RiskAssessLv]}">
+                                <Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[riskInfo.ListRiskAssess[0].RiskAssessLv] }}</p>
+                            <p class="p_center">
+                                <Icon slot="icon" class="icon" :name="'trend-icon'" style="color:#33CC99" />{{ riskInfo.ListRiskAssess[0].RiskAssessScore }}</p>
+                        </div>
+
                         <p class="p_center">
-                            <Icon slot="icon" class="icon" :name="'trend-icon'" style="color:#33CC99" />{{ riskInfo.ListRiskAssess[0].RiskAssessScore }}</p>
+                            <Icon slot="icon" class="icon" :name="'riskType'" style="color:#33CC99" />类型: {{riskInfo.ListRiskAssess[0].RiskAssessTypeNames | s_toStr}}</p>
+                        <p class="p_center">
+                            <Icon slot="icon" class="icon" :name="'appraiser'" style="color:#33CC99" />评估人: {{riskInfo.ListRiskAssess[0].RiskAssessManName | s_toStr}}</p>
+                        <p class="p_center">
+                            <Icon slot="icon" class="icon" :name="'time2'" style="color:#33CC99" />时间: {{riskInfo.ListRiskAssess[0].RiskAssessDate | s_toDate}}</p>
+                        <p class="p_center"><span class="displayFlex"><Icon slot="icon" class="icon" :name="'describe'" style="color:#33CC99;" /></span><span><p class="assessInfo">描述: {{riskInfo.ListRiskAssess[0].RiskAssessIntro | s_toStr}}</p></span></p>
+                        <p class="p_center">
+                            <Icon slot="icon" class="icon" :name="'auditor'" style="color:#33CC99" />审核人: {{riskInfo.ListRiskAssess[0].RiskAssessAuditManName | s_toStr}}</p>
+                        <p style="float: right; margin-top: -31px;">审核状态: {{RiskAssessStatusName[riskInfo.ListRiskAssess[0].RiskAssessStatus]}}</p>
+                        <div style="clear: both;"></div>
                     </div>
-
-                    <p class="p_center">
-                        <Icon slot="icon" class="icon" :name="'riskType'" style="color:#33CC99" />类型: {{riskInfo.ListRiskAssess[0].RiskAssessTypeNames | s_toStr}}</p>
-                    <p class="p_center">
-                        <Icon slot="icon" class="icon" :name="'appraiser'" style="color:#33CC99" />评估人: {{riskInfo.ListRiskAssess[0].RiskAssessManName | s_toStr}}</p>
-                    <p class="p_center">
-                        <Icon slot="icon" class="icon" :name="'time2'" style="color:#33CC99" />时间: {{riskInfo.ListRiskAssess[0].RiskAssessDate | s_toDate}}</p>
-                    <p class="p_center"><span class="displayFlex"><Icon slot="icon" class="icon" :name="'describe'" style="color:#33CC99;" /></span><span><p class="assessInfo">描述: {{riskInfo.ListRiskAssess[0].RiskAssessIntro | s_toStr}}</p></span></p>
-                    <p class="p_center">
-                        <Icon slot="icon" class="icon" :name="'auditor'" style="color:#33CC99" />审核人: {{riskInfo.ListRiskAssess[0].RiskAssessAuditManName | s_toStr}}</p>
-                    <p style="float: right; margin-top: -31px;">审核状态: {{RiskAssessStatusName[riskInfo.ListRiskAssess[0].RiskAssessStatus]}}</p>
-                    <div style="clear: both;"></div>
                 </div>
             </div>
-        </div>
-        
-        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskHidden)!=='[]'">
-            <div class="title"><span>风险隐患</span> <span class="allHidDan"> <span @click="goPage('riskDangerList',{id:250})">全部隐患</span><span @click="goPage('riskDangerList',{id:250})">全部整改</span></span></div>
             
-            <HidDanger :item="(riskInfo.ListRiskHidden?riskInfo.ListRiskHidden[0]:[])" />
+            <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskHidden)!=='[]'">
+                <div class="title"><span>风险隐患</span> <span class="allHidDan"> <span @click="goPage('riskDangerList',{id:250})">全部隐患</span><span @click="goPage('riskDangerListModify',{id:250})">全部整改</span></span></div>
+                
+                <HidDanger :item="(riskInfo.ListRiskHidden?riskInfo.ListRiskHidden[0]:[])" />
 
-        </div>
+            </div>
 
-        <div v-if="riskInfo.RiskStatus == 1 || riskInfo.RiskStatus == 0" style="width: 100%;height: 60px;"></div>
+            <div v-if="riskInfo.RiskStatus == 1 || riskInfo.RiskStatus == 0" style="width: 100%;height: 60px;"></div>
 
-        <div v-transfer-dom>
-            <!--<popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">-->
-            <popup v-model="show">
-                <div class="popup0">
-                    <group>
+            <div v-transfer-dom>
+                <!--<popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">-->
+                <popup v-model="show">
+                    <div class="popup0">
                         <radio :options="menu" @on-change="change" v-model="result"></radio>
                         <x-textarea title="原因" :max="200" placeholder="请输入原因" :show-counter="false" v-model="riskAuditIntro" :height="200" :rows="8"
                             :cols="30"></x-textarea>
-                        <x-button type="primary" style="width: 92%; margin: 10px 4% 20px 4%; background: #33CC99;" @click.native="submit">提交审核</x-button>
-                    </group>
-                </div>
-            </popup>
-        </div>
+                        <div class="btn">
+                            <x-button type="primary" style="background: #33CC99;" @click.native="submit">提交审核</x-button>
+                        </div>
 
-        <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
-        <div class="footerBox" v-if="JSON.stringify(menuStatus)!=='[]'">
-            <div>
-                <x-button @click.native="editMenuStatus = true;">操作</x-button>
-                <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
+                    </div>
+                </popup>
             </div>
-            <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
-                <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
-            </flexbox-item>-->
-        </div>
 
-        <div v-transfer-dom>
-            <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
-        </div>
+            <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
+            <div class="footerBox" v-if="JSON.stringify(menuStatus)!=='[]'">
+                <div>
+                    <x-button @click.native="editMenuStatus = true;">操作</x-button>
+                    <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
+                </div>
+                <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
+                    <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
+                </flexbox-item>-->
+            </div>
 
+            <div v-transfer-dom>
+                <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
+            </div>
+
+        </div>
     </div>
 </template>
 <script>
@@ -171,7 +175,7 @@
         },
         mounted() {
 
-            this.getRiskInfo(this.$route.params.id);
+            this.getRiskInfo(this.$route.params.riskId);
             console.log(this.$route.params);
         },
         data() {
@@ -208,9 +212,9 @@
                 'editRisk'
             ]),
             goPage(name,param){
-                console.log(param);
+                console.log(`这是隐患详情的参数${JSON.stringify(this.$route.params)}`);
                 
-                this.$router.push({name:name});
+                this.$router.push({name:name, params: this.$route.params});
 
             },
             openEvaluationInfo(ID) {
@@ -382,6 +386,13 @@
         input.weui-btn {
             color: white;
             background: #33CC99;
+        }
+        .popup0{
+            background: #fff;
+            .btn{
+                box-sizing: border-box;
+                padding: 15px;
+            }
         }
         .popup0 .weui-cell {
             font-size: 17px;

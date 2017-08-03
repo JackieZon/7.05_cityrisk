@@ -82,7 +82,7 @@
         mounted() {
             this.clearEvaluationList();
             this.saveDefaultEvaluationListData({
-                RiskID: this.$route.params.id,
+                RiskID: this.$route.params.riskId,
                 RiskAssessStatus: this.tabStatus,
                 pageIndex: 1,   //必填参数
                 pageSize: 10,   //必填参数
@@ -122,7 +122,7 @@
                 this.clearEvaluationList();
                 this.saveDefaultEvaluationListData({
 
-                RiskID: this.$route.params.id,
+                RiskID: this.$route.params.riskId,
                     RiskAssessStatus: this.tabStatus,
                     pageIndex: 1,   //必填参数
                     pageSize: 10,   //必填参数
@@ -141,7 +141,7 @@
             pullUp() {
                 this.saveDefaultEvaluationListData({
 
-                RiskID: this.$route.params.id,
+                RiskID: this.$route.params.riskId,
                     RiskAssessStatus: this.tabStatus,
                     pageIndex: this.defaultDangerListData.pageIndex += 1,
                     pageSize: 10,

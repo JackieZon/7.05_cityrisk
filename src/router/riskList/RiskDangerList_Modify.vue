@@ -1,7 +1,7 @@
 <template>
     <div id="riskDangerList">
         <div class="upper">
-            <Heads :title="'隐患列表'" :isRiskDangerAdd="false"></Heads>
+            <Heads :title="'整改列表'"></Heads>
             <tab :line-width=2 active-color='#33CC99'>
                 <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
                 <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
@@ -16,7 +16,7 @@
             :default="defaultDangerListData"
         >
             <div class="hidDanger" v-for="(item,index) in dangerList" :key="index">
-                <HidDanger :item="item" @click.native="goInfo(item)"></HidDanger>
+                <HidDanger :item="item" @click.native="goInfo(item)" :isModify="true"></HidDanger>
             </div>
         </PullUpRefresh>
     </div>
@@ -50,17 +50,16 @@
         watch:{
         },
         mounted(){
-            console.warn(`路由参数${JSON.stringify(this.$route.params)}`);
-
             this.clearDangerList();
+            console.warn(this.$route.params);
             this.saveDefaultDangerListData({
                 RiskID: this.$route.params.riskId,
-                RiskHiddenStatus: this.tabStatus,
+                RiskChangedStatus: this.tabStatus,
                 pageIndex: 1,   //必填参数
                 pageSize: 10,   //必填参数
             });
 
-            this.getRiskHidden();
+            this.getRiskHiddenChanged();
         },
         data(){
             return{
@@ -80,7 +79,7 @@
         },
         methods:{
             ...mapActions([
-				'getRiskHidden',
+				'getRiskHiddenChanged',
                 'getRiskHiddenInfo'
             ]),
             ...mapMutations([
@@ -91,34 +90,35 @@
             pullDown(){
                 this.clearDangerList();
                 this.saveDefaultDangerListData({
-                    RiskHiddenStatus: this.tabStatus,
+                    RiskChangedStatus: this.tabStatus,
                     pageIndex: 1,   //必填参数
                     pageSize: 10,   //必填参数
                 });
-                this.getRiskHidden();
+                this.getRiskHiddenChanged();
             },
             pullUp(){
 
                 this.saveDefaultDangerListData({
-                    RiskHiddenStatus: this.tabStatus,
+                    RiskChangedStatus: this.tabStatus,
                     pageIndex: this.defaultDangerListData.pageIndex += 1,
                     pageSize: 10,
                 });
-                this.getRiskHidden();
+                this.getRiskHiddenChanged();
 
             },
             changeTab(val){
                 this.tabStatus = val;
                 this.clearDangerList();
                 this.saveDefaultDangerListData({
-                    RiskHiddenStatus: this.tabStatus,
-                    pageIndex: 1,   //必填参数
+                    RiskChangedStatus: this.tabStatus,
+                    pageIndex: 1,   //必填参数/必填参数
                     pageSize: 10,   //必填参数
                 });
-                this.getRiskHidden();
+                this.getRiskHiddenChanged();
             },
             goInfo(item){
-                this.$router.push({ name: 'riskDanger',params:{dangerId: item.ID, riskId: this.$route.params.riskId} });
+                console.log(this.$route.params);
+                this.$router.push({ name: 'riskDangerModify',params:{dangerModifyId: item.ID} });
             }
         }
     }

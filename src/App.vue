@@ -137,7 +137,7 @@ body {
 .weui-textarea{
   border: 1px solid #dbdbdb!important;
   box-sizing: border-box;
-  padding: 0 10px;
+  padding: 5px 10px;
 }
 .weui-search-bar__cancel-btn{
   color:#33CC99!important;

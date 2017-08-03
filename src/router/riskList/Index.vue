@@ -107,7 +107,8 @@
                 this.$router.push({name:'riskAdd'});
             },
 			goPage(name,item,addOperation){
-				this.$router.push({name:name,params:{id:(item?item.ID:''),add:addOperation,editStatus:0}})
+				console.log(`进入**${name}**${item.ID}`);
+				this.$router.push({name:name,params:{riskId:item.ID,add:addOperation,editStatus:0}});
 			},
 			refresh() {
 				console.log('我是往下拉');

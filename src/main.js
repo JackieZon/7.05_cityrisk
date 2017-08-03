@@ -1,4 +1,4 @@
-import  { ToastPlugin } from 'vux'
+import  { ToastPlugin, Datetime } from 'vux'
 import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
@@ -15,6 +15,7 @@ import {wxInit} from './utils/weixin'
 // wxInit();
 
 Vue.use(ToastPlugin);
+Vue.use(Datetime);
 
 // requires and returns all modules that match 
 const requireAll = requireContext => requireContext.keys().map(requireContext);

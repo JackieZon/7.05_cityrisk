@@ -23,14 +23,18 @@
         </card>
         <group>
             <cell is-link title="我的资料" @click.native="goPages('myInfo')"></cell>
-            <cell is-link title="风险列表" @click.native="goPages('auditList')"></cell>
-            <!--<cell is-link title="隐患列表" @click.native="goPages('riskDangerList')"></cell>
-            <cell is-link title="隐患整改列表" @click.native="goPages('auditList')"></cell>-->
         </group>
         <group>
-            <cell is-link title="风险审核" @click.native="goPages('myAuditList')"></cell>
-            <cell is-link title="评估审核" @click.native="goPages('myAssessAuditList')"></cell>
-            <cell is-link title="隐患审核" @click.native="goPages('myAuditList')"></cell>
+            <cell is-link title="待审核风险源" @click.native="goPages('auditList')"></cell>
+            <cell is-link title="待审核风险评估" @click.native="goPages('auditList')"></cell>
+            <cell is-link title="待审核风险隐患" @click.native="goPages('riskDangerList',{riskId:0,add:1,editStatus:1})"></cell>
+            <cell is-link title="待审核隐患整改" @click.native="goPages('auditList')"></cell>
+        </group>
+        <group>
+            <cell is-link title="风险源审核" @click.native="goPages('myAuditList')"></cell>
+            <cell is-link title="风险评估审核" @click.native="goPages('myAssessAuditList')"></cell>
+            <cell is-link title="风险隐患审核" @click.native="goPages('riskDangerReviewList')"></cell>
+            <cell is-link title="隐患整改审核" @click.native="goPages('myRiskDangerReviewListModify')"></cell>
         </group>
     </div>
 </template>
@@ -51,8 +55,8 @@
             Cell
         },
         methods:{
-            goPages(name){
-                this.$router.push({name:name});
+            goPages(name,params){
+                this.$router.push({name:name,params:params});
             }
         }
     }
@@ -60,8 +64,9 @@
 <style lang="less" scoped>
 @import '~vux/src/styles/1px.less';
     .my{
-        height:100%;
-        background: #fbf9fe;   
+        background: #fbf9fe;
+        box-sizing: border-box;
+        padding-bottom: 30px;
     }
     .card-demo-flex {
         display: flex;

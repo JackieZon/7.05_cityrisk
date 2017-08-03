@@ -1,12 +1,12 @@
 <template>
-    <div id="riskDanger">
-        <Heads :title="'隐患详情'"></Heads>
+    <div id="RiskDanger_Modify">
+        <Heads :title="'整改详情'"></Heads>
         <div class="BasicInfoA">
             <div class="title">隐患信息</div>
             <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
             <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
-            <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
-            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+            <x-input title="提交时间" :disabled="true" :value="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
+            <x-textarea :title="'隐患描述'" :readonly="true" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <group :title="'隐患照片'">
                 <div class="photo">
                     <div class="imgItem" v-for="item in dangerInfo.RiskHiddenBeforePhotosPath">
@@ -17,24 +17,23 @@
                     </div>
                 </div>
             </group>
-            <popup v-model="transferState" :hide-on-blur="false">
-                <div class="edit">
-                    <x-input title="联系人" value="默认" placeholder="暂无"></x-input>
-                    <x-input title="联系电话" value="15070713710" placeholder="暂无"></x-input>
-                    <x-input title="提交时间" value="7/14 16:38" placeholder="暂无"></x-input>
-                    <x-textarea :title="'隐患描述'" :max="200" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
-                    <group :title="'整改前照片'">
-                        <div class="photo">
-                            <div class="imgItem">
-                                <img src="./../../assets/img/img1.jpg" alt="">
-                            </div>
-                        </div>
-                    </group>
-                    <div class="next">
-                        <x-button @click.native="rectification">提交</x-button>
+        </div>
+        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==1">
+            <div class="title">整改信息</div>
+            <x-input title="责任主体" :disabled="true" :value="dangerInfo.RiskChangedDuty" placeholder="暂无"></x-input>
+            <x-input title="整改起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-input title="整改止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-textarea :title="'整改措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+            <group :title="'整改照片'">
+                <div class="photo">
+                    <div class="imgItem" v-for="item in dangerInfo.RiskChangedAfterPhotosPath">
+                        <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="">
+                    </div>
+                    <div class="imgItem" v-if="JSON.stringify(dangerInfo.RiskChangedAfterPhotosPath)=='[]'">
+                        暂无图片
                     </div>
                 </div>
-            </popup>
+            </group>
         </div>
         
         <div class="footerBox" ref="revise">
@@ -48,6 +47,7 @@
     </div>
 </template>
 <script>
+// RiskChangedStatus
     import Heads from './../../components/Heads.vue'
     import { param_baseUrls } from './../../utils/subei_config.js'
     import { Tab, TabItem, Actionsheet, TransferDom, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, Popup,Toast } from 'vux'
@@ -78,7 +78,7 @@
         created(){
 
             console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
-            this.getRiskHiddenInfo({ID: this.$route.params.dangerId});
+            this.getRiskHiddenInfo({ID: this.$route.params.dangerModifyId});
             
         },
         data(){
@@ -103,13 +103,13 @@
 
                 console.log(`我是整改前状态状态${val.RiskHiddenStatus}`);
 
-                if(val.RiskHiddenStatus==0){
-                    this.reviseMenus = { edit:'编辑', delete:'删除'};
-                }else if(val.RiskHiddenStatus == 1){
+                if(val.RiskChangedStatus==0){
+                    this.reviseMenus = { edit:'整改', delete:'删除'};
+                }else if(val.RiskChangedStatus == 1){
                     this.reviseMenus = { retract:'撤回' };
-                }else if(val.RiskHiddenStatus == 2){
-                    this.reviseMenus = { edit:'编辑' };
-                }else if(val.RiskHiddenStatus == 3){
+                }else if(val.RiskChangedStatus == 2){
+                    this.reviseMenus = { edit:'整改' };
+                }else if(val.RiskChangedStatus == 3){
                     this.$refs.revise.style.display = 'none';
                 }
 
@@ -173,6 +173,7 @@
                 'getRiskHiddenInfo',
                 'postRiskHiddenDelete',
                 'postUpdateRiskHiddenStatus_Recall',
+                'postUpdateRiskHiddenChangedStatus_Recall',
             ]),
             ...mapMutations([
                 'openConfirm'
@@ -186,7 +187,7 @@
                 switch (name) {
 
                     case 'edit':{
-                        this.$router.push({ name:'riskDangerAdd', params:{item: this.dangerInfo, riskId: this.$route.params.riskId} });
+                        this.$router.push({ name:'riskDangerAddModify', params:{item: this.dangerInfo} });
                     }
                     break;
 
@@ -199,7 +200,7 @@
 
                     case 'retract':{
                         this.openConfirm({state:true,msg:'确认要撤回吗？',control: ()=>{
-                            this.postUpdateRiskHiddenStatus_Recall({id:this.dangerInfo.ID,$router: this.$router});
+                            this.postUpdateRiskHiddenChangedStatus_Recall({id:this.dangerInfo.ID,$router: this.$router});
                         }})
                     }
                     break;
@@ -215,12 +216,9 @@
     }
 </script>
 <style lang="less">
-    #riskDanger{
-        background: #f1f1f1;
+    #RiskDanger_Modify{
         box-sizing: border-box;
-        padding-bottom: 15px;
-        height: 100%;
-
+        padding-bottom: 60px;
         .vux-swiper{
             height:100%!important;
         }
@@ -229,10 +227,11 @@
         }
         .title{
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             line-height: 45px;
             border-bottom:2px solid #33CC99;
+            padding: 0 15px;
         }
         .BasicInfoA{margin-top:15px;background:#fff;}
         .photo{

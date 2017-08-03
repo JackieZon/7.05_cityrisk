@@ -39,7 +39,6 @@ export const store = new Vuex.Store({
       },1500);
     },
     showToast({commit,dispatch,getters,state},payload){
-      payload.state=true;
       console.log(payload);
       commit('upToastMag',payload);
       dispatch('hideToast');

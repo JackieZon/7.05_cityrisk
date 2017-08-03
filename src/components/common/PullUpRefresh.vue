@@ -69,19 +69,19 @@
 			item(val,vals){
 				console.log(val.length);
 				
-				// if(val.length<vals.length){
-				// 	this.$nextTick(() => {
-				// 		this.$refs.scrollerRef.reset({
-				// 			top: 0
-				// 		})
-				// 	})
-				// }else{
+				if(val.length<vals.length){
+					this.$nextTick(() => {
+						this.$refs.scrollerRef.reset({
+							top: 0
+						})
+					})
+				}else{
 					this.$nextTick(() => {this.$refs.scrollerRef.reset()});
-				// }
+				}
 				
 			},
 			default(){
-				console.log(`我是默认数据${JSON.stringify(this.default)}`);
+				// console.log(`我是默认数据${JSON.stringify(this.default)}`);
 				this.defaults = (this.default?this.default:{total:0})
 				this.$nextTick(() => {this.$refs.scrollerRef.reset()});
 			}

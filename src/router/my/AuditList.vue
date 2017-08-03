@@ -218,7 +218,7 @@
         this.getRisk();
       },
       goRiskInfo(item){
-        this.$router.push({name:'riskInfo',params:{id:item.ID,add:1,editStatus:1}})
+        this.$router.push({name:'riskInfo',params:{riskId:item.ID,add:1,editStatus:1}})
       }
     }
   }

@@ -1,8 +1,9 @@
-import { getRiskHidden, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall, } from './../../servers/api'
+import { getRiskHidden, getRiskHiddenChanged, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall,postUpdateRiskHiddenStatus_Audit, postUpdateRiskHiddenChangedStatus_Recall } from './../../servers/api'
 import Vue from 'vue';
 const state = {
     defaultDangerListData:{
-        RiskID:1092,
+        RiskID:0,
+        RiskChangedStatus:'',
         RiskHiddenStatus:'',
         pageIndex: 1,   //必填参数
         pageSize: 10,   //必填参数
@@ -37,6 +38,13 @@ const actions = {
     getRiskHidden({commit,dispatch,getters,state}){
         getRiskHidden(state.defaultDangerListData).then((res)=>{
             console.log(res);
+            commit('saveDefaultDangerListData',{total: res.all.total});
+            commit('saveDangerList',res.info);
+        });
+    },
+    getRiskHiddenChanged({commit,dispatch,getters,state}){
+        console.log(`我是获取风险整改的参数${JSON.stringify(state.defaultDangerListData)}`);
+        getRiskHiddenChanged(state.defaultDangerListData).then((res)=>{
             commit('saveDefaultDangerListData',{total: res.all.total});
             commit('saveDangerList',res.info);
         });
@@ -106,7 +114,47 @@ const actions = {
             }
 
         })
-    }
+    },
+    postUpdateRiskHiddenStatus_Audit({commit,dispatch,getters,state},payload){
+
+        const $router = payload.$router;
+
+        postUpdateRiskHiddenStatus_Audit(payload.default).then((res)=>{
+
+            console.log(`审核返回数据${JSON.stringify(res)}`);
+
+            if(res.all.status){
+                Vue.$vux.toast.show({
+                    text: '审核完成',
+                    type: 'success',
+                    onHide(){
+                        $router.back();
+                    }
+                });
+            }
+        })
+    },
+    postUpdateRiskHiddenChangedStatus_Recall({commit,dispatch,getters,state},payload){
+
+        console.log(`我是撤回的ID${payload.id}`);
+
+        const $router = payload.$router;
+        
+        postUpdateRiskHiddenChangedStatus_Recall(payload.id).then((res)=>{
+
+            if(res.all.status){
+                Vue.$vux.toast.show({
+                    text: '撤回成功',
+                    type: 'success',
+                    onHide(){
+                        $router.back();
+                    }
+                });
+            }
+
+        })
+
+    },
 }
 
 const getters = {}

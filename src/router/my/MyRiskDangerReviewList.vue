@@ -1,10 +1,10 @@
 <template>
-    <div id="riskDangerList">
+    <div id="myRiskDangerReviewList">
         <div class="upper">
-            <Heads :title="'隐患列表'" :isRiskDangerAdd="false"></Heads>
+            <Heads :title="'隐患审核列表'"></Heads>
             <tab :line-width=2 active-color='#33CC99'>
-                <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
-                <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
+                <!--<tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>-->
+                <tab-item selected @on-item-click="changeTab(1)">待审核</tab-item>
                 <tab-item @on-item-click="changeTab(3)">已审核</tab-item>
                 <tab-item @on-item-click="changeTab(2)">已退回</tab-item>
             </tab>
@@ -65,7 +65,7 @@
         data(){
             return{
                 transferState:false,
-                tabStatus: 0,
+                tabStatus: 1,
             }
         },
         computed:{
@@ -118,13 +118,13 @@
                 this.getRiskHidden();
             },
             goInfo(item){
-                this.$router.push({ name: 'riskDanger',params:{dangerId: item.ID, riskId: this.$route.params.riskId} });
+                this.$router.push({ name: 'riskDangerReviewInfo',params:{dangerId: item.ID, riskId: this.$route.params.riskId} });
             }
         }
     }
 </script>
 <style lang="less" scoped>
-    #riskDangerList{
+    #myRiskDangerReviewList{
         display: flex;
         flex-direction: column;
         height: 100%;

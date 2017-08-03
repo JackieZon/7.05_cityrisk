@@ -8,6 +8,14 @@ const RiskInfo = resolve => require(['./router/riskList/RiskInfo.vue'], resolve)
 const RiskDanger = resolve => require(['./router/riskList/RiskDanger.vue'], resolve)
 const RiskDangerList = resolve => require(['./router/riskList/RiskDangerList.vue'],resolve)
 const RiskDangerAdd = resolve => require(['./router/riskList/RiskDangerAdd.vue'],resolve)
+const RiskDanger_Modify = resolve => require(['./router/riskList/RiskDanger_Modify.vue'],resolve)
+const RiskDangerList_Modify = resolve => require(['./router/riskList/RiskDangerList_Modify.vue'],resolve)
+const RiskDangerAdd_Modify = resolve => require(['./router/riskList/RiskDangerAdd_Modify.vue'],resolve)
+// 隐患审核列表和详情
+const RiskDangerReviewList = resolve => require(['./router/my/MyRiskDangerReviewList.vue'],resolve)
+const RiskDangerReviewInfo = resolve => require(['./router/my/MyRiskDangerReviewInfo.vue'],resolve)
+const MyRiskDangerReviewListModify = resolve => require(['./router/my/MyRiskDangerReviewListModify.vue'],resolve)
+const MyRiskDangerReviewInfoModify = resolve => require(['./router/my/MyRiskDangerReviewInfoModify.vue'],resolve)
 
 const My = resolve => require(['./router/my/Index.vue'], resolve)
 const MyInfo = resolve => require(['./router/my/MyInfo.vue'], resolve)
@@ -98,32 +106,72 @@ export default {
   },
   {
     // editStatus == 0; 0仅查看信息，1带撤销和编辑，2带审核按钮
-    path: '/Index/RiskList/RiskInfo/:id/:add/:editStatus',
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus',
     name: 'riskInfo',
     component: RiskInfo
   },
   {
-    path: '/Index/RiskList/RiskInfo/RiskDangerList/RiskDanger/:id',
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList/RiskDanger/:dangerId',
     name: 'riskDanger',
     component: RiskDanger
   },
   {
-    path: '/Index/RiskList/RiskInfo/RiskDangerList/:id',
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList/:riskId',
     name: 'riskDangerList',
     component: RiskDangerList
   },
   {
-    path: '/Index/RiskList/RiskInfo/RiskDangerList/RiskDangerAdd/:id',
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList/RiskDangerAdd/:dangerId',
     name: 'riskDangerAdd',
     component: RiskDangerAdd
   },
+
   {
-    path: "/Index/RiskList/RiskInfo/EvaluationList/:id",
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList/RiskDanger_Modify/:dangerModifyId',
+    name: 'riskDangerModify',
+    component: RiskDanger_Modify
+  },
+  {
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList_Modify/:riskId',
+    name: 'riskDangerListModify',
+    component: RiskDangerList_Modify
+  },
+  {
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList/RiskDangerAdd_Modify/:dangerModifyId',
+    name: 'riskDangerAddModify',
+    component: RiskDangerAdd_Modify
+  },
+  // 审核风险隐患列表
+  {
+    path: '/Index/My/RiskDangerReviewList',
+    name: 'riskDangerReviewList',
+    component: RiskDangerReviewList
+  },
+  // 隐患审核详情
+  {
+    path: '/Index/My/RiskDangerReviewInfo/:dangerId',
+    name: 'riskDangerReviewInfo',
+    component: RiskDangerReviewInfo
+  },
+  // 审核风险整改列表
+  {
+    path: '/Index/My/MyRiskDangerReviewListModify',
+    name: 'myRiskDangerReviewListModify',
+    component: MyRiskDangerReviewListModify
+  },
+  // 隐患审核整改详情
+  {
+    path: '/Index/My/MyRiskDangerReviewInfoModify/:dangerId',
+    name: 'myRiskDangerReviewInfoModify',
+    component: MyRiskDangerReviewInfoModify
+  },
+  {
+    path: "/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/EvaluationList/:id",
     name: "evaluationList",
     component: EvaluationList
   },
   {
-    path: "/Index/RiskList/RiskInfo/EvaluationList/evaluationInfo/:infoId",
+    path: "/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/EvaluationList/evaluationInfo/:infoId",
     name: "evaluationInfo",
     component: EvaluationInfo
   },

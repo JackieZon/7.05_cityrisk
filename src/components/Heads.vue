@@ -106,6 +106,7 @@
         z-index: 99;
         width: 100%;
         .divHeight {
+            background: #33CC99;
             height: 45px;
             width: 100%;
         }
@@ -120,6 +121,7 @@
         z-index: 99;
         .headsTitle {
             background: #33CC99;
+            // background: rgba(255,255,255,0);
             color: #fff;
             width: 100%;
         }

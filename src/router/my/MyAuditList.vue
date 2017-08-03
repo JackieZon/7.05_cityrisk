@@ -136,7 +136,7 @@
 
       goPage(name, item, addOperation) {
         console.log(name);
-        this.$router.push({ name: name, params: { id: item.ID, add: addOperation, editStatus: 2 } });
+        this.$router.push({ name: name, params: { riskId: item.ID, add: addOperation, editStatus: 2 } });
       }
 
     }

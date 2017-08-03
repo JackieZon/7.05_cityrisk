@@ -1,22 +1,44 @@
 <template>
-    <div id="riskDangerAdd">
+    <div id="RiskDangerAdd_Modify">
 
         <div class="upper">
-            <Heads :noBack="false" :goBack="goBack" :title="'隐患'"></Heads>
+            <Heads :title="'整改'"></Heads>
             <div class="BasicInfoA">
+                <div class="title">整改前</div>
                 <div class="edit">
-                    <!--<x-input title="联系人" value="默认" placeholder="暂无"></x-input>
-                    <x-input title="联系电话" value="15070713710" placeholder="暂无"></x-input>
-                    <x-input title="提交时间" value="7/14 16:38" placeholder="暂无"></x-input>-->
-                    <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenIntro" :title="'隐患描述'" :max="200" :placeholder="'请填写描述'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
-                    <group :title="'隐患图片'">
+                    <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenIntro" :readonly="true" :title="'隐患描述'" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+                    <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenAuditIntro" :readonly="true" :title="'审核原因'" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+                    <group :title="'整改前图片'">
                         <div class="photo">
                             <div class="imgItem" v-for="(item,index) in defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath">
+                                <img :src="(item.url.indexOf('http://')>-1?item.url:`${param_baseUrls}${item.url}`)" alt="">
+                                <!--<div class="delete" @click="deletePhoto(index)"><Icon slot="icon" :name="'delete-icon'" /></div>-->
+                            </div>
+
+                            <!--<div class="imgItem" v-if="defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.length<2&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
+                                <div class="fileBox">
+                                    <div class="fileBoxs">
+                                        <input class="fileBtn" @change="changeFile" type="file" accept="image/*" ref="fileBtn" >
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </group>
+                </div>
+                <div class="modify">
+                    <div class="title">整改</div>
+                    <x-input title="责任主体" v-model="defaultRiskHiddenAdd.RiskChangedDuty" placeholder="请输入责任主体"></x-input>
+                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedStratDate" value-text-align="left" @on-change="RiskChangedStratDate" :title="'<div class=time >整改起期</div>'"></datetime>
+                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedEndDate" value-text-align="left" @on-change="RiskChangedEndDate" :title="'<div class=time >整改止期</div>'"></datetime>
+                    <x-textarea v-model="defaultRiskHiddenAdd.RiskChangedIntro" :title="'整改措施'" :max="200" :placeholder="'请填写整改措施'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+                    <group :title="'整改后图片'">
+                        <div class="photo">
+                            <div class="imgItem" v-for="(item,index) in defaultRiskHiddenAdd.RiskChangedAfterPhotosPath">
                                 <img :src="(item.url.indexOf('http://')>-1?item.url:`${param_baseUrls}${item.url}`)" alt="">
                                 <div class="delete" @click="deletePhoto(index)"><Icon slot="icon" :name="'delete-icon'" /></div>
                             </div>
 
-                            <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.length<2&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
+                            <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
                                 <div class="fileBox">
                                     <div class="fileBoxs">
                                         <input class="fileBtn" @change="changeFile" type="file" accept="image/*" ref="fileBtn" >
@@ -39,7 +61,7 @@
 <script>
     import { param_baseUrls } from './../../utils/subei_config.js'
     import Heads from './../../components/Heads.vue'
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast } from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast, Datetime} from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
 
     export default{
@@ -58,6 +80,7 @@
             TransferDom,
             Popup,
             Toast,
+            Datetime,
         },
         watch:{},
         created(){
@@ -65,15 +88,18 @@
             console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
 
             if( typeof(this.$route.params.item) == 'object'){
-                this.defaultRiskHiddenAdd = { ...this.defaultRiskHiddenAdd, ...this.$route.params.item };
-                console.log('我是替换后的数据');
+
+                this.$route.params.item.RiskChangedStratDate = '请选择';
+                this.$route.params.item.RiskChangedEndDate = '请选择';
+                this.defaultRiskHiddenAdd = this.$route.params.item;
                 console.log(this.defaultRiskHiddenAdd);
             }
-            // this.getRiskHiddenInfo({ID: this.$route.params.id});
+            // this.getRiskHiddenInfo({ID: this.$route.params.dangerModifyId});
             
         },
         data(){
             return{
+                value1: '',
                 transferState:false,
                 RiskChangePhotosPath:[],
                 files:[],
@@ -85,38 +111,38 @@
                     }
                 ],
                 defaultRiskHiddenAdd:{
-                    RiskHiddenBeforePhotosPath: [],
-                    RiskChangedAfterPhotosPath: [],
-                    RiskHiddenStatusName: "",
-                    ID: 0,
-                    RiskID: 0,
-                    RiskAgencyID: 0,
-                    RiskHiddenNo: "",
-                    RiskHiddenIntro: "",
-                    RiskHiddenAddMan: 0,
-                    RiskHiddenAddMan: "",
-                    RiskHiddenAddManTel: "",
-                    RiskHiddenDate: "",
-                    RiskHiddenBeforePhotos: "",
-                    RiskHiddenStatus: 0,
-                    RiskHiddenAuditIntro: "",
-                    RiskHiddenAuditMan: 0,
-                    RiskHiddenAuditManName: "",
-                    RiskHiddenAuditDate: "",
-                    RiskChangedDuty: "",
-                    RiskChangedIntro: "",
-                    RiskChangedAfterPhotos: "",
-                    RiskChangedStratDate: "",
-                    RiskChangedEndDate: "",
-                    RiskChangedMan: 0,
-                    RiskChangedAddManName: "",
-                    RiskChangedAddManTel: "",
-                    RiskChangedDate: "",
-                    RiskChangedStatus: 0,
-                    RiskChangedAuditIntro: "",
-                    RiskChangedAuditMan: 0,
-                    RiskChangedAuditManName: "",
-                    RiskChangedAuditDate: ""
+                    "RiskHiddenBeforePhotosPath": [],
+                    "RiskChangedAfterPhotosPath": [],
+                    "RiskHiddenStatusName": "",
+                    "ID": 0,
+                    "RiskID": 0,
+                    "RiskAgencyID": 0,
+                    "RiskHiddenNo": "",
+                    "RiskHiddenIntro": "",
+                    "RiskHiddenAddMan": 0,
+                    "RiskHiddenAddManName": "",
+                    "RiskHiddenAddManTel": "",
+                    "RiskHiddenDate": "",
+                    "RiskHiddenBeforePhotos": "",
+                    "RiskHiddenStatus": 0,
+                    "RiskHiddenAuditIntro": "",
+                    "RiskHiddenAuditMan": 0,
+                    "RiskHiddenAuditManName": "",
+                    "RiskHiddenAuditDate": "",
+                    "RiskChangedDuty": "",
+                    "RiskChangedIntro": "",
+                    "RiskChangedAfterPhotos": "",
+                    "RiskChangedStratDate": "请选择",
+                    "RiskChangedEndDate": "请选择",
+                    "RiskChangedMan": 0,
+                    "RiskChangedAddManName": "",
+                    "RiskChangedAddManTel": "",
+                    "RiskChangedDate": "",
+                    "RiskChangedStatus": 0,
+                    "RiskChangedAuditIntro": "",
+                    "RiskChangedAuditMan": 0,
+                    "RiskChangedAuditManName": "",
+                    "RiskChangedAuditDate": ""
                 }
             }
         },
@@ -126,8 +152,8 @@
                     return state.riskDangerList.dangerInfo;
                 }
             }),
-            RiskHiddenBeforePhotos(){
-                const photoList = this.defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath;
+            RiskChangedAfterPhotos(){
+                const photoList = this.defaultRiskHiddenAdd.RiskChangedAfterPhotosPath;
                 let photoName = [];
                 for(let item in photoList){
                     photoName.push(photoList[item].name)
@@ -137,54 +163,7 @@
             }
         },
         watch:{
-            dangerInfo(val){
-
-                console.log(`我是整改状态${val.RiskChangedStatus}`);
-                console.log(val.RiskChangedStatus>0)
-
-                if(val.RiskChangedStatus==0){
-
-                    if(JSON.stringify(val.RiskChangedAfterPhotosPath)!=='[]'){
-
-                        let url = val.RiskChangedAfterPhotosPath[0].url
-                        
-                        if(url.indexOf(',')>-1){
-
-                            console.log(url.indexOf(','));
-                            this.RiskChangePhotosPath = url.split(',');
-
-                        }else{
-                            this.RiskChangePhotosPath[0] = url;
-                        }
-                    }
-                    
-
-                }else{
-
-                    if(JSON.stringify(val.RiskHiddenBeforePhotosPath)!=='[]'){
-
-                        let url = val.RiskHiddenBeforePhotosPath[0].url
-                        
-                        console.log(url);
-
-                        if(url.indexOf(',')>-1){
-
-                            console.log(url.indexOf(','));
-                            this.RiskChangePhotosPath = url.split(',');
-                            
-                        }else{
-                            this.RiskChangePhotosPath[0] = url;
-                        }
-                    }
-                }
-                this.RiskChangePhotosPath = this.RiskChangePhotosPath.map((items)=>{
-                    if(items.indexOf('http://')>-1){
-                        return items;
-                    }else{
-                        return `http://wx-cityrisk.subei88.com${items}`
-                    }
-                })
-                console.log(`我是处理后的数据${JSON.stringify(this.RiskChangePhotosPath)}`);
+            defaultRiskHiddenAdd(val){
             }
         },
         methods:{
@@ -198,17 +177,23 @@
                 'updateLoadingStatus',
                 'openConfirm'
             ]),
-            goBack(){
-                console.log(`我是router Params${this.$router.params}`);
 
-                // this.$router.replace({path:'riskDanger',params:{id:this.$route.params.riskId}});
-                this.$router.back();
+            RiskChangedStratDate (val) {
+                this.defaultRiskHiddenAdd.RiskChangedStratDate = val;
+                console.log(val);
             },
+
+            RiskChangedEndDate(val){
+                this.defaultRiskHiddenAdd.RiskChangedEndDate = val;
+                console.log(val);
+            },
+
+
             rectification(){
                 this.transferState = !this.transferState
             },
             changeFile(){
-                
+
                 var t_data = this;
                 this.files = this.$refs.fileBtn.files[0];
 
@@ -221,8 +206,7 @@
                     this.postUploadPhoto({type:'RiskHidden',formData: formData}).then((res)=>{
                         
                         res.info.path = (res.info.path.indexOf('https://')>0?res.info.path:`${param_baseUrls}${res.info.path}`);
-                        console.log(res.info.path);
-                        this.defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.push({
+                        this.defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.push({
                             name:res.info.name,
                             url:res.info.path,
                         });
@@ -231,48 +215,59 @@
                         
                     });
                 }
-                console.log(`我是选择图片处理后的数据`);
-                console.log(this.defaultRiskHiddenAdd);
             },
             deletePhoto(index){
 
                 this.openConfirm({state:true,msg:'确定要删除吗',control:()=>{
-                    this.defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.splice(index,1);
-                    console.log(this.RiskHiddenBeforePhotos);
+                    this.defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.splice(index,1);
+                    console.log(this.RiskChangedAfterPhotos);
                 }});
 
             },
             addHidDanger(status){
 
-
-                this.defaultRiskHiddenAdd.RiskHiddenStatus = status;
+                this.defaultRiskHiddenAdd.RiskChangedStatus = status;
                 this.defaultRiskHiddenAdd.RiskID = this.$route.params.riskId;
-                this.defaultRiskHiddenAdd.RiskHiddenBeforePhotos = this.RiskHiddenBeforePhotos.join(',');
+                this.defaultRiskHiddenAdd.RiskChangedAfterPhotos = this.RiskChangedAfterPhotos.join(',');
 
-                if(!this.defaultRiskHiddenAdd.RiskHiddenIntro){
-                    this.showToast({toastState:true,toastValue:'请选择事故后果'});
+                if(!this.defaultRiskHiddenAdd.RiskChangedDuty){
+                    this.showToast({toastState:true,toastValue:'请填写责任主体'});
                     return;
                 }
 
-                if(this.defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.length==0){
-                    this.showToast({toastState:true,toastValue:'请上传隐患图片'});
+                if(this.defaultRiskHiddenAdd.RiskChangedStratDate=='请选择'){
+                    this.showToast({toastState:true,toastValue:'请选择起期'});
+                    return;
+                }   
+
+                if(this.defaultRiskHiddenAdd.RiskChangedEndDate=='请选择'){
+                    this.showToast({toastState:true,toastValue:'请选择止期'});
+                    return;
+                }
+                if(!this.defaultRiskHiddenAdd.RiskChangedIntro){
+                    this.showToast({toastState:true,toastValue:'请填写整改措施'});
+                    return;
+                }
+                
+                if(this.defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length==0){
+                    this.showToast({toastState:true,toastValue:'请上传整改图片'});
                     return;
                 }
 
                 console.log(this.defaultRiskHiddenAdd);
 
-                console.log(`我是计算后的数据 图片名${this.RiskHiddenBeforePhotos}`);
+                console.log(`我是计算后的数据 图片名${this.RiskChangedAfterPhotos}`);
                 
                 console.log('这是提交的数据***************')
                 console.log(JSON.stringify(this.defaultRiskHiddenAdd));
-    
+
                 this.postRiskHiddenAdd({param: this.defaultRiskHiddenAdd, $router: this.$router});
             }
         }
     }
 </script>
 <style lang="less">
-    #riskDangerAdd{
+    #RiskDangerAdd_Modify{
 
         background: #f1f1f1;
         box-sizing: border-box;
@@ -283,7 +278,7 @@
         flex-direction: column;
 
         .upper{
-            background: #fff;
+            
         }
         .vux-swiper{
             height:100%!important;
@@ -297,12 +292,14 @@
 
         .title{
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             line-height: 45px;
             border-bottom:2px solid #33CC99;
+            padding: 0 15px;
+            background: #fff;
         }
-        .BasicInfoA{margin-top:15px;background:#fff;}
+        .BasicInfoA{margin-top:15px;}
         .photo{
             box-sizing: border-box;
             padding: 5px;
@@ -381,6 +378,18 @@
             background: #f0f3f9;
             color: #34538b;
         }
-
+        .modify{
+            margin-top: 15px;
+            background: #fff;
+            .weui-label{
+                width: 6em!important;
+            }
+        }
+        .time{
+             width: 6em!important;
+        }
+        .weui-cell__ft{
+            color:#333;
+        }
     }
 </style>
