@@ -663,7 +663,7 @@ var allAreas = [];
 export const countAreas = (areas)=>{
     for (var a in areas) {
 
-    console.log(`${areas[a].value}***${areas[a].label}***${(areas[a].children?areas[a].children.length:'')}`);
+    // console.log(`${areas[a].value}***${areas[a].label}***${(areas[a].children?areas[a].children.length:'')}`);
 
     allAreas.push({
         name: areas[a].label,
@@ -672,7 +672,7 @@ export const countAreas = (areas)=>{
     });
 
     //   if (areas[a].children) {
-        console.log(`${a}****${areas[a].children==null}`);
+        // console.log(`${a}****${areas[a].children==null}`);
 
         if(areas[a].children==null){
             areas[a].children = [{

@@ -61,7 +61,7 @@
         },
         mounted(){
             this.deleteRiskList();
-            this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:0});
+            this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:3});
             this.getRisk();
         },
         computed:{
@@ -83,11 +83,11 @@
                 'getRisk'
             ]),
             swiperChange(val){
-                console.log(val);
+                // console.log(val);
             },
             pullDown(){
                 this.deleteRiskList();
-                this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:0});
+                this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:3});
                 this.getRisk();
             },
             pullUp(){
@@ -95,7 +95,7 @@
                 this.getRisk();
             },
             goRiskInfo(item){
-                this.$router.push({name:'riskInfo',params:{id:item.ID,add:1,editStatus:1}})
+                this.$router.push({name:'riskInfo',params:{riskId:item.ID,add:1,editStatus:1}})
             }
         }
     }

@@ -56,7 +56,7 @@
             }
         },
 		mounted(){
-			this.defaults = (this.default?this.default:{total:0})
+			this.defaults = (this.default?this.default:{total:0});
 		},
 		watch:{
 			statusDown(){
@@ -67,18 +67,22 @@
 				}
 			},
 			item(val,vals){
-				console.log(val.length);
+
+				this.onFetching = true;
+				setTimeout(()=>{
+					this.onFetching = false;
+				},1000);
 				
 				if(val.length<vals.length){
 					this.$nextTick(() => {
 						this.$refs.scrollerRef.reset({
 							top: 0
 						})
-					})
+					});
 				}else{
 					this.$nextTick(() => {this.$refs.scrollerRef.reset()});
 				}
-				
+
 			},
 			default(){
 				// console.log(`我是默认数据${JSON.stringify(this.default)}`);
@@ -91,7 +95,8 @@
 				'updateLoadingStatus'
 			]),
 			...mapActions([
-				'showToast'
+				'showToast',
+				'publicFun',
 			]),
             refresh() {
 				setTimeout(() => {
@@ -106,21 +111,27 @@
 					// do nothing
 				} else {
 					console.log(`下一页${this.default.total}***${this.item.length}`);
+
 					if(this.default.total>this.item.length){
 						this.updateLoadingStatus({isLoading:true});
 					}
+
 					this.onFetching = true
 					setTimeout(() => {
 						
-						if(this.default.total==this.item.length){
-							this.showToast({toastState:true,toastValue:`亲，已经到底了`});
-						}
-						if(typeof(this.pullUp) == 'function'){
-							this.pullUp();
-						}
 						this.updateLoadingStatus({isLoading:false});
 						this.$nextTick(() => {this.$refs.scrollerRef.reset()})
 						this.onFetching = false
+
+						
+						if(this.default.total==this.item.length){
+							this.showToast({toastValue:'亲，已经到底了。',toastState:true,});
+						}
+						if(typeof(this.pullUp) == 'function'&&this.default.total>this.item.length){
+							this.pullUp();
+						}
+						
+
 					}, 800)
 				}
 

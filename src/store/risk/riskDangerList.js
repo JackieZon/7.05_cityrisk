@@ -1,4 +1,4 @@
-import { getRiskHidden, getRiskHiddenChanged, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall,postUpdateRiskHiddenStatus_Audit, postUpdateRiskHiddenChangedStatus_Recall } from './../../servers/api'
+import { getRiskHidden, getRiskHiddenChanged, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall,postUpdateRiskHiddenStatus_Audit, postUpdateRiskHiddenChangedStatus_Recall, postUpdateRiskHiddenChangedStatus_Audit} from './../../servers/api'
 import Vue from 'vue';
 const state = {
     defaultDangerListData:{
@@ -120,6 +120,24 @@ const actions = {
         const $router = payload.$router;
 
         postUpdateRiskHiddenStatus_Audit(payload.default).then((res)=>{
+
+            console.log(`审核返回数据${JSON.stringify(res)}`);
+
+            if(res.all.status){
+                Vue.$vux.toast.show({
+                    text: '审核完成',
+                    type: 'success',
+                    onHide(){
+                        $router.back();
+                    }
+                });
+            }
+        })
+    },
+    postUpdateRiskHiddenChangedStatus_Audit({commit,dispatch,getters,state},payload){
+
+        const $router = payload.$router;
+        postUpdateRiskHiddenChangedStatus_Audit(payload.default).then((res)=>{
 
             console.log(`审核返回数据${JSON.stringify(res)}`);
 

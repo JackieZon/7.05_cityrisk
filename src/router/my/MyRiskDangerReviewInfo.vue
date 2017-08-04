@@ -6,11 +6,11 @@
             <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
             <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
-            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" ></x-textarea>
             <div v-if="dangerInfo.RiskHiddenStatus==3||dangerInfo.RiskHiddenStatus==2" style="border-top: 1px solid #eee;">
             
                 <x-input title="审核状态" :disabled="true" :value="dangerInfo.RiskHiddenStatus==3?'审核通过':'审核退回'" placeholder="暂无"></x-input>
-                <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenAuditIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+                <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenAuditIntro" :placeholder="'暂无'" :show-counter="false" ></x-textarea>
                 
             </div>
             <group :title="'隐患照片'">
@@ -154,10 +154,11 @@
         }
         .title{
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             line-height: 45px;
             border-bottom:2px solid #33CC99;
+            padding: 0 15px;
         }
         .BasicInfoA{margin-top:15px;background:#fff;}
         .photo{

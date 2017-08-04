@@ -1,50 +1,38 @@
 import { getRiskAssess } from "./../../servers/api"
+
 const state = {
-
-    assessAuditList: [],
-    defaultData: {
-        // RiskName: "",
-        RiskAssessStatus: 1,
-        pageIndex: 1,
-        pageSize: 10,
-        total: 0,
-    }
-
-}
-
-const actions = {
-    getAssessAuditList({ commit, dispatch, getters, state }) {
-
-        console.log(JSON.stringify(state.defaultData));
-
-        getRiskAssess(state.defaultData).then((data) => {
-
-            // console.log(JSON.stringify(data.info));
-            commit('saveDefaultDatas', { total: data.all.total })
-            commit('saveAssessAuditList', data.info);
-
-        });
-    }
+    defaultEvaluationListData:{
+        RiskID:0,
+        RiskAssessStatus:'',
+        pageIndex: 1,   //必填参数
+        pageSize: 10,   //必填参数
+        total: 0,       //必填参数
+    },
+    evaluationList:[],
 }
 
 const mutations = {
-
-    saveAssessAuditList(state, payload) {
-        state.assessAuditList.push(...payload) ;
+    saveDefaultEvaluationListDatas(state,payload){ //改变状态
+        state.defaultEvaluationListData = { ...state.defaultEvaluationListData, ...payload}
     },
-
-
-    saveDefaultDatas(state, payload) {
-        // alert(JSON.stringify(state.defaultData))
-        state.defaultData = { ...state.defaultData, ...payload }
+    saveEvaluationLists(state, payload){//存储列表数据
+        state.evaluationList = state.evaluationList.concat(payload);
+        // console.log(state.evaluationList);
     },
+    clearEvaluationLists(state, payload){//清空列表数据
+        state.evaluationList = [];
+    },
+}
 
-
-    deleteAssessAuditList(state, payload) {
-        state.assessAuditList = [];
+const actions = {
+    getRiskAssessList({commit,state,dispatch,getters}){
+        getRiskAssess(state.defaultEvaluationListData).then((res) => {
+             commit('saveDefaultEvaluationListDatas',{total: res.all.total});
+            commit('saveEvaluationLists',res.info);
+            console.log(`我是数据${JSON.stringify(res.info)}`)
+            // console.log(res)
+        })
     }
-
-
 }
 
 const getters = {
@@ -54,8 +42,8 @@ const getters = {
 export default {
 
     state,
-    actions,
     mutations,
-    getters
+    getters,
+    actions
 
 }

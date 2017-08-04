@@ -10,6 +10,7 @@ import myAuditList from "./risk/myAuditList"
 import myAssessAuditList from "./my/myAssessAuditList"
 import riskDangerList from './risk/riskDangerList'
 import evaluationList from './risk/evaluationList'
+import myAssessAuditInfo from './my/myAssessAuditInfo'
 import {getArea, postUploadPhoto} from './../servers/api'
 import {countAreas} from './../utils/areas'
 
@@ -22,13 +23,14 @@ export const store = new Vuex.Store({
     areaData:[],
     toast:{
       toastState: false,
-      toastValue: '',
+      toastValue: '我是123',
     },
     confirm:{
       state: false,
       msg:'我是提醒消息',
       control:()=>{}
     },
+    public:{}
   },
   actions: {
     hideToast(context){
@@ -39,9 +41,11 @@ export const store = new Vuex.Store({
       },1500);
     },
     showToast({commit,dispatch,getters,state},payload){
+      
       console.log(payload);
       commit('upToastMag',payload);
       dispatch('hideToast');
+      
     },
     getArea({commit,dispatch,getters,state}){
       getArea().then((data)=>{
@@ -51,8 +55,11 @@ export const store = new Vuex.Store({
     },
     postUploadPhoto: async ({commit,dispatch,getters,state},payload) => {
       return await postUploadPhoto(payload);
+    },
+    publicFun({commit,dispatch,getters,state},payload){
+      console.log(JSON.stringify(payload));
+      commit(`savePublicFun`,payload);
     }
-    // http://wx-cityrisk.subei88.com:8080/api/Area
   },
   mutations: {
     updateLoadingStatus (state, payload) {
@@ -66,6 +73,9 @@ export const store = new Vuex.Store({
     },
     saveArea(state, payload){
       state.areaData = payload;
+    },
+    savePublicFun(state, payload){
+      state.public = {...state.public, ...payload}
     }
   },
   modules:{
@@ -78,5 +88,6 @@ export const store = new Vuex.Store({
     myAssessAuditList,
     riskDangerList,
     evaluationList,
+    myAssessAuditInfo
   }
 });

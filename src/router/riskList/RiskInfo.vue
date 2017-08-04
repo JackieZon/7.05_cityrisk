@@ -1,6 +1,6 @@
 <template>
     <div id="riskInfo" v-cloak>
-        <Heads :title="'风险详情'" :isDanger="addOperation"></Heads>
+        <Heads :title="'风险详情'" :isDanger="(riskInfo.RiskStatus==3)"></Heads>
         <div class="main">
         
             <div class="BasicInfoA">
@@ -12,6 +12,9 @@
                 <x-input title="风险地址" :disabled="true" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"
                     placeholder="暂无"></x-input>
 
+            <x-textarea v-show="false" title="风险地址" placeholder="风险地址" :readonly="true" :show-counter="false" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"></x-textarea>
+            <x-input title="审核状态" :disabled="true" placeholder="暂无" :style="{'color':statusColor[riskInfo.RiskStatus]}" :value="RiskAssessStatusName[riskInfo.RiskStatus]"></x-input>
+        </div>
                 <x-textarea v-show="false" title="风险地址" placeholder="风险地址" :readonly="true" :show-counter="false" :value="`${riskInfo.RiskAreaName1}-${riskInfo.RiskAreaName2}-${riskInfo.RiskAreaName3}-${riskInfo.RiskAreaName4}-${riskInfo.RiskAreaName5}-${riskInfo.RiskAddress}`"></x-textarea>
 
             </div>
@@ -32,10 +35,15 @@
                 <x-input title="联系电话" :disabled="true" placeholder="暂无" :value="item.RiskRegulatoryContactTel"></x-input>
             </div>
 
-            <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
-                <div class="title">评估列表<span class="more" v-on:click="openEvaluation">查看全部</span></div>
-                <div class="evaluationList" v-on:click="openEvaluationInfo">
-                    <div style="font-size: 14px;" v-if="riskInfo.ListRiskAssess">
+        <div class="BasicInfoE" v-if=" riskInfo.RiskStatus == 2 || riskInfo.RiskStatus == 3 ">
+            <div class="title">审核描述</div>
+            <x-textarea :placeholder="''" :value="riskInfo.RiskAuditIntro" readonly></x-textarea>
+        </div>
+
+        <div class="evaluation" v-if="JSON.stringify(riskInfo.ListRiskAssess)!=='[]'">
+            <div class="title">评估列表<span class="more" v-if="riskInfo.RiskStatus == 3" v-on:click="openEvaluation">查看全部</span></div>
+            <div class="evaluationList" v-on:click="openEvaluationInfo(riskInfo.ListRiskAssess[0])">
+                <div style="font-size: 14px;" v-if="riskInfo.ListRiskAssess">
 
                         <div style="position: absolute; right: 10px; top: 10px;">
                             <p class="p_center" :style="{'color':fontColor[riskInfo.ListRiskAssess[0].RiskAssessLv]}">
@@ -83,16 +91,20 @@
                 </popup>
             </div>
 
-            <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
-            <div class="footerBox" v-if="JSON.stringify(menuStatus)!=='[]'">
-                <div>
-                    <x-button @click.native="editMenuStatus = true;">操作</x-button>
-                    <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
-                </div>
-                <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
-                    <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
-                </flexbox-item>-->
+        <!-- v-if="$route.params.editStatus==0?false:(riskInfo.RiskStatus==3?false:true) -->
+        <div class="footerBox" v-if="JSON.stringify(menuStatus)!=='[]'">
+            <div>
+                 <x-button v-if="jurisdictionStatus == 2 && riskInfo.RiskStatus==1" @click.native="showAudit();">审核</x-button>
+                <x-button v-if="riskInfo.RiskStatus==1 || riskInfo.RiskStatus== 0 && jurisdictionStatus !== 2" @click.native="editMenuStatus = true;">操作</x-button> 
+
+                <!-- <x-button v-if="riskInfo.RiskStatus==1" @click.native="editMenuStatus = true;">操作</x-button> -->
+
+                <!--<x-button type="primary" @click.native="showAudit" v-if="riskInfo.RiskStatus == 1">审核</x-button>-->
             </div>
+            <!--<flexbox-item v-if="riskInfo.RiskStatus == 1">
+                <x-button style="background:red;" type="warn" @click.native="revoke">撤销</x-button>
+            </flexbox-item>-->
+        </div>
 
             <div v-transfer-dom>
                 <actionsheet :menus="editMenu" v-model="editMenuStatus" show-cancel @on-click-menu="changeEdit"></actionsheet>
@@ -104,6 +116,7 @@
 <script>
     import Heads from './../../components/Heads.vue'
     import HidDanger from './../../components/common/HidDanger.vue'
+    import { updateRiskStatusRecall, riskDelete } from './../../servers/api.js'
     import { TransferDom,Actionsheet, Tab, TabItem, Sticky, Divider, XButton, Flexbox, FlexboxItem, Radio, Swiper, SwiperItem, XInput, Selector, Group, Popup, XTextarea } from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
     const list = () => ['基本信息', '评估信息', '责任主体', '监管机构']
@@ -157,6 +170,8 @@
                         menuStatus = ['编辑','删除']
                     }else if(this.riskInfo.RiskStatus==1){
                         menuStatus = ['撤回']
+                    }else if(this.riskInfo.RiskStatus==0){
+                        menuStatus = ['删除']
                     }
 
                 }else if(editStatus == 2 && this.riskInfo.RiskStatus==1){
@@ -168,15 +183,18 @@
                 this.menuStatus = menuStatus;
                 this.editMenu = menuStatus;
 
-                console.log(`我是风险的状态${this.riskInfo.RiskStatus}***这是我的状态${menuStatus}`);
+                // console.log(`我是风险的状态${this.riskInfo.RiskStatus}***这是我的状态${menuStatus}`);
                 
 
             }
         },
         mounted() {
 
+            // console.warn(`我是风险状态${this.riskInfo.RiskStatus}`);
             this.getRiskInfo(this.$route.params.riskId);
-            console.log(this.$route.params);
+
+            console.log(JSON.stringify(this.riskInfo))
+
         },
         data() {
             return {
@@ -195,11 +213,16 @@
                 show: false,
                 result: "",
                 riskAuditIntro: "",
-                addOperation: ""
+                addOperation: "",
+                jurisdictionStatus: "",
+                statusColor:['#FF0000','#FF8C00','#1E90FF','#33CC99'],
+                RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过']
             }
         },
         created() {
             this.addOperation = this.$route.params.add;
+            this.jurisdictionStatus = this.$route.params.editStatus;
+
         },
 
         methods: {
@@ -217,41 +240,71 @@
                 this.$router.push({name:name, params: this.$route.params});
 
             },
-            openEvaluationInfo(ID) {
-                this.$router.push({ name: 'evaluationInfo',params:{infoId:this.riskInfo.ListRiskAssess[0].ID} });
+            openEvaluationInfo(item) {
+                this.$router.push({ name: 'evaluationInfo', params: item })
+                // this.$router.push({ name: 'evaluationInfo',params:{infoId:this.riskInfo.ListRiskAssess[0].ID} });
             },
 
             openEvaluation(item) {
-                this.$router.push({ name: "evaluationList", params: this.$route.params });
+                this.$router.push({ name: "evaluationList", params:{id:this.$route.params.riskId } });
             },
             addEvaluation() {
                 this.show = true
             },
             changeEdit(val){
 
-                console.log(this.menuStatus[0]);
+                console.log(this.menuStatus[val]);
                 console.log(val);
 
                 if(val=='cancel'){
                     return;
                 }
 
-                if(this.menuStatus[0] == '编辑'){
+                if(this.menuStatus[val] == '删除'){
+                    this.openConfirm({state:true,msg:'确定要删除吗？',control: ()=>{
+                        riskDelete(this.$route.params.riskId).then((ret)=>{
+                            if(ret.all.status){
+                                    this.showToast({ toastState: true, toastValue: '删除成功' })
+                                    setTimeout(()=>{
+                                        this.$router.push({name:'auditList'});
+                                    },1000)
+                                }else{
+                                    this.showToast({ toastState: true, toastValue: ret.all.info })
+                                    return;
+                                }
+                        })
+                    }});
+                        
+                }
+                 if(this.menuStatus[val] == '编辑'){
 
                     // this.openConfirm({state:true,msg:'确定要编辑吗？',control: ()=>{
-                        this.$router.push({name:'riskAdd',params:{id:this.riskInfo.ID}});
+                        this.$router.push({name:'riskAdd',params:{id:this.riskInfo.ID,riskInfo: this.riskInfo}});
 
                         this.editRisk(this.riskInfo);
 
                     // }});
 
-                }else if(this.menuStatus[0] == '撤回'){
+                }else if(this.menuStatus[val] == '撤回'){
 
                     this.openConfirm({state:true,msg:'确定要撤回吗？',control: ()=>{
-                        // this.deleteListRiskDuty({index: index});
+                            console.log('我是路由传的参数'+JSON.stringify(this.$route.params));
+                        updateRiskStatusRecall(this.$route.params.riskId).then((ret) => {
+                            console.log(JSON.stringify(ret))
+                            if(ret.all.status){
+                                this.showToast({ toastState: true, toastValue: '撤回成功' })
+                                setTimeout(()=>{
+                                    this.$router.push({name:'auditList'});
+                                },1000)
+                            }else{
+                                this.showToast({ toastState: true, toastValue: ret.all.info })
+                                return;
+                            }
+                        })
                     }});
 
-                }else if(this.menuStatus[0] == '审核'){
+                }
+                if(this.menuStatus[val] == '审核'){
                     this.showAudit();
                 }
 
@@ -313,7 +366,6 @@
     #riskInfo {
         background: #f1f1f1;
         box-sizing: border-box;
-        height: 100%;
         .review{
             padding: 10px;
             background:#fff;
@@ -375,6 +427,16 @@
         .BasicInfoD {
             margin-top: 15px;
             background: #fff;
+        }
+        .BasicInfoE {
+            margin-top: 15px;
+            background: #fff;
+            .weui-textarea {
+                border: 0 solid #dbdbdb!important;
+                padding: 0 !important;
+                font-size: 16px;
+                font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+            }
         }
         .next {
             border-top: 1px solid #f1f1f1;

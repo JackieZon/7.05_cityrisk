@@ -16,7 +16,7 @@
 </template>
 <script>
 import axios from 'axios'
-import {getJackieZon,getRiskObjectType} from './../../servers/api.js'
+import {getJackieZon,getRiskObjectType,getMemberLogin} from './../../servers/api.js'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import { XInput, Group, XButton, Cell } from 'vux'
 
@@ -30,6 +30,10 @@ export default {
     data(){
         return {
             logo:'',
+            defalut:{
+                "UserName": "admin",
+                "UserPwd": "123456"
+            }
         }
     },
     computed: {
@@ -43,6 +47,10 @@ export default {
         go(){
         },
         getText(){
+            getMemberLogin(this.defalut).then((res)=>{
+                console.log('我是登录数据');
+                console.log(res);
+            });
             // getRiskObjectType().then((res)=>{
             //     console.log(res);
             // });

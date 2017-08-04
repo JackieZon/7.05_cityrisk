@@ -5,7 +5,7 @@
             <div class="title">隐患信息</div>
             <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
             <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
-            <x-input title="提交时间" :disabled="true" :value="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
+            <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" placeholder="暂无"></x-input>
             <x-textarea :title="'隐患描述'" :readonly="true" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <group :title="'隐患照片'">
                 <div class="photo">
@@ -104,7 +104,7 @@
                 console.log(`我是整改前状态状态${val.RiskHiddenStatus}`);
 
                 if(val.RiskChangedStatus==0){
-                    this.reviseMenus = { edit:'整改', delete:'删除'};
+                    this.reviseMenus = { edit:'整改'};
                 }else if(val.RiskChangedStatus == 1){
                     this.reviseMenus = { retract:'撤回' };
                 }else if(val.RiskChangedStatus == 2){
@@ -206,7 +206,7 @@
                     break;
 
                     default:{
-                        console.log('错误');
+                        console.log('取消');
                     }
                 }
 

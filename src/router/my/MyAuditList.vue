@@ -166,7 +166,8 @@
     }
 
     .padd-top {
-      padding-top: 15px;
+      background: #fff;
+      margin-top: 15px;
     }
   }
 

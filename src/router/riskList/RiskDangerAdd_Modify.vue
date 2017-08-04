@@ -30,9 +30,10 @@
                     <x-input title="责任主体" v-model="defaultRiskHiddenAdd.RiskChangedDuty" placeholder="请输入责任主体"></x-input>
                     <datetime v-model="defaultRiskHiddenAdd.RiskChangedStratDate" value-text-align="left" @on-change="RiskChangedStratDate" :title="'<div class=time >整改起期</div>'"></datetime>
                     <datetime v-model="defaultRiskHiddenAdd.RiskChangedEndDate" value-text-align="left" @on-change="RiskChangedEndDate" :title="'<div class=time >整改止期</div>'"></datetime>
-                    <x-textarea v-model="defaultRiskHiddenAdd.RiskChangedIntro" :title="'整改措施'" :max="200" :placeholder="'请填写整改措施'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+                    <x-textarea v-model="defaultRiskHiddenAdd.RiskChangedIntro" :title="'整改措施'" :placeholder="'请填写整改措施'" :show-counter="false" autosize></x-textarea>
                     <group :title="'整改后图片'">
                         <div class="photo">
+                        
                             <div class="imgItem" v-for="(item,index) in defaultRiskHiddenAdd.RiskChangedAfterPhotosPath">
                                 <img :src="(item.url.indexOf('http://')>-1?item.url:`${param_baseUrls}${item.url}`)" alt="">
                                 <div class="delete" @click="deletePhoto(index)"><Icon slot="icon" :name="'delete-icon'" /></div>

@@ -190,6 +190,7 @@
             },
             addListRegulatory(){
                 const regulatory = this.defaultRegulatory;
+                const phoneReg = new RegExp(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/)
                 if(!regulatory.RiskRegulatoryName){
                     this.showToast({toastState:true,toastValue:'请输入机构名称'})
                     return;
@@ -198,9 +199,16 @@
                     this.showToast({toastState:true,toastValue:'请输入联系人'})
                     return;
                 }
-                if(!regulatory.RiskRegulatoryContactTel){
-                    this.showToast({toastState:true,toastValue:'请输入联系电话'})
-                    return;
+                if(!phoneReg.test(regulatory.RiskRegulatoryContactTel)){
+
+                    if(!regulatory.RiskRegulatoryContactTel){
+                        this.showToast({toastState:true,toastValue:'请输入联系电话'})
+                        return;
+                    }else{
+                        this.showToast({toastState:true,toastValue:'请输入正确的联系电话'})
+                        return;
+                    }
+                    
                 }
                 if(!regulatory.RiskRegulatoryArea1){
                     this.showToast({toastState:true,toastValue:'请选择省市区'})

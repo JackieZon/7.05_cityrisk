@@ -28,7 +28,7 @@
             <cell is-link title="待审核风险源" @click.native="goPages('auditList')"></cell>
             <cell is-link title="待审核风险评估" @click.native="goPages('auditList')"></cell>
             <cell is-link title="待审核风险隐患" @click.native="goPages('riskDangerList',{riskId:0,add:1,editStatus:1})"></cell>
-            <cell is-link title="待审核隐患整改" @click.native="goPages('auditList')"></cell>
+            <cell is-link title="待审核隐患整改" @click.native="goPages('riskDangerListModify',{riskId:0,add:1,editStatus:1})"></cell>
         </group>
         <group>
             <cell is-link title="风险源审核" @click.native="goPages('myAuditList')"></cell>

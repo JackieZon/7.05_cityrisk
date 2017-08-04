@@ -53,10 +53,10 @@
             <div class="next2">
                 <flexbox>
                     <flexbox-item>
-                        <x-button @click.native="upDataRiskAdd(0)">保存</x-button>
+                        <x-button v-if="" @click.native="upDataRiskAdd(0)">保存</x-button>
                     </flexbox-item>
                     <flexbox-item>
-                        <x-button @click.native="upDataRiskAdd(1)">提交评估</x-button>
+                        <x-button @click.native="upDataRiskAdd(1)">提交审核</x-button>
                     </flexbox-item>
                 </flexbox>
             </div>
@@ -104,6 +104,7 @@
                     RiskAssessLv: 4,
                     RiskAssessScore: 0,
                     RiskAssessStatus: 0,
+                    RiskAssessTypeNames: ""
                 },
                 TmpRiskAssessDetail: {
 
@@ -234,6 +235,7 @@
 
                 if (this.assessType == 'edit') {
                     this.formInfo.ListRiskAssessDetail[this.assessIndex] = tmpdata;
+                    // console.log(this.formInfo.RiskAssessTypeNames)
                 } else {
                     this.formInfo.ListRiskAssessDetail.push(tmpdata);
                 }
@@ -284,10 +286,13 @@
                     this.showToast({ toastState: true, toastValue: '请填写评估描述！' });
                     return;
                 }
+                for( let item in this.formInfo.ListRiskAssessDetail ){
+                    this.formInfo.RiskAssessTypeNames += `${this.formInfo.ListRiskAssessDetail[item].RiskAssessTypeName} `;
+                }
               
                  this.openConfirm({
                     state: true, msg: `您确定要${state == 0 ? "保存" : "提交"}吗？`, control: () => { 
-                        this.formInfo.RiskAssessStatus = state;
+                        this.formInfo.RiskAssessStatus =   this.formInfo.RiskAssessStatus == 2   ?  2 :  state;
                         this.formPost()
                     }
                 })
@@ -297,6 +302,7 @@
         mounted() {
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
             this.riskIntro = postRiskAdd.RiskIntro
+            this.formInfo.RiskAssessTypeNames = "";
             if (this.$route.params.infoId) {
                 let tmpinfo = this.riskAssessList.filter(res => res.ID == this.$route.params.infoId)[0]
                 this.riskIntro = tmpinfo.RiskAssessIntro
@@ -438,7 +444,6 @@
         justify-content: space-between;
         overflow-y: scroll;
         .enterInfo {
-            margin-top: 10px;
             background: #fff;
         }
         .next {

@@ -24,6 +24,8 @@
 </template>
 <script>
     import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
+    import {mapMutations,mapState} from 'vuex'
+
     export default {
         directives: {
             TransferDom
@@ -44,7 +46,6 @@
                 isRiskAddState: false,
                 isRightTitleState: false,
                 isRiskListState: false,
-                isDangerState: false,
                 isDangerState: false,
                 isEvaluationListState: false,
                 isRiskDangerAddState: false,
@@ -69,6 +70,9 @@
             this.isRiskDangerAddState = (this.isRiskDangerAdd==true?true:false)
         },
         methods: {
+            ...mapMutations([
+                'cleanPostRiskAdd',
+            ]),
             backChange(){
                 this.$router.push({ name: this.goBack });
             },
@@ -88,9 +92,7 @@
             },
             
             goPages(name,param) {
-
-                console.log(param);
-
+                this.cleanPostRiskAdd();
                 this.$router.push({ name: name , params: param });
             },
 

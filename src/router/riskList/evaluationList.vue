@@ -2,7 +2,7 @@
     <div id="riskInfo" v-cloak>
         <div class="upper">
             <Heads :title="'评估列表'" :isEvaluationList="true"></Heads>
-            <tab :line-width=2 active-color='#33CC99'>
+            <tab :line-width=2 active-color='#33CC99'>  
                 <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
                 <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
                 <tab-item @on-item-click="changeTab(3)">已审核</tab-item>
@@ -110,10 +110,11 @@
                 "getRiskAssess",
             ]),
             openEvaluationInfo(Id, item) {
+                // alert(JSON.stringify(item))
                 //  if(item.RiskAssessStatus == 0){
                 //    this.$router.push({ name: 'addEvaluation',params:item })
                 // }else{
-                this.$router.push({ name: 'evaluationInfo', params: item })
+                this.$router.push({ name:'evaluationInfo', params: {infoId: Id ,item: item,ID: item.ID}})
                 // }
                 // this.$router.push({ name: 'evaluationInfo' });
             },

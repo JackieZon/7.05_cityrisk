@@ -6,7 +6,7 @@
                 <!--<tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>-->
                 <tab-item selected @on-item-click="changeTab(1)">待审核</tab-item>
                 <tab-item @on-item-click="changeTab(3)">已审核</tab-item>
-                <!--<tab-item @on-item-click="changeTab(2)">已退回</tab-item>-->
+                <tab-item @on-item-click="changeTab(2)">已退回</tab-item>
             </tab>
         </div>
         <PullUpRefresh
@@ -117,8 +117,10 @@
                 this.getRiskHiddenChanged();
             },
             goInfo(item){
-                console.log(this.$route.params);
-                this.$router.push({ name: 'myRiskDangerReviewInfoModify',params:{dangerModifyId: item.ID} });
+
+                console.log(this.$route);
+                this.$router.push({ name: 'myRiskDangerReviewInfoModify',params:{dangerId: item.ID} });
+            
             }
         }
     }

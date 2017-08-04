@@ -6,7 +6,7 @@
             <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
             <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
-            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <group :title="'隐患照片'">
                 <div class="photo">
                     <div class="imgItem" v-for="item in dangerInfo.RiskHiddenBeforePhotosPath">
@@ -22,7 +22,7 @@
                     <x-input title="联系人" value="默认" placeholder="暂无"></x-input>
                     <x-input title="联系电话" value="15070713710" placeholder="暂无"></x-input>
                     <x-input title="提交时间" value="7/14 16:38" placeholder="暂无"></x-input>
-                    <x-textarea :title="'隐患描述'" :max="200" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+                    <x-textarea :title="'隐患描述'" :max="200" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
                     <group :title="'整改前照片'">
                         <div class="photo">
                             <div class="imgItem">

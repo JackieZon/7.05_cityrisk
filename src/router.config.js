@@ -132,7 +132,7 @@ export default {
     component: RiskDanger_Modify
   },
   {
-    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList_Modify/:riskId',
+    path: '/Index/RiskList/RiskInfo/:riskId/:add/:editStatus/RiskDangerList_Modify',
     name: 'riskDangerListModify',
     component: RiskDangerList_Modify
   },
@@ -211,7 +211,7 @@ export default {
     component: MyAssessAuditList
   },
   {
-    path: '/Index/My/MyAssessAuditInfo',
+    path: '/Index/My/MyAssessAuditInfo:id/:riskId',
     name: 'myAssessAuditInfo',
     component: MyAssessAuditInfo
   },
@@ -223,19 +223,7 @@ export default {
   {
     path: "/Login/Risk/RiskMap/warningList",
     name: "warningList",
-    component: WarningList,
-    children: [
-      {
-        path: '/warningList/warning',
-        name: 'warning',
-        component: Warning
-      },
-      {
-        path: "/warningList/alarm",
-        name: 'alarm',
-        component: Alarm
-      }
-    ]
+    component: WarningList
   },
   {
     path: "/Map/Map/Map/Map",

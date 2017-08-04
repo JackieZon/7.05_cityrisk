@@ -6,11 +6,11 @@
             <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
             <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
-            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+            <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <div v-if="dangerInfo.RiskHiddenStatus==3||dangerInfo.RiskHiddenStatus==2" style="border-top: 1px solid #eee;">
             
                 <x-input title="审核状态" :disabled="true" :value="dangerInfo.RiskHiddenStatus==3?'审核通过':'审核退回'" placeholder="暂无"></x-input>
-                <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenAuditIntro" :placeholder="'暂无'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
+                <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenAuditIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
                 
             </div>
             <group :title="'隐患照片'">
@@ -26,9 +26,8 @@
             <popup v-model="reviewPageStatus">
                 <div class="review">
                     <div class="popup0">
-                        <radio :options="menu" @on-change="changeRadio" v-model="updateRiskHiddenStatus_Audit_data.default.RiskHiddenStatus"></radio>
-                        <x-textarea title="原因" :max="200" placeholder="请输入原因" :show-counter="false" v-model="updateRiskHiddenStatus_Audit_data.default.RiskHiddenAuditIntro" :height="200" :rows="8"
-                            :cols="30"></x-textarea>
+                        <radio :options="menu" @on-change="changeRadio" v-model="updateRiskHiddenChangedStatus_Audit_data.default.RiskChangedStatus"></radio>
+                        <x-textarea title="原因" :max="200" placeholder="请输入原因" :show-counter="false" v-model="updateRiskHiddenChangedStatus_Audit_data.default.RiskChangedAuditIntro" autosize></x-textarea>
                         <div class="btn">
                             <x-button type="primary" style="background: #33CC99;" @click.native="submitAudit">提交审核</x-button>
                         </div>
@@ -38,7 +37,31 @@
             </popup>
         </div>
         
-        <div class="footerBox" ref="revise" v-if="dangerInfo.RiskHiddenStatus==1">
+        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==3 || dangerInfo.RiskChangedStatus==2">
+            <div class="title">整改信息</div>
+            <x-input title="责任主体" :disabled="true" :value="dangerInfo.RiskChangedDuty" placeholder="暂无"></x-input>
+            <x-input title="整改起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-input title="整改止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-textarea :title="'整改措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+            <div v-if="dangerInfo.RiskChangedStatus==3||dangerInfo.RiskChangedStatus==2" style="border-top: 1px solid #eee;">
+            
+                <x-input title="审核状态" :disabled="true" :value="dangerInfo.RiskChangedStatus==3?'审核通过':'审核退回'" placeholder="暂无"></x-input>
+                <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskChangedAuditIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+                
+            </div>
+            <group :title="'整改照片'">
+                <div class="photo">
+                    <div class="imgItem" v-for="item in dangerInfo.RiskChangedAfterPhotosPath">
+                        <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="">
+                    </div>
+                    <div class="imgItem" v-if="JSON.stringify(dangerInfo.RiskChangedAfterPhotosPath)=='[]'">
+                        暂无图片
+                    </div>
+                </div>
+            </group>
+        </div>
+
+        <div class="footerBox" ref="revise" v-if="dangerInfo.RiskChangedStatus==1">
             <x-button @click.native="reviewPageStatus = true">审核</x-button>
         </div>
 
@@ -75,10 +98,10 @@
         },
         created(){
 
-            console.warn(`我是隐患审核${JSON.stringify(this.$route.params)}`);
+            console.warn(`我是整改审核${JSON.stringify(this.$route.params)}`);
             this.getRiskHiddenInfo({ID: this.$route.params.dangerId});
-
-            this.updateRiskHiddenStatus_Audit_data.default.ID = this.$route.params.dangerId;
+            console.log(this.updateRiskHiddenChangedStatus_Audit_data);
+            this.updateRiskHiddenChangedStatus_Audit_data.default.ID = this.$route.params.dangerId;
         },
         data(){
             return{
@@ -89,11 +112,11 @@
                 changeRadioVal:3,
                 riskAuditIntro:'',
                 
-                updateRiskHiddenStatus_Audit_data:{
+                updateRiskHiddenChangedStatus_Audit_data:{
                     default:{
                         "ID": 0,
-                        "RiskHiddenStatus": 3,
-                        "RiskHiddenAuditIntro": "",
+                        "RiskChangedStatus": 3,
+                        "RiskChangedAuditIntro": "",
                         
                     },
                     "$router": this.$router
@@ -117,7 +140,7 @@
                 'getRiskHiddenInfo',
                 'postRiskHiddenDelete',
                 'postUpdateRiskHiddenStatus_Recall',
-                'postUpdateRiskHiddenStatus_Audit',
+                'postUpdateRiskHiddenChangedStatus_Audit',
                 'showToast'
             ]),
             ...mapMutations([
@@ -130,11 +153,11 @@
                 console.log(val);
             },
             submitAudit(){
-                if(!this.updateRiskHiddenStatus_Audit_data.default.RiskHiddenAuditIntro){
+                if(!this.updateRiskHiddenChangedStatus_Audit_data.default.RiskChangedAuditIntro){
                     this.showToast({toastValue: '请填原因！',toastState: true});
                     return;
                 }
-                this.postUpdateRiskHiddenStatus_Audit(this.updateRiskHiddenStatus_Audit_data);
+                this.postUpdateRiskHiddenChangedStatus_Audit(this.updateRiskHiddenChangedStatus_Audit_data);
             },
         }
     }
@@ -154,10 +177,11 @@
         }
         .title{
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             line-height: 45px;
             border-bottom:2px solid #33CC99;
+            padding: 0 15px;
         }
         .BasicInfoA{margin-top:15px;background:#fff;}
         .photo{

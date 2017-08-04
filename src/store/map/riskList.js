@@ -5,7 +5,7 @@ const state = {
     riskList:[],
     defaultData:{
         RiskName: "",
-        RiskStatus: -1,
+        RiskStatus: 3,
         pageIndex: 1 ,
         pageSize: 10,
         total: 0,
@@ -18,11 +18,8 @@ const actions = {
     },
     getRisk({commit,dispatch,getters,state}){
 
-        console.log(JSON.stringify(state.defaultData));
-
         getRisk(state.defaultData).then((data)=>{
             
-            console.log(data.info);
             commit('saveDefaultData',{total: data.all.total})
             commit('saveGetRiskList',data.info);
 

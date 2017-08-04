@@ -7,8 +7,9 @@
         <p><Icon class="Icon" :name="'trend-icon'" style="color:#33CC99" />{{ item.RiskScore | s_toNum}}</p>
       </div>
       <div class="content">
-        <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 : {{ item.RiskName | s_toStr}}</p>
-        <p><Icon class="Icon" :name="'address'" style="color:#33CC99" />地址 : {{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</p>
+        <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 :&nbsp;{{ item.RiskName | s_toStr}}</p>
+        <p><Icon class="Icon" :name="'address'" style="color:#33CC99" />地址 :&nbsp;{{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</p>
+        <p><Icon class="Icon" :name="'state'" style="color:#33CC99" />审核状态 : &nbsp;<span :style="{'color':statusColor[item.RiskStatus]}">{{ RiskAssessStatusName[item.RiskStatus] }}</span></p>
       </div>
       <div class="dateFot">
 
@@ -32,7 +33,9 @@
         return {
             searchList:[],
             riskStatus:['极高','高','中等','低','可忽略'],
-            fontColor:['#FF0000','#FF8C00','#FFD700','#1E90FF']
+            fontColor:['#FF0000','#FF8C00','#FFD700','#1E90FF'],
+            statusColor:['#FF0000','#FF8C00','#1E90FF','#33CC99'],
+            RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
         }
     },
     mounted(){

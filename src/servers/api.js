@@ -17,6 +17,12 @@ export const getJackieZon = () => {
   return author;
 }
 
+// 用户登录
+// http://wx-cityrisk.subei88.com:8080/api/Member/MemberLogin
+export const getMemberLogin = async (param) => {
+  return await axiosApi(`${param_baseUrl}Member/MemberLogin`, "post", param);
+}
+
 // 获取图片链接
 // http://wx-cityrisk.subei88.com/Common/UploadPhoto?type=RiskHidden
 export const postUploadPhoto = async (param) => {
@@ -71,8 +77,6 @@ export const getRiskAssessInfo = async (param) => {
 // 风险列表
 // http://wx-cityrisk.subei88.com:8080/api/Risk
 export const getRisk = async(param)=>{
-  console.log(`在api接口文件里`);
-  console.log(param);
   const data = await axiosApi(`${param_baseUrl}Risk?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,"post",param);
   return data;
 }
@@ -164,6 +168,13 @@ export const postUpdateRiskHiddenStatus_Audit = async (param) => {
   return data;
 }
 
+// 审核整改
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskHiddenChangedStatus_Audit
+export const postUpdateRiskHiddenChangedStatus_Audit = async (param) => {
+  const data = await axiosApi(`${param_baseUrl}UpdateRiskHiddenChangedStatus_Audit`,'post',param);
+  return data;
+}
+
 //风险评估-撤回审核
 // http://wx-cityrisk.subei88.com:8080/api/UpdateRiskAssessStatus_Recall
 export const updateRiskAssessStatusRecall = async (param) => {
@@ -172,15 +183,34 @@ export const updateRiskAssessStatusRecall = async (param) => {
 
 }
 
+//风险评估-审核
+// http://wx-cityrisk.subei88.com:8080/api/UpdateRiskAssessStatus_Audit
+export const updateRiskAssessStatusAudit = async (param) => {
+    const data = await axiosApi(`${param_baseUrl}UpdateRiskAssessStatus_Audit`,'post',param);
+    return data;
+}
+
+// 风险预警
+// http://wx-cityrisk.subei88.com:8080/api/RiskWarn
+export const getRiskWarn = async (param) => {
+    return await axiosApi(`${param_baseUrl}RiskWarn?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+}
+
+// 风险删除
+// http://wx-cityrisk.subei88.com:8080/api/RiskDelete
+export const riskDelete = async (param) => {
+    const data = await axiosApi(`${param_baseUrl}RiskDelete?ID=${param}`,'post');
+    return data;
+}
+
+
+
 export const api =
 {
-
-
     updateRiskAssessStatusRecall : async (param) => {
     const data = await axiosApi(`${param_baseUrl}UpdateRiskAssessStatus_Recall?ID=${param}`,'post');
     return data;
-
-    },
+  },
 
      getRiskAssessInfo : async (param) => {
     const data = await axiosApi(`${param_baseUrl}RiskAssessInfo`, 'post', param);

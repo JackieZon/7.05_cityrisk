@@ -189,6 +189,7 @@
                 
             },
             addListRiskDuty(){
+                const phoneReg = new RegExp(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/)
 
                 if(!this.defaultDuty.RiskDutyContactMan){
                     this.actionToast({toastState:true,toastValue:'请输入联系人'})
@@ -198,9 +199,16 @@
                     this.actionToast({toastState:true,toastValue:'请输入主体名称'})
                     return;
                 }
-                if(!this.defaultDuty.RiskDutyContactTel){
-                    this.actionToast({toastState:true,toastValue:'请输入主体联系人电话'})
-                    return;
+
+                if(!phoneReg.test(this.defaultDuty.RiskDutyContactTel)){
+                    
+                    if(!this.defaultDuty.RiskDutyContactTel){
+                        this.actionToast({toastState:true,toastValue:'请输入主体联系人电话'})
+                        return;
+                    }else{
+                        this.actionToast({toastState:true,toastValue:'请输入正确的主体联系人电话'})
+                        return;
+                    }
                 }
                 if(!this.defaultDuty.RiskDutyArea1){
                     this.actionToast({toastState:true,toastValue:'请选择省市区'})

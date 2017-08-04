@@ -75,6 +75,9 @@
                 },
                 dangerList(state){
                     return state.riskDangerList.dangerList;
+                },
+                scrolleUp(state){
+                    return state.public.scrolleUp;
                 }
             })
         },
@@ -108,6 +111,7 @@
 
             },
             changeTab(val){
+
                 this.tabStatus = val;
                 this.clearDangerList();
                 this.saveDefaultDangerListData({
@@ -116,6 +120,7 @@
                     pageSize: 10,   //必填参数
                 });
                 this.getRiskHidden();
+                
             },
             goInfo(item){
                 this.$router.push({ name: 'riskDanger',params:{dangerId: item.ID, riskId: this.$route.params.riskId} });

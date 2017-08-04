@@ -114,6 +114,7 @@
             },
         },
         mounted(){
+            
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
             if(postRiskAdd.RiskObjectTypeID1){
                 this.riskObjectTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID1;
@@ -176,7 +177,9 @@
         },
         methods:{
             ...mapMutations([
-                'upRiskAdd'
+                'upRiskAdd',
+                'cleanPostRiskAdd',
+                'editRisk'
             ]),
             next(){
                 this.$router.push({name:'basicInfoC'})

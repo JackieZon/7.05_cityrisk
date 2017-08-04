@@ -1,4 +1,5 @@
 import {getRiskBaseType,getRiskObjectType,postRiskAdd} from './../../servers/api'
+import { addRiskDefault } from './../../utils/defaultData.js'
 import Vue from 'vue'
 import {store} from './../index'
 
@@ -190,6 +191,10 @@ const actions = {
 const getters = {}
 
 const mutations = {
+    cleanPostRiskAdd: (state) =>{
+        state.postRiskAdd = addRiskDefault;
+    },
+
     saveData: (state, payload) => {
         state = {...state, ...payload}
     },
