@@ -37,8 +37,16 @@
         <div style="margin-bottom: 20px;">
             <group>
                 <x-input title="评估人" :disabled="true" :value="assessAuditInfo.RiskAssessManName" placeholder="暂无"></x-input>
-                <x-input title="描述"></x-input>
-                <x-textarea readonly :height="200" v-model="assessAuditInfo.RiskAssessIntro"></x-textarea>
+                <!-- <x-input title="描述" :disabled="true"></x-input>
+                <x-textarea readonly :height="200" v-model="assessAuditInfo.RiskAssessIntro"></x-textarea> -->
+                 <x-textarea title="描述" placeholder="" :readonly="true" :show-counter="false" :value="assessAuditInfo.RiskAssessIntro"></x-textarea>
+                <!-- <x-input title="审核描述" :disabled="true"></x-input>
+                <x-textarea readonly :height="200" v-model="assessAuditInfo.RiskAssessAuditIntro"></x-textarea> -->
+            </group>
+            <group v-if="assessAuditInfo.RiskAssessStatus == 3 || assessAuditInfo.RiskAssessStatus == 2">
+                <x-input title="审核人" :disabled="true" :value="assessAuditInfo.RiskAssessAuditManName" placeholder="暂无"></x-input>
+                <x-input title="审核状态" :disabled="true" :value="assessAuditInfo.RiskAssessStatusName" placeholder="暂无"></x-input>
+                <x-textarea title="审核描述" placeholder="" :readonly="true" :show-counter="false" :value="assessAuditInfo.RiskAssessAuditIntro"></x-textarea>
             </group>
             <div v-if="assessAuditInfo.RiskAssessStatus == 1" style="width: 100%; height:30px;"></div>
         </div>
@@ -55,8 +63,8 @@
                 <div class="popup0">
                     <group>
                         <radio :options="choiceList" @on-change="changeChoice" v-model="result"></radio>
-                        <x-textarea title="审核描述" :max="200" placeholder="请输入审核描述" :show-counter="false" v-model="auditDtat.RiskAssessAuditIntro" :height="200"
-                            :rows="8" :cols="30"></x-textarea>
+                        <x-textarea title="审核描述" :max="200" placeholder="请输入审核描述" :show-counter="false" v-model="auditDtat.RiskAssessAuditIntro"
+                            :height="200" :rows="8" :cols="30"></x-textarea>
                         <x-button type="primary" style="width: 92%; margin: 10px 4% 20px 4%; background: #33CC99;" @click.native="submit">提交</x-button>
                     </group>
                 </div>
@@ -68,7 +76,7 @@
     import Heads from './../../components/Heads.vue'
     import RiskList from './../../components/common/RiskList.vue'
     import { XInput, Group, XTextarea, Actionsheet, FlexboxItem, XButton, TransferDom, Cell, Popup, Radio } from 'vux'
-    import { mapActions } from 'vuex'
+    import { mapActions, mapMutations } from 'vuex'
     import { getRiskInfo, updateRiskAssessStatusAudit } from './../../servers/api'
     export default {
         directives: {
@@ -97,6 +105,9 @@
         mounted() {
             // alert(this.$route.params.id)
             // alert(this.$route.params.riskId)
+
+            this.auditDtat.RiskAssessStatus = this.result; //初始化默认选择结果
+
             if (this.$route.params.riskId) {
                 getRiskInfo(this.$route.params.riskId).then((ret) => {
                     if (ret.all.status) {
@@ -125,6 +136,11 @@
 
             }
 
+
+            setTimeout(() => {
+                console.log(JSON.stringify(this.assessAuditInfo))
+            }, 1000)
+
         },
         components: {
             Heads,
@@ -145,6 +161,9 @@
                 'showToast',
                 'submitAudit',
             ]),
+            ...mapMutations([
+                'openConfirm'
+            ]),
             changeChoice(val) {
                 this.auditDtat.RiskAssessStatus = val;
             },
@@ -161,15 +180,25 @@
                     return;
                 }
 
-                updateRiskAssessStatusAudit(t_data.auditDtat).then((ret) => {
-                    if (ret.all.status) {
-                        this.operation = false
-                        this.$router.push({ name: "myAssessAuditList" });
-                    } else {
-                        this.showToast({ toastState: true, toastValue: ret.all.info });
-                        return;
+
+                this.openConfirm({
+                    state: true, msg: `您确定要${state == 0 ? "保存" : "提交"}吗？`, control: () => {
+                        updateRiskAssessStatusAudit(t_data.auditDtat).then((ret) => {
+                            if (ret.all.status) {
+                                this.operation = false
+                                this.showToast({ toastState: true, toastValue: '审核成功' });
+                                setTimeout(() => {
+                                    this.$router.go(-1);
+                                }, 500)
+                            } else {
+                                this.showToast({ toastState: true, toastValue: ret.all.info });
+                                return;
+                            }
+                        })
                     }
                 })
+
+
 
             },
 
@@ -186,14 +215,13 @@
 
 </script>
 <style lang="less">
-
     #assessRiskList {
         background: #fbf9fe;
         box-sizing: border-box;
         height: 100%;
         display: flex;
         flex-direction: column;
-        
+
         .displayFlex {
             display: flex;
             justify-content: center;
@@ -244,6 +272,12 @@
             background: #fff;
         }
 
+        .weui-textarea {
+            border: 0px solid #dbdbdb !important;
+            box-sizing: border-box;
+            padding: 0px;
+        }
+
         .evaluationList p {
             line-height: 30px;
         }
@@ -284,6 +318,7 @@
             }
         }
     }
+
     .weui-cells {
         margin-top: 0;
     }

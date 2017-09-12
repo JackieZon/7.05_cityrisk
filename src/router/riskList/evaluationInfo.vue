@@ -13,28 +13,28 @@
         <div class="BasicInfoA" style="margin-bottom: 20px;">
             <group>
                 <x-input title="评估人" :disabled="true" :value="formInfo.RiskAssessManName" placeholder="暂无"></x-input>
-                <x-input title="描述"></x-input>
+                <x-input title="描述" :disabled="true"></x-input>
                 <x-textarea readonly :height="0" v-model="formInfo.RiskAssessIntro"></x-textarea>
             </group>
         </div>
-        
+
         <div class="BasicInfoA" style="margin-bottom: 20px;" v-if="formInfo.RiskAssessStatus == 1 && formInfo.RiskAssessAuditIntro">
             <group>
-                <x-input title="上次不通过原因"></x-input>
+                <x-input title="上次不通过原因" :disabled="true"></x-input>
                 <x-textarea readonly :height="0" v-model="formInfo.RiskAssessAuditIntro"></x-textarea>
             </group>
         </div>
 
         <div class="BasicInfoA" style="margin-bottom: 20px;" v-if="formInfo.RiskAssessStatus == 3 || formInfo.RiskAssessStatus == 2">
             <group>
-                <x-input title="原因"></x-input>
+                <x-input title="原因" :disabled="true"></x-input>
                 <x-textarea readonly :height="0" v-model="formInfo.RiskAssessAuditIntro"></x-textarea>
             </group>
         </div>
 
         <div v-if="formInfo.RiskAssessStatus == 3 || formInfo.RiskAssessStatus == 2" style="height:40px;"></div>
-        <div>
-            <div class="bottoms" v-if="formInfo.RiskAssessStatus == 1 || formInfo.RiskAssessStatus == 0"></div>
+        <div class="footerBox">
+            <!--<div class="bottoms" v-if="formInfo.RiskAssessStatus == 1 || formInfo.RiskAssessStatus == 0"></div>-->
             <div class="buttons">
                 <flexbox-item v-if="formInfo.RiskAssessStatus == 10">
                     <x-button type="primary" @click.native="confirmSubmission">提交审核</x-button>
@@ -42,6 +42,7 @@
 
                 <flexbox-item>
                     <x-button v-if="formInfo.RiskAssessStatus == 0 || formInfo.RiskAssessStatus == 2" type="primary" @click.native="operation = true">操作</x-button>
+                     <!-- || formInfo.RiskAssessStatus == 2 -->
                 </flexbox-item>
 
                 <flexbox-item v-if="formInfo.RiskAssessStatus == 1">
@@ -50,7 +51,8 @@
             </div>
         </div>
 
-        <actionsheet v-model="operation" :menus="(formInfo.RiskAssessStatus == 0? operationList : operationList1)" theme="android" @on-click-menu="openOperation"></actionsheet>
+        <actionsheet v-model="operation" :menus="(formInfo.RiskAssessStatus == 0? operationList : operationList1)" theme="android"
+            @on-click-menu="openOperation"></actionsheet>
 
     </div>
 </template>
@@ -99,9 +101,9 @@
         },
 
         created() {
-            if (this.$route.params.ID) {
+            if (this.$route.params.evaluationInfoId) {
                 this.$store.dispatch("getRiskAssessInfo", {
-                    data: { ID: this.$route.params.ID }, callback: (ret) => {
+                    data: { ID: this.$route.params.evaluationInfoId }, callback: (ret) => {
                         if (ret.status) {
                             console.log(`我是最新的最新的最新的数据================================${JSON.stringify(ret.info)}`)
                             this.formInfo = ret.info
@@ -136,6 +138,7 @@
 
         methods: {
             ...mapMutations([
+                'openConfirm',
                 'changeAssessmentId'
             ]),
             ...mapActions([
@@ -144,24 +147,36 @@
                 'submitAudit',
             ]),
             auditWithdrawal() {
+                // console.log(JSON.stringify(this.$route.params))
+                // return;
 
-                api.updateRiskAssessStatusRecall(this.$route.params.ID).then((data) => {
-
-                    const ret = data.all
-                    if (ret.status) {
-                        this.$router.push({ name: 'evaluationList', params: { id: this.$route.params.RiskID } });
-                    }
-                    else {
-                        this.showToast({ toastState: true, toastValue: ret.info });
-                        return;
+                this.openConfirm({
+                    state: true, msg: `您确定要撤回吗？`, control: () => {
+                        api.updateRiskAssessStatusRecall(this.$route.params.evaluationInfoId).then((data) => {
+                            const ret = data.all
+                            if (ret.status) {
+                                this.$vux.toast.show({
+                                    text: '撤回成功',
+                                    type: 'success'
+                                });
+                                setTimeout(() => {
+                                    this.$router.push({ name: 'evaluationList', params: {  riskId:-1,add:0,editStatus:0,addEvaluationList:0,status:0  } });
+                                },1000)
+                            }
+                            else {
+                                this.showToast({ toastState: true, toastValue: ret.info });
+                                return;
+                            }
+                        })
                     }
                 })
 
 
+
+
             },
             riskAssessDelete() {
-
-                api.riskAssessDelete(this.$route.params.ID).then((data) => {
+                api.riskAssessDelete(this.$route.params.evaluationInfoId).then((data) => {
 
                     const ret = data.all
                     if (ret.status) {
@@ -174,18 +189,29 @@
                 })
             },
             confirmSubmission() {
-                this.submitAudit()
+                
+                        this.submitAudit()
+                
             },
             openOperation(key) {
                 if (key == 'submit') {
-                    this.formInfo.RiskAssessStatus = 1;
-                    this.formPost()
+                    this.openConfirm({
+                        state: true, msg: `您确定要提交吗？`, control: () => {
+                            this.formInfo.RiskAssessStatus = 1;
+                            this.formPost()
+                        }
+                    })
                 }
                 if (key == 'edit') {
-                    this.$router.push({ name: 'addEvaluation', params: { ...{ id: this.$route.params.RiskID }, ...this.$route.params } })
+                    this.$router.push({ name: 'addEvaluation', params: { evaluationInfoId: this.$route.params.evaluationInfoId, item: this.formInfo } })
                 }
                 if (key == 'delete') {
-                    this.riskAssessDelete()
+
+                    this.openConfirm({
+                        state: true, msg: `您确定要删除吗？`, control: () => {
+                            this.riskAssessDelete()
+                        }
+                    })
                 }
                 console.log(key)
             },
@@ -228,9 +254,12 @@
             height: 40px;
         }
         .buttons {
-            position: fixed;
             bottom: 0px;
             width: 100%;
+            .weui-btn_primary{
+                background-color: #33CC99;
+                color:#fff;
+            }
         }
     }
 

@@ -1,7 +1,45 @@
 import request from './fetch.js';
+import axiosApi from './../utils/axios.js'
+import {
+  param_baseUrl,
+  param_baseUrls,
+} from './subei_config.js'
+
 import qs from 'qs';
 
 import { apiUrl, baseUrl, appId } from './config';
+
+// 设置cookie
+export function setCookie(c_name, value, expiredays) {
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + expiredays);
+	document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+}
+
+//读取cookies
+export function getCookie(name) {
+
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg)){
+			return (arr[2]);
+		}else{
+			return null;
+		}
+
+}
+
+//删除cookies
+export function delCookie(name) {
+
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null){
+			document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+		}
+
+}
+
 
 // 获取 URL 中的参数
 export function getUrlParam(name) {
@@ -40,7 +78,6 @@ export function getStrParam(obj,paramName) {
       paramObj[name] = value;
     }
   };
-
   return paramObj[paramName];
 }
 
@@ -58,12 +95,15 @@ export function oAuth() {
     }
     else {
 
-      const res = request(`/Weixin/wx_Oauto?oAuth_Code=${code}&oAuth_State=${state}`);
-      res.then(v => {
+      axiosApi(`${param_baseUrls}Weixin/wx_Oauto?oAuth_Code=${code}&oAuth_State=${state}`,'get').then(v => {
 
         console.log('res-----' + JSON.stringify(v));
         localStorage.serverUrl = JSON.stringify(v);
-        // alert('openId 是：'+ v.openid);
+
+        // document.cookie  = `.openId=${v.info.openid};path=/`;
+        
+        console.log('我是cookie----');
+        console.log(document.cookie);
 
         sessionStorage.setItem('key', v.info.key);
         sessionStorage.setItem('memberId', v.info.id);

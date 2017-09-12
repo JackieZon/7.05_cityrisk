@@ -11,11 +11,11 @@
 
         <div class="upper">
             <Heads :title="'风险评估审核'"></Heads>
-            <!-- <tab :line-width=2 active-color='#33CC99'>
+              <tab :line-width=2 active-color='#33CC99'>
                 <tab-item selected @on-item-click="changeTab(1)">待审核</tab-item>
                 <tab-item @on-item-click="changeTab(3)">已审核</tab-item>
                 <tab-item @on-item-click="changeTab(2)">已退回</tab-item>
-            </tab> -->
+            </tab>  
         </div>
 
         <PullUpRefresh 
@@ -83,16 +83,19 @@
                 RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
                 fontColor: ['#FF0000', '#FF8C00', '#FFD700', '#1E90FF'],
                 pageIndex: 0,
-                tabStatus: 1
+                tabStatus: 1,
+                userId: 0,
             }
         },
         mounted() {
+            this.userId = this.$route.params.userId;
             this.clearEvaluationLists();
             this.saveDefaultEvaluationListDatas({
-                RiskID:0,
-                RiskAssessStatus: this.tabStatus,
-                pageIndex: 1,   //必填参数
-                pageSize: 10,   //必填参数
+                // RiskID:0,
+                RiskAssessStatus:this.tabStatus,
+                RiskAssessAuditMan:this.userId,
+                pageIndex:1,   //必填参数
+                pageSize:10,   //必填参数
             });
 
             this.getRiskAssessList();
@@ -128,30 +131,30 @@
                 this.tabStatus = val;
                 this.clearEvaluationLists();
                 this.saveDefaultEvaluationListDatas({
-                    RiskID:0,
-                    RiskAssessStatus: this.tabStatus,
-                    pageIndex: 1,   //必填参数
-                    pageSize: 10,   //必填参数
+                    // RiskID:-1,
+                    RiskAssessStatus:this.tabStatus,
+                    pageIndex:1,   //必填参数
+                    pageSize:10,   //必填参数
                 });
                 this.getRiskAssessList();
             },
             pullDown() {
                 this.clearEvaluationLists();
                 this.saveDefaultEvaluationListDatas({
-                    RiskID:0,
-                    RiskAssessStatus: this.tabStatus,
-                    pageIndex: 1,   //必填参数
-                    pageSize: 10,   //必填参数
+                    // RiskID:0,
+                    RiskAssessStatus:this.tabStatus,
+                    pageIndex:1,//必填参数
+                    pageSize:10,//必填参数
                 });
                 this.getRiskAssessList();
             },
             pullUp() {
                 this.saveDefaultEvaluationListDatas({
 
-                    RiskID: 0,
-                    RiskAssessStatus: this.tabStatus,
-                    pageIndex: this.defaultDangerListData.pageIndex += 1,
-                    pageSize: 10,
+                    // RiskID: 0,
+                    RiskAssessStatus:this.tabStatus,
+                    pageIndex:this.defaultDangerListData.pageIndex+=1,
+                    pageSize:10,
                 });
                 this.getRiskAssessList();
             },

@@ -1,11 +1,12 @@
 <template>
     <div id="RiskDanger_Modify">
-        <Heads :title="'整改详情'"></Heads>
+        <Heads :title="'整治详情'"></Heads>
         <div class="BasicInfoA">
             <div class="title">隐患信息</div>
-            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
-            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
+            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskHiddenAddManName" placeholder="暂无"></x-input>
+            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskHiddenAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" placeholder="暂无"></x-input>
+            <x-input title="审核人" :disabled="true" :value="dangerInfo.RiskHiddenAuditManName" placeholder="暂无"></x-input>
             <x-textarea :title="'隐患描述'" :readonly="true" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <group :title="'隐患照片'">
                 <div class="photo">
@@ -18,13 +19,16 @@
                 </div>
             </group>
         </div>
-        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==1">
-            <div class="title">整改信息</div>
+        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==1 || dangerInfo.RiskChangedStatus==3 || dangerInfo.RiskChangedStatus==2 || dangerInfo.RiskChangedDuty">
+            <div class="title">整治信息</div>
+            <x-input title="审核状态" v-if="dangerInfo.RiskChangedStatus!==0" :disabled="true" :value="dangerInfo.RiskChangedStatusName" placeholder="暂无"></x-input>
+            <x-input title="审核人" :disabled="true" :value="dangerInfo.RiskChangedAuditManName" placeholder="暂无"></x-input>
+            <x-textarea :title="'审核描述'" v-if="dangerInfo.RiskChangedStatus!==0" :readonly="true" :value="dangerInfo.RiskChangedAuditIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <x-input title="责任主体" :disabled="true" :value="dangerInfo.RiskChangedDuty" placeholder="暂无"></x-input>
-            <x-input title="整改起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
-            <x-input title="整改止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
-            <x-textarea :title="'整改措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
-            <group :title="'整改照片'">
+            <x-input title="整治起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-input title="整治止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-textarea :title="'整治措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+            <group :title="'整治照片'">
                 <div class="photo">
                     <div class="imgItem" v-for="item in dangerInfo.RiskChangedAfterPhotosPath">
                         <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="">
@@ -76,6 +80,9 @@
         watch:{
         },
         created(){
+            setTimeout(()=>{
+                console.log('这是我要的数据+++++++++'+JSON.stringify(this.dangerInfo))
+            },1000)
 
             console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
             this.getRiskHiddenInfo({ID: this.$route.params.dangerModifyId});
@@ -104,11 +111,11 @@
                 console.log(`我是整改前状态状态${val.RiskHiddenStatus}`);
 
                 if(val.RiskChangedStatus==0){
-                    this.reviseMenus = { edit:'整改'};
+                    this.reviseMenus = { edit:'整治'};
                 }else if(val.RiskChangedStatus == 1){
                     this.reviseMenus = { retract:'撤回' };
                 }else if(val.RiskChangedStatus == 2){
-                    this.reviseMenus = { edit:'整改' };
+                    this.reviseMenus = { edit:'整治' };
                 }else if(val.RiskChangedStatus == 3){
                     this.$refs.revise.style.display = 'none';
                 }
@@ -187,6 +194,8 @@
                 switch (name) {
 
                     case 'edit':{
+                        // console.log(JSON.stringify(this.dangerInfo));
+                        // return
                         this.$router.push({ name:'riskDangerAddModify', params:{item: this.dangerInfo} });
                     }
                     break;

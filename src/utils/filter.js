@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 Vue.filter('s_toStr',function(val){
     if(!val){return '暂无';}
-    return val.toString();
+    return String(val);
 });
 
 Vue.filter('s_isFun',function(val){
@@ -19,7 +19,7 @@ Vue.filter('s_toNum',function(val){
     if(typeof(val) == 'number'){
       return val;
     }else{
-      return val.toNumber();
+      return Number(val);
     }
 });
 
@@ -121,7 +121,8 @@ Vue.component('no-data',{
  * svg 图标
  */
 Vue.component('Icon',{
-  template: `<svg :width='widths' :height='heights' ><use :href="'#'+name" /></svg>`,
+//   template: `<object :width='widths' :height='heights' :data="name" type="image/svg+xml"></object>`,
+  template: `<svg :width='widths' :height='heights' ><use v-bind:xlink:href="'#'+name" /></svg>`,
   props:['name','width','height'],
   data(){
     return {

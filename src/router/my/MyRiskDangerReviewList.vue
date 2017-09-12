@@ -51,9 +51,9 @@
         },
         mounted(){
             console.warn(`路由参数${JSON.stringify(this.$route.params)}`);
-
             this.clearDangerList();
             this.saveDefaultDangerListData({
+                RiskHiddenAuditMan: this.$route.params.userId,
                 RiskID: this.$route.params.riskId,
                 RiskHiddenStatus: this.tabStatus,
                 pageIndex: 1,   //必填参数

@@ -50,22 +50,32 @@
         watch:{
         },
         mounted(){
-            console.warn(`路由参数${JSON.stringify(this.$route.params)}`);
 
+            this.riskId = this.$route.params.riskId;
+            
+            //用于过滤列表 从个人中心进入 userId = 用户Id, 从详情进入userId = 0
+            this.userId = (this.riskId == 0 ? this.$route.params.userId : 1)
+
+            // this.userId = this.$route.params.userId;
+            console.warn(`路由参数${JSON.stringify(this.$route.params)}`);
             this.clearDangerList();
             this.saveDefaultDangerListData({
-                RiskID: this.$route.params.riskId,
+                RiskID: this.riskId,
                 RiskHiddenStatus: this.tabStatus,
+                RiskHiddenAuditMan: 0,
+                RiskHiddenAddMan: this.userId,
                 pageIndex: 1,   //必填参数
                 pageSize: 10,   //必填参数
             });
 
             this.getRiskHidden();
+
         },
         data(){
             return{
                 transferState:false,
                 tabStatus: 0,
+                userId: 0,
             }
         },
         computed:{
@@ -101,7 +111,6 @@
                 this.getRiskHidden();
             },
             pullUp(){
-
                 this.saveDefaultDangerListData({
                     RiskHiddenStatus: this.tabStatus,
                     pageIndex: this.defaultDangerListData.pageIndex += 1,
@@ -111,15 +120,21 @@
 
             },
             changeTab(val){
-
                 this.tabStatus = val;
+
                 this.clearDangerList();
                 this.saveDefaultDangerListData({
                     RiskHiddenStatus: this.tabStatus,
+                    RiskHiddenAddMan: this.userId,
                     pageIndex: 1,   //必填参数
                     pageSize: 10,   //必填参数
                 });
                 this.getRiskHidden();
+
+                
+            // setTimeout(()=>{
+            //     console.log(JSON.stringify(this.dangerList))
+            // },1000)
                 
             },
             goInfo(item){

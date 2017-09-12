@@ -10,7 +10,8 @@
                 <div v-if="isDangerState" class="map" slot="right" v-on:click="showMenus = true"><span style="font-size: 20px;">+</span></div>
                 <!--<div v-if="isDangerState" class="map" slot="right">隐患</div>-->
                 <div @click="addEvaluation" v-if="isEvaluationListState" class="map" slot="right">新增</div>
-                <div @click="goPages('riskDangerAdd',{id: $route.params.id})" v-if="isRiskDangerAddState" class="map" slot="right">新增隐患</div>
+                <!-- <div @click="goPages('riskDangerAdd',{id: $route.params.id})" v-if="isRiskDangerAddState" class="map" slot="right">新增隐患</div> -->
+                <div @click="goPages('riskDangerAdd',{id: $route.params.id})" v-if="riskDangerAdd" class="map" slot="right">新增隐患</div>
                 <div v-if="isRightTitleState" class="map" slot="right">{{rightTitle}}</div>
 
                 <div v-transfer-dom>
@@ -40,34 +41,47 @@
         props: ['title', 'back', 'noBack', 'goBack', 'isMap', 'isRiskAdd', 'isRightTitle', 'rightTitle', 'isRiskList', 'isDanger', 'isEvaluationList', 'isRiskDangerAdd'],
         data() {
             return {
-                backState: true,
-                noBackState: false,
-                isMapState: false,
-                isRiskAddState: false,
-                isRightTitleState: false,
-                isRiskListState: false,
-                isDangerState: false,
-                isEvaluationListState: false,
-                isRiskDangerAddState: false,
                 menus: {
                     menu1: '新增隐患',
                     menu2: '新增评估'
                 },
-                showMenus: false
+                showMenus: false,
+                riskDangerAdd:false
+            }
+        },
+        computed:{
+            backState(){
+                return (this.back == false ? false : true);
+            },
+            isMapState(){
+                return (this.isMap == true ? true : false);
+            },
+            isRiskAddState(){
+                return (this.isRiskAdd == true ? true : false);
+            },
+            isRightTitleState(){
+                return (this.isRightTitle == true ? true : false);
+            },
+            isRiskListState(){
+                return (this.isRiskList == true ? true : false);
+            },
+            isDangerState(){
+                return (this.isDanger == true ? true : false);
+            },
+            isEvaluationListState(){
+                return (this.isEvaluationList == true ? true : false);
+            },
+            noBackState(){
+                return (this.noBack == true ? true : false);
+            },
+            isRiskDangerAddState(){
+                return (this.isRiskDangerAdd==true?true:false);
             }
         },
         mounted(){
         },
         created() {
-            this.backState = (this.back == false ? false : true)
-            this.isMapState = (this.isMap == true ? true : false)
-            this.isRiskAddState = (this.isRiskAdd == true ? true : false)
-            this.isRightTitleState = (this.isRightTitle == true ? true : false)
-            this.isRiskListState = (this.isRiskList == true ? true : false)
-            this.isDangerState = (this.isDanger == true ? true : false)
-            this.isEvaluationListState = (this.isEvaluationList == true ? true : false)
-            this.noBackState = (this.noBack == true ? true : false)
-            this.isRiskDangerAddState = (this.isRiskDangerAdd==true?true:false)
+            this.riskDangerAdd = this.$route.params.riskDangerAdd
         },
         methods: {
             ...mapMutations([
@@ -77,16 +91,16 @@
                 this.$router.push({ name: this.goBack });
             },
             openMenu(data) {
-                console.log(data);
+                
+                let param = this.$route.params;
+                console.log(param);
+                
                 if(data == "menu1"){
-
-                    this.$router.push({ name: "riskDangerAdd" });
+                    this.$router.push({ name: "riskDangerAdd", params:{riskId: param.riskId ,add:param.add ,editStatus: param.editStatus,dangerId:0}});
                 }
 
                 if(data == "menu2"){
-
-                   this.$router.push({ name: "addEvaluation" });
-
+                   this.$router.push({ name: "addEvaluation" , params:{evaluationInfoId:0}});
                 }
 
             },
@@ -95,9 +109,11 @@
                 this.cleanPostRiskAdd();
                 this.$router.push({ name: name , params: param });
             },
-
+            goRiskAdd(){
+                this.$router.replace({ name: 'riskAdd' , params: {} });
+            },
             addEvaluation() {
-                this.$router.push({ name: "addEvaluation" });
+                this.$router.push({ name: "addEvaluation", params:{evaluationInfoId:0}});
             }
         }
     }

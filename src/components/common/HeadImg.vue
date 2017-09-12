@@ -4,15 +4,21 @@
             <div class="img">
                 <Icon :name="'head-icon'" :width="'100%'" :height="'100%'" style="background: rgba(255,255,255,0.85);" />
             </div>
-            <div class="name">Jack</div>
+            <div class="name">{{item.UserNickName}}</div>
         </div>
     </div>
 </template>
 <script>
     export default {
+        props:['item'],
         data(){
             return {
 
+            }
+        },
+        watch:{
+            item(val){
+                 console.log(`我是头像组件`);
             }
         }
     }

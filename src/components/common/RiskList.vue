@@ -1,25 +1,30 @@
 <template>
   <div id="danger">
-    <group>
-      <p class="title"><Icon class="Icon" :name="'location1'" style="color:#33CC99"/><span class="titleInfo">{{item.RiskFullAddress?item.RiskFullAddress:'暂无'}}</span></p>
-      <div class="mark">
-        <p :style="{'color':fontColor[riskStatus.indexOf(item.RiskLvName)]}"><Icon class="Icon" :name="'level'" />{{ item.RiskLvName }}</p>
-        <p><Icon class="Icon" :name="'trend-icon'" style="color:#33CC99" />{{ item.RiskScore | s_toNum}}</p>
-      </div>
-      <div class="content">
-        <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 :&nbsp;{{ item.RiskName | s_toStr}}</p>
-        <p><Icon class="Icon" :name="'address'" style="color:#33CC99" />地址 :&nbsp;{{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</p>
-        <p><Icon class="Icon" :name="'state'" style="color:#33CC99" />审核状态 : &nbsp;<span :style="{'color':statusColor[item.RiskStatus]}">{{ RiskAssessStatusName[item.RiskStatus] }}</span></p>
-      </div>
-      <div class="dateFot">
+     <!-- <group>  -->
+      <div class="dangerList">
+        <div class="listItem">
+                                                                                                                      
+          <p class="title"><Icon class="Icon" :name="'location1'" style="color:#33CC99"/><span class="titleInfo">{{item.RiskAddress? item.RiskAddress :'暂无'}}</span></p>
+          <div class="mark">
+            <p :style="{'color':statusColor[riskStatus.indexOf(item.RiskLvName)]}">{{ item.RiskLvName }}<Icon class="iconPad" :name="'level'" /></p>
+            <p>{{ item.RiskScore | s_toNum}}<Icon class="iconPad" :name="'trend-icon'" style="color:#33CC99" /></p>
+          </div>
+          <div class="content">
+            <p><Icon class="Icon" :name="'riskName'" style="color:#33CC99" />名称 :&nbsp;{{ item.RiskName | s_toStr}}</p>
+            <p><Icon class="Icon" :name="'address'" style="color:#33CC99" /><span class="ellipsis">地址 :&nbsp;{{ (item.RiskAreaName1?item.RiskAreaName1:'-') + (item.RiskAreaName2?item.RiskAreaName2:'-') + (item.RiskAreaName3?item.RiskAreaName3:'-') + (item.RiskAreaName4?item.RiskAreaName4:'-') + (item.RiskAreaName5?item.RiskAreaName5:'-') }}</span></p>
+            <p><Icon class="Icon" :name="'state'" style="color:#33CC99" />审核状态 : &nbsp;<span :style="{'color':statusColor[item.RiskStatus]}">{{ RiskAssessStatusName[item.RiskStatus] }}</span></p>
+          </div>
+          <div class="dateFot">
 
-        <p class="date">{{ item.RiskAddDate | s_toDate}}</p>
-        <div class="lngAndlat">
-          <div class="lng">经纬度: {{ item.RiskLng | s_toStr }}/{{ item.RiskLat | s_toStr }}</div>
+            <p class="date">{{ item.RiskAddDate | s_toDate}}</p>
+            <div class="lngAndlat">
+              <div class="lng">经纬度: {{ item.RiskLng | s_toStr }}/{{ item.RiskLat | s_toStr }}</div>
+            </div>
+            
+          </div>
         </div>
-        
       </div>
-    </group>
+    <!-- </group> -->
   </div>
 </template>
 <script>
@@ -33,8 +38,9 @@
         return {
             searchList:[],
             riskStatus:['极高','高','中等','低','可忽略'],
-            fontColor:['#FF0000','#FF8C00','#FFD700','#1E90FF'],
-            statusColor:['#FF0000','#FF8C00','#1E90FF','#33CC99'],
+            fontColor:['#D62F27','#F98A1E','#F0E615','#3265FE','#3265FE'],
+            // fontColor:['#FF0000','orangered','#FF8C00','#FFD700','#1E90FF'],
+            statusColor:['#FF0000','orangered','#FF8C00','#1E90FF','#33CC99'],
             RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
         }
     },
@@ -42,23 +48,34 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
   #danger{
     background: #fbf9fe;
     box-sizing: border-box;
-
-    .weui-cells{
-      padding: 10px;
-      background: #fff!important;
-      margin:0px!important;
+    
+    .listItem{
+      background: url('./../../assets/img/isRight.png') 100% 50% no-repeat;
+      background-size: 22px;
     }
+
+    .dangerList {
+      background: #fff;
+      padding: 10px;
+      position:relative;
+    }
+    
+     /* .weui-cells{
+      margin-top: 0 !important;
+      padding: 10px !important;
+      background: #fff !important;
+    }  */
 
     .dateFot{
       display: flex;
       justify-content: space-between;
       align-items: center;
       .date{
-        font-size:10px!important;
+        font-size:12px!important;
       }
       .lngAndlat{
         float: right;
@@ -81,16 +98,24 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        width: 45%;
+        font-size: 16px;
+        // width: 45%;
         text-align: center;
       }
     }
     .mark { 
       position: absolute;
-      right: 15px; 
+      right: 15px;
       top: 10px;
       width: 65px;
-      p{line-height: 22px;}
+      p{
+        line-height: 22px;
+        font-size: 12px;
+        justify-content: flex-end;
+      }
+      .iconPad{
+        margin-left:5px;
+      }
     }
     p { 
       display: flex; 
@@ -106,6 +131,9 @@
     }
     .content { 
       padding: 20px 0 10px; 
+      .itemP{
+
+      }
     }
   }
 

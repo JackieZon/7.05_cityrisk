@@ -1,11 +1,17 @@
 <template>
-    <div class="addEvaluation">
+    <div id="addEvaluation">
         <div class="enterInfo">
             <Heads :title="'新增评估'" :isEvaluationList="false"></Heads>
 
-            <!--<x-input title="评估人" :disabled="true" value="JackieZon（系统默认值）" placeholder="评估人"></x-input>
-            <x-input title="联系电话" :disabled="true" value="15070713710（系统默认值）" placeholder="联系电话"></x-input>
-            <x-input title="评估时间" :disabled="true" :value="nuwData" placeholder="评估时间"></x-input>-->
+            <selector title="风险类型" placeholder="请选择" :options="RiskIntro" v-model="formInfo.RiskAssessIntroID" @on-change="RiskIntroChange"></selector>
+
+            <selector 
+                title="指定审核人"
+                placeholder="请选择"
+                :options="aduitUser"
+                :value="RiskAssessAuditMan"
+                @on-change="changeRiskAssessAuditMan"
+            ></selector>
 
             <x-input title="等级/分值" :disabled="true" :value="`${status[formInfo.RiskAssessLv]}/${formInfo.RiskAssessScore}`" placeholder="风险等级"></x-input>
             <x-textarea title="评估描述" placeholder="评估描述" :show-counter="false" v-model="formInfo.RiskAssessIntro"></x-textarea>
@@ -26,12 +32,13 @@
             </group>
             <div class="next">
                 <load-more v-if="formInfo.ListRiskAssessDetail.length == 0" :show-loading="false" :tip="'暂无评估'" background-color="#fbf9fe"></load-more>
+                <x-button class="add" @click.native="oepnAssess('open',-1)">增加</x-button>
             </div>
 
 
             <popup v-model="ShowEditDetial" :hide-on-blur="false">
                 <div class="evaluation">
-                    <selector title="评估类型" :options="RiskAssessType" v-model="TmpRiskAssessDetail.RiskAssessTypeID" @on-change="RiskAssessTypeChoose"></selector>
+                    <selector title="风险类型" :options="RiskAssessType" v-model="TmpRiskAssessDetail.RiskAssessTypeID" @on-change="RiskAssessTypeChoose"></selector>
                     <selector title="频繁程度" :options="RiskAssessE" v-model="TmpRiskAssessDetail.RiskAssessEScore" @on-change="RiskAssessEChoose"></selector>
                     <selector title="事故后果" :options="RiskAssessC" v-model="TmpRiskAssessDetail.RiskAssessCScore" @on-change="RiskAssessCChoose"></selector>
                     <selector title="可能性" :options="RiskAssessL" v-model="TmpRiskAssessDetail.RiskAssessLScore" @on-change="RiskAssessLChoose"></selector>
@@ -48,7 +55,6 @@
         <div class="lower">
 
             <div class="next">
-                <x-button @click.native="oepnAssess('open',-1)">增加</x-button>
             </div>
             <div class="next2">
                 <flexbox>
@@ -99,12 +105,17 @@
                 assessIndex: '',
                 status: ['极高', '高', '中等', '低', '可忽略'],
                 RiskAssessDetailLv: '',
+                RiskAssessAuditMan:'',
                 formInfo: {
                     ListRiskAssessDetail: [],
                     RiskAssessLv: 4,
                     RiskAssessScore: 0,
                     RiskAssessStatus: 0,
-                    RiskAssessTypeNames: ""
+                    RiskAssessTypeNames: "",
+                    RiskAssessAuditMan:"",
+                    RiskAssessAuditManName:"",
+                    RiskAssessIntroID: '',
+                    RiskAssessRemark:'',
                 },
                 TmpRiskAssessDetail: {
 
@@ -148,6 +159,21 @@
                 // 'postRiskAdds',
                 'reloadRiskAssess'
             ]),
+            changeRiskAssessAuditMan(val){
+                if(val){
+
+                    for(let item in this.aduitUser){
+                        
+                        if(this.aduitUser[item].key==val){
+
+                            console.log(`我是ID和名字${val}${this.aduitUser[item].value}`);
+                            this.formInfo.RiskAssessAuditMan = val;
+                            this.formInfo.RiskAssessAuditManName = this.aduitUser[item].value;
+
+                        }
+                    }
+                }
+            },
             changeRiskIntro(e) {
                 this.saveAssesss({ RiskAssessIntro: e });
             },
@@ -194,6 +220,18 @@
                         break;
                     }
                 }
+            },
+            RiskIntroChange(e){
+
+                for(var item in this.RiskIntro){
+                    if(this.RiskIntro[item].key == e){
+                        
+                        console.log(`${e}||${this.RiskIntro[item].value}`);
+                        this.formInfo = {...this.formInfo, RiskAssessIntroID: e, RiskAssessRemark: this.RiskIntro[item].value }
+
+                    }
+                }
+
             },
             clearData() {
                 for (let key in this.TmpRiskAssessDetail) {
@@ -266,7 +304,8 @@
 
                           const  ret=data.all
                              if (ret.status) {
-                                    this.$router.push({ name: 'evaluationList' });
+                                    // this.$router.push({ name: 'evaluationList' });
+                                    this.$router.go(-1)
                                 }
                                 else {
                                     this.showToast({ toastState: true, toastValue: ret.info });
@@ -275,20 +314,39 @@
                  })
             },
             upDataRiskAdd(state) {
+                
+                // console.log('我是要提交的数据********');
+                // console.log(JSON.stringify(this.formInfo));
+                this.formInfo.RiskAssessStatus = state;
+
+                if (!this.formInfo.RiskAssessAuditMan) {
+                    this.showToast({ toastState: true, toastValue: '请指定审核人' });
+                    return;
+                }
 
                 if (this.formInfo.ListRiskAssessDetail.length == 0) {
                     this.showToast({ toastState: true, toastValue: '您至少添加一个风险评估！' });
                     return;
                 }
                 
+                if (!this.formInfo.RiskAssessIntroID) {
+                    this.showToast({ toastState: true, toastValue: '请选择描述选项！' });
+                    return;
+                }
 
                 if (!this.formInfo.RiskAssessIntro) {
                     this.showToast({ toastState: true, toastValue: '请填写评估描述！' });
                     return;
                 }
-                for( let item in this.formInfo.ListRiskAssessDetail ){
-                    this.formInfo.RiskAssessTypeNames += `${this.formInfo.ListRiskAssessDetail[item].RiskAssessTypeName} `;
+
+                if(this.formInfo.RiskAssessTypeNames.length > 0){
+                    this.formInfo.RiskAssessTypeNames = ''
                 }
+
+                    for( let item in this.formInfo.ListRiskAssessDetail ){
+                            this.formInfo.RiskAssessTypeNames += `${this.formInfo.ListRiskAssessDetail[item].RiskAssessTypeName} `;
+                    }
+                
               
                  this.openConfirm({
                     state: true, msg: `您确定要${state == 0 ? "保存" : "提交"}吗？`, control: () => { 
@@ -303,32 +361,45 @@
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
             this.riskIntro = postRiskAdd.RiskIntro
             this.formInfo.RiskAssessTypeNames = "";
-            if (this.$route.params.infoId) {
-                let tmpinfo = this.riskAssessList.filter(res => res.ID == this.$route.params.infoId)[0]
-                this.riskIntro = tmpinfo.RiskAssessIntro
-                tmpinfo.ListRiskAssessDetail.forEach((item) => {
-                    this.pushAssessDetails(item)
-                })
+
+            console.log('我数新增评估**************************');
+            console.log(this.$route.params);
+
+            if (typeof(this.$route.params.item)=='object') {
+                
+                this.formInfo = this.$route.params.item;
+                this.RiskAssessAuditMan = this.formInfo.RiskAssessAuditMan || '';
+                
+                // let tmpinfo = this.riskAssessList.filter(res => res.ID == this.$route.params.evaluationInfoId)[0];
+
+                // this.riskIntro = tmpinfo.RiskAssessIntro;
+                // tmpinfo.ListRiskAssessDetail.forEach((item) => {
+                //     this.pushAssessDetails(item)
+                // });
+
             }
         },
 
         created() {
-            this.formInfo.RiskID=this.$route.params.id;
 
-            if (this.$route.params.ID){
-                this.$store.dispatch("getRiskAssessInfo", {
-                            data: {ID:this.$route.params.ID}, callback: (ret) => {
-                                if (ret.status) {
-                                     this.formInfo =  ret.info
-                                }
-                                else {
-                                    this.showToast({ toastState: true, toastValue: ret.info });
-                                    return;
-                                }
-                            }
-                        })
+            this.formInfo.RiskID = this.$route.params.riskId;
+
+            // this.formInfo.RiskID=this.$route.params.id;
+
+            // if (this.$route.params.ID){
+            //     this.$store.dispatch("getRiskAssessInfo", {
+            //                 data: {ID:this.$route.params.ID}, callback: (ret) => {
+            //                     if (ret.status) {
+            //                          this.formInfo =  ret.info
+            //                     }
+            //                     else {
+            //                         this.showToast({ toastState: true, toastValue: ret.info });
+            //                         return;
+            //                     }
+            //                 }
+            //             })
                 
-            }
+            // }
         },
 
         computed: {
@@ -338,6 +409,27 @@
                 return `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}`
             },
             ...mapState({
+                aduitUser(state){
+
+                    let aduitUser=[];
+                    console.log(state);
+                    const aduitUserItem = state.riskSelectAduitUser;
+
+                    if(JSON.stringify(aduitUserItem)!=='[]'){
+                        for(let item in aduitUserItem){
+                            aduitUser.push({
+                                key: aduitUserItem[item].ID,
+                                value: aduitUserItem[item].UserNickName
+                            });
+                        }
+                    };
+
+                    console.log(`**************************************************`);
+                    console.log(aduitUser);
+
+                    return aduitUser;
+
+                },
                 RiskAssessType: state => {
                     let riskData = [];
                     let t_data = this;
@@ -402,9 +494,23 @@
                 //     const ListRiskAssessDetail = state.evaluation.riskAssessData.ListRiskAssessDetail;
                 //     return ListRiskAssessDetail;
                 // },
-                // riskAssessList(state) {
-                //     return state.evaluation.riskAssessList;
-                // },
+                riskAssessList(state) {
+                    return state.evaluation.riskAssessList;
+                },
+                RiskIntro(state){
+                    let RiskIntro = [];
+                    const RiskIntroItem = state.tiskAdd.riskBaseType.RiskIntro;
+
+                    if (JSON.stringify(RiskIntroItem) !== '[]') {
+                        for (let item in RiskIntroItem) {
+                            RiskIntro.push({
+                                key: RiskIntroItem[item].ID,
+                                value: RiskIntroItem[item].BaseName
+                            });
+                        }
+                    }
+                    return RiskIntro;
+                },
             }),
 
             countScore() {
@@ -436,7 +542,7 @@
 
 </script>
 <style lang="less">
-    .addEvaluation {
+    #addEvaluation {
         height: 100%;
         background: #fbf9fe;
         display: flex;
@@ -462,7 +568,8 @@
             background: #fbf9fe;
         }
         .weui-label {
-            width: 5em!important;
+            line-height: 100%;
+            width: 5.5em!important;
         }
         .evaluation {
             width: 100%;
@@ -480,6 +587,14 @@
             border-bottom: 1px solid #e0e0e0!important;
             border-right: 1px solid #e0e0e0!important;
             text-align: center!important;
+        }
+        .weui-cell_select-after .weui-select{
+            line-height: inherit;
+            color: #333!important;
+        }
+        .add{
+            background-color: #33CC99;
+            color:#fff;
         }
     }
 </style>

@@ -29,7 +29,7 @@ const actions = {
         getRiskAssess(state.defaultEvaluationListData).then((res) => {
              commit('saveDefaultEvaluationListData',{total: res.all.total});
             commit('saveEvaluationList',res.info);
-            console.log(`我是数据${JSON.stringify(res.info)}`)
+            // console.log(`我是数据${JSON.stringify(res.info)}`)
             // console.log(res)
         })
     }

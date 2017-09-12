@@ -11,19 +11,22 @@
                 请移动地图获取经纬度
             </div>
         </div>
-        <div class="map">
+        <div class="map" ref="getLngLatBox" :style="{height: `${mapSize.heights}px`}">
             <baidu-map class="bm-view" :zoom="zoom" :center="center" @ready="readyMap">
             
                 <!--<bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
-                <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
 
                 <bm-marker @click="markerIn" :position="{lng: 116.404, lat: 39.915}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
                 </bm-marker>-->
-    
-                <bm-marker @click="markerIn" :position="{lng: 116.4017, lat: 40.225964}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
+
+                <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+                
+                <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
+
+                <!--<bm-marker @click="markerIn" :position="{lng: 116.4017, lat: 40.225964}" :dragging="false" animation="BMAP_ANIMATION_BOUNCE">
                     <bm-label content="标题" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
-                </bm-marker>
+                </bm-marker>-->
 
                 <div class="isContent">
                     <Icon slot="icon" :name="'map-point02'" :width="'40px'" :height="'40px'" />
@@ -53,14 +56,39 @@
             MsgToast,
             XButton,
         },
-        props:['callback'],
+        props:['callback','pageState','defaultAddres'],
+        watch:{
+            pageState(val){
+                const ofHeight = this.$refs.getLngLatBox.offsetHeight;
+                this.mapSize.heights = ofHeight;
+                console.log(`我改变了${val}次${JSON.stringify(this.center)}||我是地址${this.defaultAddres}`);
+                console.log(this.BMap);
+                	// 创建地址解析器实例
+	            let myGeo = new BMap.Geocoder();
+                myGeo.getPoint((this.defaultAddres?this.defaultAddres:'深圳'), (point) => {
+
+                    console.log(point);
+
+                    if (point) {
+                        this.center = point
+                    }else{
+                        console.log("您选择地址没有解析到结果!");
+                    }
+                });
+            }
+        },
         data(){
             return {
-                zoom: 15,
-                center: {lng: 0, lat: 0},
+                mapSize:{
+                    heights: 0,
+                },
+                zoom: 18,
+                center: {lng: 114.024773, lat: 22.546698},
                 mapShow:false,
                 nowLngLat:{},
                 msg:'',
+                BMap:{},
+                map:{},
             }
         },
         mounted(){
@@ -76,7 +104,6 @@
 
                 this.editRisk(addRiskDefault);
                 this.$router.push({name:'riskAdd'});
-
             },
             markerIn(){
                 console.log(1)
@@ -86,18 +113,21 @@
             },
             readyMap({BMap, map}){
 
-                this.center.lng = 114.024773;
-                this.center.lat = 22.546698;
-
+                this.BMap = BMap;
+                this.map = map;
                 map.addEventListener("moveend", (e)=>{
 
                     this.nowLngLat = {lng:map.getCenter().lng, lat:map.getCenter().lat};
-                    const point = new BMap.Point(map.getCenter().lng,map.getCenter().lat);
-                    const geocoder = new BMap.Geocoder();
+                    this.center = this.nowLngLat;
 
+                    const point = new BMap.Point(map.getCenter().lng,map.getCenter().lat);
+
+                    const geocoder = new BMap.Geocoder();
                     geocoder.getLocation(point,(data)=>{
+
                         this.msg=data.address;
-                        console.log(`我是详细地址${this.msg}`);
+                        // console.log(`我是详细地址${this.msg}`);
+
                     });
 
                 });
@@ -124,6 +154,11 @@
         display: flex;
         flex-direction: column;
         .map{
+            display: flex;
+            -webkit-box-flex: 1;
+            -moz-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
             flex: 1;
             position: relative;
             .isContent{

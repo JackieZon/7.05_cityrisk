@@ -33,7 +33,8 @@ const actions = {
         // console.log(JSON.stringify(state.defaultData));
 
         getRisk(state.defaultData).then((data)=>{
-            
+            // console.log(JSON.stringify(state.defaultData))
+            // return;
             // console.log(data.info);
             commit('saveMyAuditListDefaultData',{total: data.all.total})
             commit('setAuditList',data.info);

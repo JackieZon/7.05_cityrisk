@@ -3,14 +3,17 @@
         <Heads :title="'隐患详情'"></Heads>
         <div class="BasicInfoA">
             <div class="title">隐患信息</div>
-            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
-            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
+            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskHiddenAddManName" placeholder="暂无"></x-input>
+            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskHiddenAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
+            <x-input title="审核状态" :disabled="true" :value="dangerInfo.RiskHiddenStatusName" placeholder="暂无"></x-input>
+            <x-input v-if="dangerInfo.RiskHiddenStatus == 3" title="审核人" :disabled="true" :value="dangerInfo.RiskHiddenAuditManName" placeholder="暂无"></x-input>
             <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+            <x-textarea v-if="dangerInfo.RiskHiddenStatus == 3 || dangerInfo.RiskHiddenStatus == 2" :title="'审核描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenAuditIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <group :title="'隐患照片'">
                 <div class="photo">
                     <div class="imgItem" v-for="item in dangerInfo.RiskHiddenBeforePhotosPath">
-                        <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="">
+                        <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="" @click="enlarge ((item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`))">
                     </div>
                     <div class="imgItem" v-if="JSON.stringify(dangerInfo.RiskHiddenBeforePhotosPath)=='[]'">
                         暂无图片
@@ -44,11 +47,12 @@
         <div v-transfer-dom>
             <actionsheet :menus="reviseMenus" v-model="reviseStatus" show-cancel @on-click-menu="changeRevise"></actionsheet>
         </div>
-
+        <Img-enlarge v-if="enlargePicture" :imgSrc="imgSrc" @change-data="closeImg"></Img-enlarge>
     </div>
 </template>
 <script>
     import Heads from './../../components/Heads.vue'
+    import ImgEnlarge from './../../components/common/ImgEnlarge.vue'
     import { param_baseUrls } from './../../utils/subei_config.js'
     import { Tab, TabItem, Actionsheet, TransferDom, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, Popup,Toast } from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
@@ -59,6 +63,7 @@
         },
         components:{
             Heads,
+            ImgEnlarge,
             Tab,
             TabItem,
             Sticky,
@@ -79,6 +84,10 @@
 
             console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
             this.getRiskHiddenInfo({ID: this.$route.params.dangerId});
+
+            setTimeout(()=>{
+                console.log('我是你想要的数据'+JSON.stringify(this.dangerInfo))
+            },1000)
             
         },
         data(){
@@ -87,6 +96,8 @@
                 reviseStatus: false,
                 reviseMenus:[],
                 param_baseUrls: param_baseUrls,
+                enlargePicture: false,
+                imgSrc:''
             }
         },
         computed:{
@@ -186,7 +197,7 @@
                 switch (name) {
 
                     case 'edit':{
-                        this.$router.push({ name:'riskDangerAdd', params:{item: this.dangerInfo, riskId: this.$route.params.riskId} });
+                        this.$router.replace({ name:'riskDangerAdd', params:{item: this.dangerInfo, riskId: this.$route.params.riskId} });
                     }
                     break;
 
@@ -211,14 +222,21 @@
 
 
             },
+            enlarge (url){
+                this.imgSrc = url;
+                this.enlargePicture = true;
+            },
+            closeImg (val){
+                this.enlargePicture = val;
+            }
         }
     }
 </script>
 <style lang="less">
     #riskDanger{
         background: #f1f1f1;
-        box-sizing: border-box;
-        padding-bottom: 15px;
+        /* box-sizing: border-box; */
+        padding-bottom: 60px;
         height: 100%;
 
         .vux-swiper{

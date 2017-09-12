@@ -1,7 +1,7 @@
 <template>
     <div id="riskDangerList">
         <div class="upper">
-            <Heads :title="'整改列表'"></Heads>
+            <Heads :title="'整治列表'"></Heads>
             <tab :line-width=2 active-color='#33CC99'>
                 <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
                 <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
@@ -50,11 +50,18 @@
         watch:{
         },
         mounted(){
+
+            this.riskId = this.$route.params.riskId; 
+            
+            //用于过滤整改列表 从个人中心进入 this.userId = 用户Id,从风险详情进入 this.userId = 0
+            this.userId = (this.riskId == 0 ? this.$route.params.userId : 0 )
+            
             this.clearDangerList();
-            console.warn(this.$route.params);
+            // console.warn(this.$route.params);
             this.saveDefaultDangerListData({
-                RiskID: this.$route.params.riskId,
+                RiskID: this.riskId,
                 RiskChangedStatus: this.tabStatus,
+                RiskChangedMan: this.userId,
                 pageIndex: 1,   //必填参数
                 pageSize: 10,   //必填参数
             });
@@ -65,6 +72,8 @@
             return{
                 transferState:false,
                 tabStatus: 0,
+                userId: 0,
+                riskId: 0
             }
         },
         computed:{
@@ -110,6 +119,7 @@
                 this.tabStatus = val;
                 this.clearDangerList();
                 this.saveDefaultDangerListData({
+                    // RiskHiddenStatus: this.tabStatus,
                     RiskChangedStatus: this.tabStatus,
                     pageIndex: 1,   //必填参数/必填参数
                     pageSize: 10,   //必填参数

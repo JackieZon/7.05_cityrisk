@@ -1,7 +1,7 @@
 <template>
     <div id="riskInfo" v-cloak>
         <div class="upper">
-            <Heads :title="'评估列表'" :isEvaluationList="true"></Heads>
+            <Heads :title="'评估列表'" :isEvaluationList="status"></Heads>
             <tab :line-width=2 active-color='#33CC99'>  
                 <tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>
                 <tab-item @on-item-click="changeTab(1)">待审核</tab-item>
@@ -18,11 +18,11 @@
         >
 
             <div class="evaluation" v-for="item in evaluationList">
-                <div class="evaluationList" v-on:click="openEvaluationInfo(item.ID,item)">
+                <div class="evaluationList" v-on:click="openEvaluationInfo(item)">
                     <!-- <div class="evaluationList" v-on:click="openEvaluationInfo(item.ID,item)"> -->
                     <div style="font-size: 14px;">
                         <div style="position: absolute; right: 10px; top: 10px;width: 80px;">
-                            <p class="p_center" :style="{'color':fontColor[0]}">
+                            <p class="p_center" :style="{'color':statusColor[item.RiskAssessLv]}">
                                 <Icon slot="icon" class="icon" :name="'level'" />{{riskStatus[item.RiskAssessLv] }}</p>
                             <p class="p_center">
                                 <Icon slot="icon" class="icon" :name="'trend-icon'" style="color:#33CC99" />{{ item.RiskAssessScore }}</p>
@@ -71,18 +71,30 @@
             return {
                 show: false,
                 showToast: true,
-                searchList: [1, 2, 3, 4, 5, 6],
-                riskStatus: ['极高', '高', '中等', '低', '可忽略'],
+                riskStatus:['极高','高','中等','低','可忽略'],
                 RiskAssessStatusName: ['暂存', '待审核', '审核退回', '审核通过'],
-                fontColor: ['#FF0000', '#FF8C00', '#FFD700', '#1E90FF'],
+                statusColor:['#FF0000','orangered','#FF8C00','#1E90FF','#33CC99'],
                 pageIndex: 0,
-                tabStatus: 0
+                tabStatus: 0,
+                status: 0, //判断是从详情进入页面还是个人中心
+                riskId: 0,
+                userId: 0
             }
         },
         mounted() {
+            
+            this.status = this.$route.params.status;
+
+            //用于过滤风险列表 从个人中心进入 status = 0， 从风险详情进入 status = 1
+            this.userId = ( this.status == 0 ? this.$route.params.userId : 0 );  
+
+            //用于过滤风险列表 从个人中心进入 riskId = 0， 从风险详情进入 riskId = 风险Id
+            this.riskId = this.$route.params.riskId;  
+
             this.clearEvaluationList();
-            this.saveDefaultEvaluationListData({
-                RiskID: this.$route.params.riskId,
+            this.saveDefaultEvaluationListData({ //初始化进入暂存列表，只能看到自己保存的
+                RiskID: this.riskId,
+                RiskAssessMan: this.userId,
                 RiskAssessStatus: this.tabStatus,
                 pageIndex: 1,   //必填参数
                 pageSize: 10,   //必填参数
@@ -109,21 +121,20 @@
             ...mapActions([
                 "getRiskAssess",
             ]),
-            openEvaluationInfo(Id, item) {
-                // alert(JSON.stringify(item))
-                //  if(item.RiskAssessStatus == 0){
-                //    this.$router.push({ name: 'addEvaluation',params:item })
-                // }else{
-                this.$router.push({ name:'evaluationInfo', params: {infoId: Id ,item: item,ID: item.ID}})
-                // }
-                // this.$router.push({ name: 'evaluationInfo' });
+
+            openEvaluationInfo(item) {
+    
+                this.$router.push({ name:'evaluationInfo', params: { evaluationInfoId: item.ID}});
+                
             },
             changeTab(val) {
-                this.tabStatus = val;
+                
                 this.clearEvaluationList();
-                this.saveDefaultEvaluationListData({
+                this.tabStatus = val;
 
-                RiskID: this.$route.params.riskId,
+                this.saveDefaultEvaluationListData({
+                    RiskID: this.riskId,
+                    RiskAssessMan: this.userId,
                     RiskAssessStatus: this.tabStatus,
                     pageIndex: 1,   //必填参数
                     pageSize: 10,   //必填参数
@@ -141,8 +152,6 @@
             },
             pullUp() {
                 this.saveDefaultEvaluationListData({
-
-                RiskID: this.$route.params.riskId,
                     RiskAssessStatus: this.tabStatus,
                     pageIndex: this.defaultDangerListData.pageIndex += 1,
                     pageSize: 10,

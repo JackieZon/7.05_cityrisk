@@ -658,9 +658,9 @@
 //   }
 // ]
 
-var allAreas = [];
 
 export const countAreas = (areas)=>{
+    let allAreas = [];
     for (var a in areas) {
 
     // console.log(`${areas[a].value}***${areas[a].label}***${(areas[a].children?areas[a].children.length:'')}`);
@@ -779,3 +779,43 @@ export const countAreas = (areas)=>{
     }
     return allAreas;
 }
+
+export const areaByAgencyId = (data)=>{
+    let areaByAgency = [];
+    areaByAgency.push(
+        {
+            name: data[0].AgencyAreaName1,
+            value: String(data[0].AgencyArea1),
+            parent: 0,
+        },
+        {
+            name: data[0].AgencyAreaName2,
+            value: String(data[0].AgencyArea2),
+            parent: String(data[0].AgencyArea1),
+        },
+        {
+            name: data[0].AgencyAreaName3,
+            value: String(data[0].AgencyArea3),
+            parent: String(data[0].AgencyArea2),
+        },
+        {
+            name: data[0].AgencyAreaName4,
+            value: String(data[0].AgencyArea4),
+            parent: String(data[0].AgencyArea3),
+        }
+    );
+    for(let item in data[0].Area5List){
+
+        let items = data[0].Area5List[item];
+        areaByAgency.push({
+            name: items.AreaName,
+            value: String(items.ID),
+            parent: String(items.AreaPid),
+        });
+
+    };
+    console.log('我是机构的地址');
+    console.log(areaByAgency);
+    return areaByAgency;
+}
+

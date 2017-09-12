@@ -12,6 +12,9 @@
     >
             <p style="text-align:center;">{{ confirmMsg }}</p>
     </confirm>
+    <div class="returnBox" ref="returnBox">
+      <div class="returnHome" @click="returnHome" >首页</div>
+    </div>
   </div>
 </template>
 
@@ -50,11 +53,15 @@ export default {
     '$route' (to, from) {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
+
+      this.$refs.returnBox.style.display = ((to.name=='home'||to.path=='/')?'none':'block');
+
       if(toDepth==fromDepth){
         this.animated = 'fadeIn'
       }else{
         this.animated = toDepth < fromDepth ? 'fadeInLeft' : 'fadeInRight';
       }
+      
     },
     isLoading(){
       this.isLoadingStatus = this.isLoading;
@@ -76,6 +83,9 @@ export default {
     isConfirm(){
       this.confirmControl();
       this.openConfirm({state: false});
+    },
+    returnHome(){
+      this.$router.push({name: 'home'});
     }
   }
 }
@@ -90,6 +100,25 @@ html,body{
   #app{
     width:100%;
     height:100%;
+    .returnBox{
+      display: none;
+      position: fixed;
+      bottom: 15%;
+      right: 10%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid rgba(0,0,0,0.2);
+    }
+    .returnHome{
+      width: 2.5rem;
+      height: 2.5rem;
+      background: #33CC99;
+      font-size: 14px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .toast{
         z-index: 999;
     }
@@ -149,5 +178,12 @@ body {
     box-sizing: border-box;
     padding: 10px 15px;
     background: #fff;
+    z-index: 99;
 }
+.ellipsis{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.anchorBL{display:none;}
 </style>

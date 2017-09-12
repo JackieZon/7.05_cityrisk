@@ -1,7 +1,7 @@
 <template>
   <div id="audit">
     <div class="title">
-      <Heads :title="'风险列表'"></Heads>
+      <Heads :title="'风险列表'" :isRiskAdd="true"></Heads>
       <tab :line-width=2 active-color='#33CC99'>
         <tab-item :selected="defaultData.RiskStatus==-1" @on-item-click="changeTab(-1)">全部审核</tab-item>
         <tab-item :selected="defaultData.RiskStatus==0" @on-item-click="changeTab(0)">未提交</tab-item>
@@ -43,21 +43,17 @@
     },
     mounted(){
       this.deleteRiskList();
-      this.saveDefaultData({pageIndex:1,pageSize:10});
+      this.saveDefaultData({RiskStatus: 0,pageIndex:1,pageSize:10,listType: 'My'});
       this.getRisk();
-      setTimeout(()=>{
-      console.log(JSON.stringify(this.riskList))
-
-      },1000)
     },
     watch:{},
     computed: {
       ...mapState({
 				riskList(state){
-					return state.riskList.riskList
+					return state.riskList.riskList;
 				},
         defaultData(state){
-          return state.riskList.defaultData
+          return state.riskList.defaultData;
         }
 			})
 		},

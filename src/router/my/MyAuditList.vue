@@ -20,7 +20,7 @@
         </div>
         <div class="content">
           <Icon class="Icon" :name="'number'" style="color:#33CC99" />&nbsp;审核编号&nbsp;:
-          <p>{{ item.number }}</p>
+          <p>{{ item.RiskNo }}</p>
         </div>
         <div class="content">
           <Icon class="Icon" :name="'company'" style="color:#33CC99" />&nbsp;单位名称&nbsp;:
@@ -72,10 +72,7 @@
     },
     mounted() {
 
-      // console.log(JSON.stringify(`我是数据呀${this.searchList}`))
       this.deleteAuditList();
-      this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10, RiskStatus: -1 });
-      // this.getRisks();
       this.changeTab(1)
     },
 
@@ -120,7 +117,7 @@
 
       changeTab(status) {
         this.deleteAuditList();
-        this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10, RiskStatus: status });
+        this.saveMyAuditListDefaultData({ pageIndex: 1, pageSize: 10, RiskStatus: status,listType: 'MyAudit'});
         this.getRisks();
       },
       pullDown() {

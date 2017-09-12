@@ -8,6 +8,23 @@
                     <!--<x-input title="联系人" value="默认" placeholder="暂无"></x-input>
                     <x-input title="联系电话" value="15070713710" placeholder="暂无"></x-input>
                     <x-input title="提交时间" value="7/14 16:38" placeholder="暂无"></x-input>-->
+                            
+                    <selector 
+                        title="指定审核人"
+                        placeholder="请选择"
+                        :options="aduitUser"
+                        :value="defaultRiskHiddenAdd.RiskHiddenAuditMan"
+                        @on-change="changeRiskHiddenAuditMan"
+                    ></selector>
+
+                    <selector 
+                        title="隐患类型"
+                        placeholder="请选择"
+                        :options="hiddenDangerType"
+                        :value="defaultRiskHiddenAdd.RiskHiddenType"
+                        @on-change="changeHiddenDangerType"
+                    ></selector>
+
                     <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenIntro" :title="'隐患描述'" :max="200" :placeholder="'请填写描述'" :show-counter="false" :height="50" :rows="8" :cols="30"></x-textarea>
                     <group :title="'隐患图片'">
                         <div class="photo">
@@ -16,13 +33,13 @@
                                 <div class="delete" @click="deletePhoto(index)"><Icon slot="icon" :name="'delete-icon'" /></div>
                             </div>
 
-                            <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.length<2&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
+                             <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath.length<6&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<6">
                                 <div class="fileBox">
                                     <div class="fileBoxs">
                                         <input class="fileBtn" @change="changeFile" type="file" accept="image/*" ref="fileBtn" >
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     </group>
                 </div>
@@ -39,7 +56,7 @@
 <script>
     import { param_baseUrls } from './../../utils/subei_config.js'
     import Heads from './../../components/Heads.vue'
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast } from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast, Selector } from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
 
     export default{
@@ -58,6 +75,7 @@
             TransferDom,
             Popup,
             Toast,
+            Selector,
         },
         watch:{},
         created(){
@@ -84,6 +102,7 @@
                         path:'',
                     }
                 ],
+                hiddenDangerTypeData:'',
                 defaultRiskHiddenAdd:{
                     RiskHiddenBeforePhotosPath: [],
                     RiskChangedAfterPhotosPath: [],
@@ -91,16 +110,18 @@
                     ID: 0,
                     RiskID: 0,
                     RiskAgencyID: 0,
+                    RiskHiddenType:0,
+                    RiskHiddenTypeName:'',
                     RiskHiddenNo: "",
                     RiskHiddenIntro: "",
                     RiskHiddenAddMan: 0,
-                    RiskHiddenAddMan: "",
+                    RiskHiddenAddManName: "",
                     RiskHiddenAddManTel: "",
                     RiskHiddenDate: "",
                     RiskHiddenBeforePhotos: "",
                     RiskHiddenStatus: 0,
                     RiskHiddenAuditIntro: "",
-                    RiskHiddenAuditMan: 0,
+                    RiskHiddenAuditMan: '',
                     RiskHiddenAuditManName: "",
                     RiskHiddenAuditDate: "",
                     RiskChangedDuty: "",
@@ -120,10 +141,40 @@
                 }
             }
         },
+        mounted (){
+            this.defaultRiskHiddenAdd.RiskHiddenAddMan = this.$route.params.userId;
+
+            this.getHiddenDangerType()
+
+        },
         computed:{
             ...mapState({
                 dangerInfo(state){
                     return state.riskDangerList.dangerInfo;
+                },
+                aduitUser(state){
+
+                    let aduitUser=[];
+                    console.log(state);
+                    const aduitUserItem = state.riskSelectAduitUser;
+
+                    if(JSON.stringify(aduitUserItem)!=='[]'){
+                        for(let item in aduitUserItem){
+                            aduitUser.push({
+                                key: aduitUserItem[item].ID,
+                                value: aduitUserItem[item].UserNickName
+                            });
+                        }
+                    };
+
+                    // console.log(`**************************************************`);
+                    // console.log(aduitUser);
+
+                    return aduitUser;
+
+                },
+                hiddenDangerType(state){
+                    return state.riskDangerList.hiddenDangerType
                 }
             }),
             RiskHiddenBeforePhotos(){
@@ -193,6 +244,7 @@
                 'postUploadPhoto',
                 'showToast',
                 'postRiskHiddenAdd',
+                'getHiddenDangerType',
             ]),
             ...mapMutations([
                 'updateLoadingStatus',
@@ -234,6 +286,17 @@
                 console.log(`我是选择图片处理后的数据`);
                 console.log(this.defaultRiskHiddenAdd);
             },
+            changeHiddenDangerType(val){
+                
+                for(let i = 0; i < this.hiddenDangerType.length; i++){
+                    if( this.hiddenDangerType[i].key == val ){
+                        this.hiddenDangerTypeData = this.hiddenDangerType[i].value;
+                    }
+                }
+                this.defaultRiskHiddenAdd.RiskHiddenType = val;
+                this.defaultRiskHiddenAdd.RiskHiddenTypeName = this.hiddenDangerTypeData;
+                
+            },
             deletePhoto(index){
 
                 this.openConfirm({state:true,msg:'确定要删除吗',control:()=>{
@@ -244,10 +307,31 @@
             },
             addHidDanger(status){
 
+                // console.log(JSON.stringify(this.defaultRiskHiddenAdd))
+                // return;
 
                 this.defaultRiskHiddenAdd.RiskHiddenStatus = status;
-                this.defaultRiskHiddenAdd.RiskID = this.$route.params.riskId;
+                    this.defaultRiskHiddenAdd.RiskID = (this.$route.params.riskId == 0 ? this.defaultRiskHiddenAdd.RiskID : this.$route.params.riskId);
                 this.defaultRiskHiddenAdd.RiskHiddenBeforePhotos = this.RiskHiddenBeforePhotos.join(',');
+                // this.defaultRiskHiddenAdd.RiskChangedMan = this.$route.params.userId
+                // this.defaultRiskHiddenAdd.RiskChangedAuditMan = this.defaultRiskHiddenAdd.RiskHiddenAuditMan
+                    // RiskChangedAddManName: "",
+                // console.log(this.$route.params.userId)
+                // console.log(JSON.stringify(this.defaultRiskHiddenAdd))
+                // return
+
+                // console.log(JSON.stringify(this.defaultRiskHiddenAdd));
+                // return
+
+                if(!this.defaultRiskHiddenAdd.RiskHiddenAuditMan){
+                    this.showToast({toastState:true,toastValue:'请指定审核人'});
+                    return;
+                }
+
+                if(!this.defaultRiskHiddenAdd.RiskHiddenType){
+                    this.showToast({toastState:true,toastValue:'请选择隐患类型'});
+                    return;
+                }
 
                 if(!this.defaultRiskHiddenAdd.RiskHiddenIntro){
                     this.showToast({toastState:true,toastValue:'请选择事故后果'});
@@ -262,11 +346,24 @@
                 console.log(this.defaultRiskHiddenAdd);
 
                 console.log(`我是计算后的数据 图片名${this.RiskHiddenBeforePhotos}`);
-                
-                console.log('这是提交的数据***************')
+                console.log('这是提交的数据');
                 console.log(JSON.stringify(this.defaultRiskHiddenAdd));
     
                 this.postRiskHiddenAdd({param: this.defaultRiskHiddenAdd, $router: this.$router});
+            },
+            changeRiskHiddenAuditMan(val){
+                if(val){
+
+                    for(let item in this.aduitUser){
+                        
+                        if(this.aduitUser[item].key==val){
+
+                            this.defaultRiskHiddenAdd.RiskHiddenAuditMan = val;
+                            this.defaultRiskHiddenAdd.RiskHiddenAuditManName = this.aduitUser[item].value;
+
+                        }
+                    }
+                }
             }
         }
     }

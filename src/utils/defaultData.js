@@ -156,9 +156,7 @@ export const addRiskDefault = {
   //     }
   //   ],
   "RiskFullAddress": "",
-  "RiskAreaIDsArray": [
-    0
-  ],
+  "RiskAreaIDsArray": '',
   "RiskObjectTypeIDsArray": [
     0
   ],

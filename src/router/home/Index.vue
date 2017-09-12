@@ -3,6 +3,7 @@
         <div class="upper">
             <Heads :back="false" :title="'首页'" :isRiskAdd="true"></Heads>
         </div>
+
         <PullUpRefresh
             :pullDown="pullDown"
             :pullUp="pullUp"
@@ -18,9 +19,9 @@
                 @on-index-change="swiperChange"
                 :interval="5000"
             ></swiper>
-            <RiskList v-for="(item,index) in riskList" class="riskList" :item="item" :key="index" @click.native="goRiskInfo(item)" :class="riskList"></RiskList>
+            <RiskList v-for="(item,index) in riskList" class="riskList" :item="item" :key="index" @click.native="goRiskInfo(item)"></RiskList>
         </PullUpRefresh>
-        <!--<load-more :show-loading="false" :tip="'暂无已审核风险'" background-color="#fbf9fe"></load-more>-->
+        
     </div>
 </template>
 <script>
@@ -61,7 +62,8 @@
         },
         mounted(){
             this.deleteRiskList();
-            this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:3});
+            
+            this.saveDefaultData({pageIndex:1,pageSize:10,RiskStatus:3,listType: 'Map'});
             this.getRisk();
         },
         computed:{
@@ -80,7 +82,7 @@
                 'deleteRiskList'
             ]),
             ...mapActions([
-                'getRisk'
+                'getRisk',
             ]),
             swiperChange(val){
                 // console.log(val);

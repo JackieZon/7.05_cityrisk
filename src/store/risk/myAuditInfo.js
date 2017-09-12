@@ -63,6 +63,7 @@ const actions = {
         console.log(state.AuditData.ID)
         console.log(state.AuditData.RiskStatus)
         console.log(state.AuditData.RiskAuditIntro)
+        // alert(JSON.stringify(state.AuditData))
         updateRiskStatusAudit(state.AuditData).then((data) => {
         })
     },

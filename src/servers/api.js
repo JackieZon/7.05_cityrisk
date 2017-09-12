@@ -23,34 +23,69 @@ export const getMemberLogin = async (param) => {
   return await axiosApi(`${param_baseUrl}Member/MemberLogin`, "post", param);
 }
 
+// 获取用户信息
+// http://wx-cityrisk.subei88.com:8080/api/Member/MemberInfo/10098
+export const getMemberInfo = async (Id) => {
+  return await axiosApi(`${param_baseUrl}Member/MemberInfo/${Id}`,'get');
+}
+
+// 用户信息绑定微信
+// http://wx-cityrisk.subei88.com:8080/api/Member/MemberAccount
+export const postMemberAccount = async (params) => {
+  console.log(`这是绑定微信的参数||${JSON.stringify(params)}`);
+  console.log(params);
+  return await axiosApi(`${param_baseUrl}Member/MemberAccount?openId=${params.openId}`, 'post', params.param);
+}
+
+// 用户信息解除绑定微信
+// http://wx-cityrisk.subei88.com:8080/api/Member/MemberAccountOff?openId=123
+export const postMemberAccountOff = async () => {
+  const openId = window.sessionStorage.openId;
+  return await axiosApi(`${param_baseUrl}Member/MemberAccountOff?openId=${openId}`, 'get');
+}
+
+// 编辑用户信息
+// http://wx-cityrisk.subei88.com:8080/api/Member/MemberUpdate
+export const editMemberInfo = async (param) => {
+  return await axiosApi(`${param_baseUrl}Member/MemberUpdate`, 'post', param);
+}
+
 // 获取图片链接
 // http://wx-cityrisk.subei88.com/Common/UploadPhoto?type=RiskHidden
 export const postUploadPhoto = async (param) => {
   console.log('在api文件');
   console.log(param.formData);
-  const data = await axiosApi(`${param_baseUrls}Common/UploadPhoto?type=${param.type}`, 'postFile', param.formData);
-  return data;
+  return await axiosApi(`${param_baseUrls}Common/UploadPhoto?type=${param.type}`, 'postFile', param.formData);
 }
 
 // 得到城市地址
 // http://wx-cityrisk.subei88.com:8080/api/Area
 export const getArea = async () => {
-  const data = await axiosApi(`${param_baseUrl}Area`,'get');
-  return data;
+  return await axiosApi(`${param_baseUrl}Area`,'get');
+}
+
+// 得到机构地址
+// http://wx-cityrisk.subei88.com:8080/api/AreaByAgencyId
+export const getAreaByAgencyId = async () => {
+  return await axiosApi(`${param_baseUrl}AreaByAgencyId`,'get');
 }
 
 // 风险基础数据-列表
 // http://wx-cityrisk.subei88.com:8080/api/RiskBaseType
 export const getRiskBaseType = async () => {
-  const data = await axiosApi(`${param_baseUrl}RiskBaseType`, 'get')
-  return data;
+  return await axiosApi(`${param_baseUrl}RiskBaseType`, 'get');
 }
 
 // 风险对象类型-列表
 // http://wx-cityrisk.subei88.com:8080/api/RiskObjectType
 export const getRiskObjectType = async () => {
-  const data = await axiosApi(`${param_baseUrl}RiskObjectType`, 'get');
-  return data;
+  return await axiosApi(`${param_baseUrl}RiskObjectType`, 'get');
+}
+
+// 获取审核人员
+// http://wx-cityrisk.subei88.com:8080/api/RiskSelectAduitUser
+export const getRiskSelectAduitUser = async () => {
+  return await axiosApi(`${param_baseUrl}RiskSelectAduitUser`, 'get');
 }
 
 // 风险-新增
@@ -77,7 +112,7 @@ export const getRiskAssessInfo = async (param) => {
 // 风险列表
 // http://wx-cityrisk.subei88.com:8080/api/Risk
 export const getRisk = async(param)=>{
-  const data = await axiosApi(`${param_baseUrl}Risk?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,"post",param);
+  const data = await axiosApi(`${param_baseUrl}Risk?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}&listType=${param.listType}`,"post",param);
   return data;
 }
 
@@ -193,7 +228,17 @@ export const updateRiskAssessStatusAudit = async (param) => {
 // 风险预警
 // http://wx-cityrisk.subei88.com:8080/api/RiskWarn
 export const getRiskWarn = async (param) => {
-    return await axiosApi(`${param_baseUrl}RiskWarn?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+    const data = await axiosApi(`${param_baseUrl}RiskWarn?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+    return data
+}
+
+// 风险预警过滤数据
+
+export const getShufflingRiskWarn = async (param) =>{
+
+  let data = await axiosApi(`${param_baseUrl}ShufflingRiskWarn?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+  return data;
+  
 }
 
 // 风险删除
@@ -201,6 +246,44 @@ export const getRiskWarn = async (param) => {
 export const riskDelete = async (param) => {
     const data = await axiosApi(`${param_baseUrl}RiskDelete?ID=${param}`,'post');
     return data;
+}
+
+
+// 风险事故
+// http://wx-cityrisk.subei88.com:8080/api/RiskAccident
+export const riskAccident = async (param) => {
+    const data = await axiosApi(`${param_baseUrl}RiskAccident?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+    return data;
+}
+
+//风险预警-详情
+// http://wx-cityrisk.subei88.com:8080/api/RiskWarnInfo
+export const getRiskWarnInfo = async (param) => {
+    return await axiosApi(`${param_baseUrl}RiskWarnInfo/${param}`,'post');
+}
+
+//风险事故-详情
+// http://wx-cityrisk.subei88.com:8080/api/RiskAccidentInfo
+export const getRiskAccidentInfo = async (param) => {
+    return await axiosApi(`${param_baseUrl}RiskAccidentInfo/${param}`,'post');
+}
+
+// 知识库列表
+// http://wx-cityrisk.subei88.com:8080/api/Knowledge
+export const getKnowledgeList = async (param) => {
+    return await axiosApi(`${param_baseUrl}Knowledge?pageIndex=${param.pageIndex}&pageSize=${param.pageSize}`,'post',param);
+}
+
+// 知识库-详情
+// http://wx-cityrisk.subei88.com:8080/api/KnowledgeInfo
+export const getKnowledgeInfo = async (param) => {
+    return await axiosApi(`${param_baseUrl}KnowledgeInfo/${param}`,'post');
+}
+
+// 风险敦促人员-列表
+// http://wx-cityrisk.subei88.com:8080/api/RiskHiddenChargeUser
+export const getRiskHiddenChargeUser = async () => {
+  return await axiosApi(`${param_baseUrl}RiskHiddenChargeUser`, 'get');
 }
 
 
@@ -228,6 +311,14 @@ export const api =
     const data = await axiosApi(`${param_baseUrl}RiskAssessDelete?ID=${param}`,'post');
       return data
 },
+
+// 风险预警
+// http://wx-cityrisk.subei88.com:8080/api/RiskWarn
+      getRiskWarn : async (param,callback) => {
+        const data = await axiosApi(`${param_baseUrl}RiskWarn?pageIndex=${param.warn.pageIndex}&pageSize=${param.warn.pageSize}`,'post',param.warnData);
+        // console.log(JSON.stringify(data))
+        callback(data)
+      }
 
  
   

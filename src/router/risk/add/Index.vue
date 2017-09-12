@@ -1,19 +1,22 @@
 <template>
     <div id="addrisk">
-        <Heads :noBack="true" :goBack="'home'" :title="'风险源'"></Heads>
-        <tab :line-width=2 active-color='#33CC99' v-model="index">
-            <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
-        </tab>
-        <swiper v-model="index" :show-dots="false" :height="'100%'">
+        <div class="risk-upper" ref="riskUpper">
+            <Heads :title="'风险源'"></Heads>
+            <tab :line-width=2 active-color='#33CC99' v-model="index">
+                <tab-item class="vux-center" :selected="status === item" v-for="(item, index) in lists" @click="status = item" :key="index">{{item}}</tab-item>
+            </tab>
+        </div>
+        <div class="risk-lower">
             <transition v-bind:enter-active-class="'fadeIn animated'">
                 <router-view></router-view>
             </transition>
-        </swiper>
+        </div>
     </div>
 </template>
 <script>
     import Heads from './../../../components/Heads.vue'
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
+    import {mapActions,} from 'vuex'
     const list = () => ['基本信息', '责任主体', '监管机构', '评估信息']
 
     export default{
@@ -29,7 +32,7 @@
         },
         watch:{
             index(val,old){
-                this.$router.push({name:this.routerName[val]})
+                this.$router.replace({name:this.routerName[val]})
             },
             '$route' (to, from) {
                 if(this.routerName.indexOf(to.name)!=-1){
@@ -38,7 +41,19 @@
             }
         },
         created(){
-            this.$router.push({name:'basicInfoA'})
+            this.$router.replace({name:'basicInfoA'});
+        },
+        mounted(){
+            
+            // 获取对象类型
+            this.getRiskObjectType();
+            // 获取审核人员
+            this.getRiskSelectAduitUser();
+            // 获取用户地址选项
+            this.getArea();
+            // 获取所属机构的地址
+            this.getAreaByAgencyId();
+            
         },
         data(){
             return{
@@ -47,6 +62,14 @@
                 status:'基本信息',
                 routerName: ['basicInfoA','basicInfoC','basicInfoD','basicInfoB']
             }
+        },
+        methods:{
+            ...mapActions([
+                'getRiskObjectType',
+                'getRiskSelectAduitUser',
+                'getArea',
+                'getAreaByAgencyId',
+            ]),
         }
     }
 </script>
@@ -65,6 +88,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        .risk-lower{
+            flex-grow:1;
+            flex-shrink:1;
+            flex-basis:0;
         }
     }
     .weui-label{

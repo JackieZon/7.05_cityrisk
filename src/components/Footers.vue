@@ -36,14 +36,14 @@
         },
         watch:{
         '$route' (to, from) {
-            const path = this.$route.path.split('/')[2]
+            const path = this.$route.path.split('/')[3]
             if(this.tabPath.indexOf(path)!=-1){
                 this.tabStatus = this.tabPath.indexOf(path);
             }
         }
         },
         mounted(){
-            const path = this.$route.path.split('/')[2]
+            const path = this.$route.path.split('/')[3]
             if(this.tabPath.indexOf(path)!=-1){
                 this.tabStatus = this.tabPath.indexOf(path);
             }

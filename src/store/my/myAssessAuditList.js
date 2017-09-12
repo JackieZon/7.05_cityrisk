@@ -4,9 +4,9 @@ const state = {
     defaultEvaluationListData:{
         RiskID:0,
         RiskAssessStatus:'',
-        pageIndex: 1,   //必填参数
-        pageSize: 10,   //必填参数
-        total: 0,       //必填参数
+        pageIndex:1,   //必填参数
+        pageSize:10,   //必填参数
+        total:0,       //必填参数
     },
     evaluationList:[],
 }
@@ -26,6 +26,8 @@ const mutations = {
 
 const actions = {
     getRiskAssessList({commit,state,dispatch,getters}){
+        // console.log(JSON.stringify(state.defaultEvaluationListData))
+        // return;
         getRiskAssess(state.defaultEvaluationListData).then((res) => {
              commit('saveDefaultEvaluationListDatas',{total: res.all.total});
             commit('saveEvaluationLists',res.info);

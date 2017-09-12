@@ -2,13 +2,13 @@
     <div id="RiskDangerAdd_Modify">
 
         <div class="upper">
-            <Heads :title="'整改'"></Heads>
+            <Heads :title="'整治'"></Heads>
             <div class="BasicInfoA">
-                <div class="title">整改前</div>
+                <div class="title">整治前</div>
                 <div class="edit">
                     <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenIntro" :readonly="true" :title="'隐患描述'" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
                     <x-textarea v-model="defaultRiskHiddenAdd.RiskHiddenAuditIntro" :readonly="true" :title="'审核原因'" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
-                    <group :title="'整改前图片'">
+                    <group :title="'整治前图片'">
                         <div class="photo">
                             <div class="imgItem" v-for="(item,index) in defaultRiskHiddenAdd.RiskHiddenBeforePhotosPath">
                                 <img :src="(item.url.indexOf('http://')>-1?item.url:`${param_baseUrls}${item.url}`)" alt="">
@@ -26,12 +26,21 @@
                     </group>
                 </div>
                 <div class="modify">
-                    <div class="title">整改</div>
+                    <div class="title">整治整改</div>
                     <x-input title="责任主体" v-model="defaultRiskHiddenAdd.RiskChangedDuty" placeholder="请输入责任主体"></x-input>
-                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedStratDate" value-text-align="left" @on-change="RiskChangedStratDate" :title="'<div class=time >整改起期</div>'"></datetime>
-                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedEndDate" value-text-align="left" @on-change="RiskChangedEndDate" :title="'<div class=time >整改止期</div>'"></datetime>
-                    <x-textarea v-model="defaultRiskHiddenAdd.RiskChangedIntro" :title="'整改措施'" :placeholder="'请填写整改措施'" :show-counter="false" autosize></x-textarea>
-                    <group :title="'整改后图片'">
+                    
+                    <selector 
+                        title="指定审核人"
+                        placeholder="请选择"
+                        :options="aduitUser"
+                        :value="defaultRiskHiddenAdd.RiskChangedAuditMan"
+                        @on-change="changeRiskChangedAuditMan"
+                    ></selector>
+
+                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedStratDate" value-text-align="left" @on-change="RiskChangedStratDate" :title="'<div class=time >整治起期</div>'"></datetime>
+                    <datetime v-model="defaultRiskHiddenAdd.RiskChangedEndDate" value-text-align="left" @on-change="RiskChangedEndDate" :title="'<div class=time >整治止期</div>'"></datetime>
+                    <x-textarea v-model="defaultRiskHiddenAdd.RiskChangedIntro" :title="'整治措施'" :placeholder="'请填写整治措施'" :show-counter="false" autosize></x-textarea>
+                    <group :title="'整治后图片'">
                         <div class="photo">
                         
                             <div class="imgItem" v-for="(item,index) in defaultRiskHiddenAdd.RiskChangedAfterPhotosPath">
@@ -39,7 +48,7 @@
                                 <div class="delete" @click="deletePhoto(index)"><Icon slot="icon" :name="'delete-icon'" /></div>
                             </div>
 
-                            <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2&&defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
+                            <div class="imgItem" v-if="defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2 && defaultRiskHiddenAdd.RiskChangedAfterPhotosPath.length<2">
                                 <div class="fileBox">
                                     <div class="fileBoxs">
                                         <input class="fileBtn" @change="changeFile" type="file" accept="image/*" ref="fileBtn" >
@@ -62,7 +71,7 @@
 <script>
     import { param_baseUrls } from './../../utils/subei_config.js'
     import Heads from './../../components/Heads.vue'
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast, Datetime} from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XInput, XTextarea, Group, TransferDom, Popup, Toast, Datetime, Selector} from 'vux'
     import { mapMutations, mapState, mapActions } from 'vuex'
 
     export default{
@@ -82,21 +91,7 @@
             Popup,
             Toast,
             Datetime,
-        },
-        watch:{},
-        created(){
-
-            console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
-
-            if( typeof(this.$route.params.item) == 'object'){
-
-                this.$route.params.item.RiskChangedStratDate = '请选择';
-                this.$route.params.item.RiskChangedEndDate = '请选择';
-                this.defaultRiskHiddenAdd = this.$route.params.item;
-                console.log(this.defaultRiskHiddenAdd);
-            }
-            // this.getRiskHiddenInfo({ID: this.$route.params.dangerModifyId});
-            
+            Selector,
         },
         data(){
             return{
@@ -141,17 +136,72 @@
                     "RiskChangedDate": "",
                     "RiskChangedStatus": 0,
                     "RiskChangedAuditIntro": "",
-                    "RiskChangedAuditMan": 0,
+                    "RiskChangedAuditMan": '',
                     "RiskChangedAuditManName": "",
                     "RiskChangedAuditDate": ""
                 }
             }
         },
+        created(){
+
+            console.log(`我是隐患${JSON.stringify(this.$route.params)}`);
+            this.defaultRiskHiddenAdd.RiskID = this.$route.params.item.RiskID;
+                // console.log('asddddddddddddddddddddddddddddd'+JSON.stringify(this.$route.params.item));
+            
+
+            if( typeof(this.$route.params.item) == 'object'){
+
+                console.log(`我是起始时间${this.$route.params.item.RiskChangedStratDate}`);
+                
+                const param = this.$route.params.item;
+                const stratDate = param.RiskChangedStratDate.split('-')[0]
+
+                this.defaultRiskHiddenAdd.RiskChangedAuditMan = param.RiskChangedAuditMan || '';
+
+                if(stratDate == '1900'){
+                    this.$route.params.item.RiskChangedStratDate = '请选择';
+                    this.$route.params.item.RiskChangedEndDate = '请选择';
+                }
+
+                // this.defaultRiskHiddenAdd = this.$route.params.item;
+                console.log(this.defaultRiskHiddenAdd);
+                this.defaultRiskHiddenAdd = this.dangerInfo
+                
+            }
+            
+        },
+        mounted (){
+            // alert(this.$route.params.dangerModifyId)
+            this.getRiskHiddenInfo({ID: this.$route.params.dangerModifyId});
+            console.log('我要的数据'+JSON.stringify(this.dangerInfo))
+            this.getRiskSelectAduitUser()
+        },
         computed:{
             ...mapState({
                 dangerInfo(state){
                     return state.riskDangerList.dangerInfo;
-                }
+                },
+                aduitUser(state){
+
+                    let aduitUser=[];
+                    console.log(state);
+                    const aduitUserItem = state.riskSelectAduitUser;
+
+                    if(JSON.stringify(aduitUserItem)!=='[]'){
+                        for(let item in aduitUserItem){
+                            aduitUser.push({
+                                key: aduitUserItem[item].ID,
+                                value: aduitUserItem[item].UserNickName
+                            });
+                        }
+                    };
+
+                    console.log(`**************************************************`);
+                    console.log(aduitUser);
+
+                    return aduitUser;
+
+                },
             }),
             RiskChangedAfterPhotos(){
                 const photoList = this.defaultRiskHiddenAdd.RiskChangedAfterPhotosPath;
@@ -173,6 +223,7 @@
                 'postUploadPhoto',
                 'showToast',
                 'postRiskHiddenAdd',
+                'getRiskSelectAduitUser'
             ]),
             ...mapMutations([
                 'updateLoadingStatus',
@@ -226,9 +277,9 @@
 
             },
             addHidDanger(status){
-
+              
                 this.defaultRiskHiddenAdd.RiskChangedStatus = status;
-                this.defaultRiskHiddenAdd.RiskID = this.$route.params.riskId;
+                this.defaultRiskHiddenAdd.RiskID = (JSON.stringify(this.$route.params.item)=='{}'?this.$route.params.riskId:this.$route.params.item.RiskID);
                 this.defaultRiskHiddenAdd.RiskChangedAfterPhotos = this.RiskChangedAfterPhotos.join(',');
 
                 if(!this.defaultRiskHiddenAdd.RiskChangedDuty){
@@ -236,6 +287,11 @@
                     return;
                 }
 
+                if(!this.defaultRiskHiddenAdd.RiskChangedAuditMan){
+                    this.showToast({toastState:true,toastValue:'请指定审核人'});
+                    return;
+                }
+                
                 if(this.defaultRiskHiddenAdd.RiskChangedStratDate=='请选择'){
                     this.showToast({toastState:true,toastValue:'请选择起期'});
                     return;
@@ -263,6 +319,19 @@
                 console.log(JSON.stringify(this.defaultRiskHiddenAdd));
 
                 this.postRiskHiddenAdd({param: this.defaultRiskHiddenAdd, $router: this.$router});
+            },
+            changeRiskChangedAuditMan(val){
+                if(val){
+
+                    for(let item in this.aduitUser){
+                        
+                        if(this.aduitUser[item].key==val){
+                            this.defaultRiskHiddenAdd.RiskChangedAuditMan = val;
+                            this.defaultRiskHiddenAdd.RiskChangedAuditManName = this.aduitUser[item].value;
+                        }
+                        
+                    }
+                }
             }
         }
     }
@@ -349,13 +418,13 @@
         }
 
         .fileBox{
-            watch:100%;
+            width:100%;
             height: 100%;
             display:flex;
             justify-content: center;
             align-items: center;
             .fileBoxs{
-                watch:100%;
+                width:100%;
                 height: 100%;
                 display: flex;
                 input{

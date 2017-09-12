@@ -1,7 +1,7 @@
 <template>
     <div id="myRiskDangerReviewListModify">
         <div class="upper">
-            <Heads :title="'整改列表'"></Heads>
+            <Heads :title="'整治列表'"></Heads>
             <tab :line-width=2 active-color='#33CC99'>
                 <!--<tab-item selected @on-item-click="changeTab(0)">暂存</tab-item>-->
                 <tab-item selected @on-item-click="changeTab(1)">待审核</tab-item>

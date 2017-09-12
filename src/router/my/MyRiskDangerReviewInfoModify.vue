@@ -1,10 +1,10 @@
 <template>
     <div id="riskDanger">
-        <Heads :title="'隐患详情'"></Heads>
+        <Heads :title="'整治详情'"></Heads>
         <div class="BasicInfoA">
             <div class="title">隐患信息</div>
-            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskChangedAddManName" placeholder="暂无"></x-input>
-            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskChangedAddManTel" placeholder="暂无"></x-input>
+            <x-input title="联系人" :disabled="true" :value="dangerInfo.RiskHiddenAddManName" placeholder="暂无"></x-input>
+            <x-input title="联系电话" :disabled="true" :value="dangerInfo.RiskHiddenAddManTel" placeholder="暂无"></x-input>
             <x-input title="提交时间" :disabled="true" :value="`${dangerInfo.RiskHiddenDate.split('T')[0]} ${dangerInfo.RiskHiddenDate.split('T')[1]}`" v-if="dangerInfo.RiskHiddenDate" placeholder="暂无"></x-input>
             <x-textarea :title="'隐患描述'" :readonly="true" :max="200" :value="dangerInfo.RiskHiddenIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <div v-if="dangerInfo.RiskHiddenStatus==3||dangerInfo.RiskHiddenStatus==2" style="border-top: 1px solid #eee;">
@@ -37,19 +37,19 @@
             </popup>
         </div>
         
-        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==3 || dangerInfo.RiskChangedStatus==2">
-            <div class="title">整改信息</div>
+        <div class="BasicInfoA" v-if="dangerInfo.RiskChangedStatus==3 || dangerInfo.RiskChangedStatus==2 || dangerInfo.RiskChangedStatus==1">
+            <div class="title">整治信息</div>
             <x-input title="责任主体" :disabled="true" :value="dangerInfo.RiskChangedDuty" placeholder="暂无"></x-input>
-            <x-input title="整改起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
-            <x-input title="整改止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
-            <x-textarea :title="'整改措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
+            <x-input title="整治起期" :disabled="true" :value="dangerInfo.RiskChangedStratDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-input title="整治止期" :disabled="true" :value="dangerInfo.RiskChangedEndDate.split('T')[0]" placeholder="暂无"></x-input>
+            <x-textarea :title="'整治措施'" :readonly="true" :value="dangerInfo.RiskChangedIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
             <div v-if="dangerInfo.RiskChangedStatus==3||dangerInfo.RiskChangedStatus==2" style="border-top: 1px solid #eee;">
             
                 <x-input title="审核状态" :disabled="true" :value="dangerInfo.RiskChangedStatus==3?'审核通过':'审核退回'" placeholder="暂无"></x-input>
                 <x-textarea :title="'审核原因'" :readonly="true" :max="200" :value="dangerInfo.RiskChangedAuditIntro" :placeholder="'暂无'" :show-counter="false" autosize></x-textarea>
                 
             </div>
-            <group :title="'整改照片'">
+            <group :title="'整治照片'">
                 <div class="photo">
                     <div class="imgItem" v-for="item in dangerInfo.RiskChangedAfterPhotosPath">
                         <img :src="(item.url.indexOf('http://')>0?item.url:`${param_baseUrls}${item.url}`)" alt="">
@@ -59,6 +59,8 @@
                     </div>
                 </div>
             </group>
+
+            <div style="width:100%; height:70px;" v-if="dangerInfo.RiskChangedStatus==1"></div>
         </div>
 
         <div class="footerBox" ref="revise" v-if="dangerInfo.RiskChangedStatus==1">
@@ -98,7 +100,7 @@
         },
         created(){
 
-            console.warn(`我是整改审核${JSON.stringify(this.$route.params)}`);
+            console.warn(`我是整治审核${JSON.stringify(this.$route.params)}`);
             this.getRiskHiddenInfo({ID: this.$route.params.dangerId});
             console.log(this.updateRiskHiddenChangedStatus_Audit_data);
             this.updateRiskHiddenChangedStatus_Audit_data.default.ID = this.$route.params.dangerId;
@@ -157,7 +159,12 @@
                     this.showToast({toastValue: '请填原因！',toastState: true});
                     return;
                 }
-                this.postUpdateRiskHiddenChangedStatus_Audit(this.updateRiskHiddenChangedStatus_Audit_data);
+
+                this.openConfirm({
+                        state: true, msg: '您确定要提交吗？', control: () => {
+                            this.postUpdateRiskHiddenChangedStatus_Audit(this.updateRiskHiddenChangedStatus_Audit_data);
+                        }
+                    });
             },
         }
     }
@@ -211,6 +218,11 @@
         .edit{
             background: #fff;
             height:100%;
+        }
+         .weui-textarea {
+            font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+            font-size: 15px;
+            padding: 0;
         }
         .addImg{
             width: 100%;

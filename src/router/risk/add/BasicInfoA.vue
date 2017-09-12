@@ -18,18 +18,18 @@
 
             <selector
                 v-if="JSON.stringify(riskObjectTypeChild)!=='[]'"
-                title=" " 
+                title=" "
                 placeholder="请选择"
                 :options="riskObjectTypeChild"
                 :value="riskObjectTypeChildVal"
                 @on-change="riskObjectTypeChildChoose"
             ></selector>
 
-            <x-address 
+            <x-address
                 :title="'省市区'" 
                 raw-value
                 v-model="addressValue"
-                :list="areaData" 
+                :list="areaByAgency" 
                 value-text-align="left"
             ></x-address>
 
@@ -40,17 +40,34 @@
                 :value="postRiskAdd.RiskAddress"
             ></x-input>
 
-            <popup v-model="getLngLatState" :hide-on-blur="false" :height="'100%'">
+            <selector 
+                title="指定审核人"
+                placeholder="请选择"
+                :options="aduitUser"
+                :value="riskAuditManVal"
+                @on-change="riskAuditMan"
+            ></selector>
+
+            <popup 
+                v-model="getLngLatState" 
+                :hide-on-blur="false"
+                :height="'100%'"
+                @on-show="getWinH"
+            >
                 <div class="getLngLat">
-                    <GetLngLat 
+                    <GetLngLat
+                        ref="popupHeight"
+                        :pageState="pageState"
                         :callback="getLngLat"
+                        :defaultAddres="defaultAddres"
                     ></GetLngLat>
                 </div>
             </popup>
 
             <x-input :disabled="true" :value="`${(postRiskAdd.RiskLng?postRiskAdd.RiskLng+' / '+postRiskAdd.RiskLat:'请选择经纬度')}`" title="经度/纬度" placeholder="经度/纬度">
-                <Icon slot="right" class="flexLeft" :name="'map-icon'" @click.native="getLngLatState=true"/>
+                <Icon slot="right" class="flexLeft" :name="'map-icon'" @click.native="openGetLng()"/>
             </x-input>
+
         </div>
         <div class="next">
             <x-button @click.native="next">下一步</x-button>
@@ -59,7 +76,7 @@
 </template>
 <script>
     import GetLngLat from './../../../components/common/GetLngLat.vue'
-    import {mapMutations,mapState} from 'vuex'
+    import {mapMutations,mapState,mapActions} from 'vuex'
     import { XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton, Value2nameFilter as value2name, Selector,Popup } from 'vux'
 
     export default {
@@ -76,24 +93,23 @@
         },
         data(){
             return {
+                pageState: 1,
                 getLngLatState: false,
                 addressValue: [],
-                latAndLon:'已设置默认值',
-                riskTypeVal:'',
+                latAndLon: '已设置默认值',
+                riskTypeVal: '',
                 riskObjectTypeVal: '',
-                riskObjectTypeChildVal:'',
-                riskObjectTypeChild:[],
+                riskObjectTypeChildVal: '',
+                riskAuditManVal: '',
+                riskObjectTypeChild: [],
+                defaultAddres:'',
             }
         },
         watch:{
             addressValue(val){
                 
-                console.log(`我的地址改变了${typeof(val[0])}`);
-
                 let addres = value2name(val, this.areaData).split(' ');
-
-                console.log(addres);
-
+                this.defaultAddres = addres[0] +  addres[1] + addres[2] + addres[3] + addres[4];
                 this.upRiskAdd({
 
                     RiskArea1: val[0],
@@ -112,28 +128,53 @@
                 });
 
             },
+            riskAreaIDsArray(val,vals){
+                this.addressValue = val;
+            }
         },
         mounted(){
+
             
+            // 初始化
             const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
-            if(postRiskAdd.RiskObjectTypeID1){
-                this.riskObjectTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID1;
+            this.riskObjectTypeVal = postRiskAdd.RiskObjectTypeID1 || '';
+            this.riskAuditManVal = postRiskAdd.RiskAuditMan || '';
+            this.riskObjectTypeChildVal = postRiskAdd.RiskObjectTypeID2 || '';
+            this.riskTypeVal = postRiskAdd.RiskCategory || '';
+            
+            if(this.riskAreaIDsArray.length!==0){
+
+                let addressValues = this.riskAreaIDsArray.map((val)=>{
+                    return (typeof(val)=="number"?String(val):val);
+                });
+                this.addressValue = addressValues;
+
             }
-            if(postRiskAdd.RiskObjectTypeID1){
-                this.riskObjectTypeChildVal = this.$store.state.tiskAdd.postRiskAdd.RiskObjectTypeID2;
-            }
-            if(postRiskAdd.RiskCategory){
-                this.riskTypeVal = this.$store.state.tiskAdd.postRiskAdd.RiskCategory;
-            }
-            let addressValues = postRiskAdd.RiskAreaIDsArray.map((val)=>{
-                return String(val);
-            });
-            this.addressValue = addressValues;
+
         },
         computed: {
             ...mapState({
+                aduitUser(state){
+
+                    let aduitUser=[];
+                    const aduitUserItem = state.riskSelectAduitUser;
+
+                    if(JSON.stringify(aduitUserItem)!=='[]'){
+                        for(let item in aduitUserItem){
+                            aduitUser.push({
+                                key: aduitUserItem[item].ID,
+                                value: aduitUserItem[item].UserNickName
+                            });
+                        }
+                    };
+                    return aduitUser;
+
+                },
                 areaData: state => {
                     return state.areaData;
+                },
+                areaByAgency: state => {
+                    return state.areaByAgencyId;
                 },
                 postRiskAdd: state => {
                     if(state.tiskAdd.postRiskAdd.RiskObjectTypeID1){
@@ -143,6 +184,9 @@
                         this.riskObjectTypeChildVal = state.tiskAdd.postRiskAdd.RiskObjectTypeID2;
                     }
                     return state.tiskAdd.postRiskAdd
+                },
+                riskAreaIDsArray: state => {
+                    return state.tiskAdd.postRiskAdd.RiskAreaIDsArray;
                 },
                 riskType: state => {
                     let riskData=[];
@@ -182,10 +226,9 @@
                 'editRisk'
             ]),
             next(){
-                this.$router.push({name:'basicInfoC'})
+                this.$router.replace({name:'basicInfoC'})
             },
             getLngLat(res){
-                console.log(`获取经纬度回调${JSON.stringify(res)}`);
                 this.upRiskAdd({RiskLng:res.location.lng,RiskLat:res.location.lat});
                 this.getLngLatState = false;
             },
@@ -235,16 +278,39 @@
                 }
             },
             riskTypeChoose(val){
-                this.upRiskAdd({RiskCategory:val})
+                this.upRiskAdd({RiskCategory:val});
             },
-            changeFun(val){
-                console.log(val);
+            riskAuditMan(val){
+                if(val){
+
+                    for(let item in this.aduitUser){
+                        
+                        if(this.aduitUser[item].key==val){
+
+                            this.upRiskAdd({RiskAuditMan:val});
+                            this.upRiskAdd({RiskAuditManName:this.aduitUser[item].value});
+
+                        }
+                    }
+                }
+            },
+            getWinH(){
+                this.pageState = this.pageState+=1;
+            },
+            openGetLng(){
+                const postRiskAdd = this.$store.state.tiskAdd.postRiskAdd;
+                if(!postRiskAdd.RiskArea1){
+                    this.showToast({ toastState: true, toastValue: '请选择省市区！' });
+                    return;
+                }
+                this.getLngLatState=true
             }
         },
     }
 </script>
 <style lang="less">
     #basicInfoA{
+        width:100%;
         height:100%;
         background:#fbf9fe;
         display: flex;
@@ -276,11 +342,13 @@
             padding:2rem 15px 15px;
         }
         .weui-label{
-            width: 5em!important;
+            width: 5.5em!important;
+            line-height: 100%;
         }
         .weui-cells{margin: 0!important;}
         .weui-select{
             color:#333!important;
+            line-height: inherit;
         }
     }
 </style>

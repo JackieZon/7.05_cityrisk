@@ -9,7 +9,6 @@
 <script>
     import { mapActions } from 'vuex'
     import Footers from './../../components/Footers.vue'
-
     export default {
         components:{
             Footers
@@ -22,8 +21,13 @@
         created(){
             // this.getRiskBaseType();
             // this.postRiskAdd();
+            this.getRiskSelectAduitUser();
         },
-        methods:{}
+        methods:{
+            ...mapActions([
+                'getRiskSelectAduitUser',
+            ])
+        }
     }
 </script>
 <style lang="less" scoped>

@@ -1,34 +1,35 @@
 <template>
     <div class="basicInfoC">
-        <group v-if="JSON.stringify(ListRiskDuty)!=='[]'">
+        <group transition-mode="follow">
             <swipeout>
-                <swipeout-item transition-mode="follow" v-for="(item,index) in ListRiskDuty" :key="index">
+                <swipeout-item v-if="JSON.stringify(ListRiskDuty)!=='[]'" v-for="(item,index) in ListRiskDuty" :key="index">
                     <div slot="right-menu">
                         <swipeout-button @click.native="oepnRiskDuty('edit',index)" type="primary">{{'编辑'}}</swipeout-button>
                         <swipeout-button @click.native="oepnRiskDuty('delete',index)" type="warn">{{'删除'}}</swipeout-button>
                     </div>
                     <div slot="content" class="demo-content vux-1px-t">
                         <cell :title="item.RiskDutyName" :inline-desc="`${item.RiskDutyAreaName1} ${item.RiskDutyAreaName2} ${item.RiskDutyAreaName3} ${item.RiskDutyAreaName4} ${item.RiskDutyAreaName5}`">
-                            <Icon slot="icon" class="flexBox" :name="'trust-icon'" :width="'40'" :height="'40'" style="color:#33CC99"/>
+                            <Icon slot="icon" class="flexBox" :name="'trust-icon'" :width="'40'" :height="'40'" style="color:#33CC99" />
                         </cell>
                     </div>
                 </swipeout-item>
             </swipeout>
+            <!-- <div class="add_button">
+                <x-button @click.native="oepnRiskDuty('open')">添加</x-button>
+            </div> -->
+            <div class="add">
+                <load-more v-if="JSON.stringify(ListRiskDuty)=='[]'" :show-loading="false" :tip="'暂无责任主体'" background-color="#fbf9fe"></load-more>
+                <x-button class="add_button" @click.native="oepnRiskDuty('open')">添加</x-button>
+            </div>
         </group>
-        <load-more v-if="JSON.stringify(ListRiskDuty)=='[]'" :show-loading="false" :tip="'暂无责任主体'" background-color="#fbf9fe"></load-more>
+
         <popup v-model="basicInfoCPopup" :hide-on-blur="false">
             <div class="basicInfoCPopup">
-                <x-input title="联系人" placeholder="联系人" v-model="defaultDuty.RiskDutyContactMan"></x-input>
                 <x-input title="主体名称" placeholder="主体名称" v-model="defaultDuty.RiskDutyName"></x-input>
+                <x-input title="联系人" placeholder="联系人" v-model="defaultDuty.RiskDutyContactMan"></x-input>
                 <x-input title="联系电话" placeholder="主体联系人电话" v-model="defaultDuty.RiskDutyContactTel"></x-input>
 
-                <x-address 
-                    :title="'省市区'" 
-                    v-model="addressValue" 
-                    raw-value 
-                    :list="areaData" 
-                    value-text-align="left"
-                ></x-address>
+                <x-address :title="'省市区'" v-model="addressValue" raw-value :list="areaData" value-text-align="left"></x-address>
 
                 <x-input placeholder="详细地址" v-model="defaultDuty.RiskDutyAddress"></x-input>
                 <div class="next">
@@ -39,18 +40,18 @@
         </popup>
 
         <div class="next">
-            <x-button @click.native="oepnRiskDuty('open')">添加</x-button>
+            <!-- <x-button @click.native="oepnRiskDuty('open')">添加</x-button> -->
             <x-button @click.native="next">下一步</x-button>
         </div>
-        
+
     </div>
 </template>
 <script>
-    import { LoadMore, XInput, Group, Cell,XAddress, ChinaAddressV3Data, XButton,Popup, Value2nameFilter as value2name, Confirm, XSwitch, TransferDomDirective as TransferDom,GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
-    import {mapMutations, mapActions, mapState} from 'vuex'
+    import { LoadMore, XInput, Group, Cell, XAddress, ChinaAddressV3Data, XButton, Popup, Value2nameFilter as value2name, Confirm, XSwitch, TransferDomDirective as TransferDom, GroupTitle, Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
+    import { mapMutations, mapActions, mapState } from 'vuex'
 
     export default {
-        components:{
+        components: {
             XInput,
             Group,
             Cell,
@@ -66,32 +67,32 @@
             SwipeoutButton,
             LoadMore
         },
-        data(){
+        data() {
             return {
                 addressValue: [],
                 basicInfoCPopup: false,
                 confirmShow: false,
-                defaultDutyIndex:'',
-                defaultDuty:{
-                    "RiskDutyName":'',        // 责任主体名称
-                    "RiskDutyContactMan":'',  // 责任主体联系人
-                    "RiskDutyContactTel":'',  // 责任主体电话
-                    'RiskDutyAreaName1':'',
-                    'RiskDutyAreaName2':'',
-                    'RiskDutyAreaName3':'',
-                    'RiskDutyAreaName4':'',
-                    'RiskDutyAreaName5':'',
-                    "RiskDutyArea1":'',
-                    "RiskDutyArea2":'',
-                    "RiskDutyArea3":'',
-                    'RiskDutyArea4':'',
-                    'RiskDutyArea5':'',
-                    "RiskDutyAddress":'',
+                defaultDutyIndex: '',
+                defaultDuty: {
+                    "RiskDutyName": '',        // 责任主体名称
+                    "RiskDutyContactMan": '',  // 责任主体联系人
+                    "RiskDutyContactTel": '',  // 责任主体电话
+                    'RiskDutyAreaName1': '',
+                    'RiskDutyAreaName2': '',
+                    'RiskDutyAreaName3': '',
+                    'RiskDutyAreaName4': '',
+                    'RiskDutyAreaName5': '',
+                    "RiskDutyArea1": '',
+                    "RiskDutyArea2": '',
+                    "RiskDutyArea3": '',
+                    'RiskDutyArea4': '',
+                    'RiskDutyArea5': '',
+                    "RiskDutyAddress": '',
                 },
             }
         },
-        watch:{
-            addressValue(val){
+        watch: {
+            addressValue(val) {
 
                 console.log(val);
 
@@ -103,7 +104,7 @@
                 defaults.RiskDutyAreaName3 = addres[2];
                 defaults.RiskDutyAreaName4 = addres[3];
                 defaults.RiskDutyAreaName5 = addres[4];
-                
+
                 defaults.RiskDutyArea1 = val[0];
                 defaults.RiskDutyArea2 = val[1];
                 defaults.RiskDutyArea3 = val[2];
@@ -112,13 +113,13 @@
 
             }
         },
-        computed:{
+        computed: {
             ...mapState({
                 ListRiskDuty: state => state.tiskAdd.postRiskAdd.ListRiskDuty,
                 areaData: state => state.areaData
             })
         },
-        methods:{
+        methods: {
             ...mapMutations([
                 'upToastMag',
                 'pushListRiskDuty',
@@ -129,10 +130,10 @@
             ...mapActions({
                 actionToast: 'showToast'
             }),
-            next(){
-                this.$router.push({name:'basicInfoD'})
+            next() {
+                this.$router.replace({ name: 'basicInfoD' })
             },
-            clearData(){
+            clearData() {
                 this.defaultDuty.RiskDutyName = '';
                 this.defaultDuty.RiskDutyContactMan = '';
                 this.defaultDuty.RiskDutyContactTel = '';
@@ -142,113 +143,117 @@
                 this.defaultDuty.RiskDutyAddress = '';
                 // this.addressValue = [];
             },
-            oepnRiskDuty(type,index){
+            oepnRiskDuty(type, index) {
 
-                if(type=='open'){
+                if (type == 'open') {
                     this.defaultDutyIndex = '';
                     this.basicInfoCPopup = true;
-                }else if(type=='edit'){
+                } else if (type == 'edit') {
 
                     console.log(this.ListRiskDuty[index]);
 
                     this.defaultDutyIndex = index;
                     this.defaultDuty = {
-                        "RiskDutyName":this.ListRiskDuty[index].RiskDutyName,
-                        "RiskDutyContactMan":this.ListRiskDuty[index].RiskDutyContactMan,
-                        "RiskDutyContactTel":this.ListRiskDuty[index].RiskDutyContactTel,
-                        "RiskDutyArea1":this.ListRiskDuty[index].RiskDutyArea1,
-                        "RiskDutyArea2":this.ListRiskDuty[index].RiskDutyArea2,
-                        "RiskDutyArea3":this.ListRiskDuty[index].RiskDutyArea3,
-                        "RiskDutyArea4":this.ListRiskDuty[index].RiskDutyArea4,
-                        "RiskDutyArea5":this.ListRiskDuty[index].RiskDutyArea5,
-                        "RiskDutyAddress":this.ListRiskDuty[index].RiskDutyAddress,
+                        "RiskDutyName": this.ListRiskDuty[index].RiskDutyName,
+                        "RiskDutyContactMan": this.ListRiskDuty[index].RiskDutyContactMan,
+                        "RiskDutyContactTel": this.ListRiskDuty[index].RiskDutyContactTel,
+                        "RiskDutyArea1": this.ListRiskDuty[index].RiskDutyArea1,
+                        "RiskDutyArea2": this.ListRiskDuty[index].RiskDutyArea2,
+                        "RiskDutyArea3": this.ListRiskDuty[index].RiskDutyArea3,
+                        "RiskDutyArea4": this.ListRiskDuty[index].RiskDutyArea4,
+                        "RiskDutyArea5": this.ListRiskDuty[index].RiskDutyArea5,
+                        "RiskDutyAddress": this.ListRiskDuty[index].RiskDutyAddress,
                     };
 
-                    let allAreas = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3,this.defaultDuty.RiskDutyArea4,this.defaultDuty.RiskDutyArea5];
+                    let allAreas = [this.defaultDuty.RiskDutyArea1, this.defaultDuty.RiskDutyArea2, this.defaultDuty.RiskDutyArea3, this.defaultDuty.RiskDutyArea4, this.defaultDuty.RiskDutyArea5];
                     let addressValues;
-                    if(typeof(this.defaultDuty.RiskDutyArea1)=='number'){
-                        addressValues = allAreas.map((val)=>{
+                    if (typeof (this.defaultDuty.RiskDutyArea1) == 'number') {
+                        addressValues = allAreas.map((val) => {
                             return String(val);
                         })
-                    }else{
+                    } else {
                         addressValues = allAreas;
                     }
 
                     this.addressValue = addressValues;
                     this.basicInfoCPopup = true;
 
-                }else if(type=='close'){
+                } else if (type == 'close') {
                     this.clearData();
                     this.basicInfoCPopup = false;
-                }else if(type=='delete'){
-                    this.openConfirm({state:true,msg:'确定要删除吗？',control: ()=>{
-                        this.deleteListRiskDuty({index: index});
-                    }});
-                    
+                } else if (type == 'delete') {
+                    this.openConfirm({
+                        state: true, msg: '确定要删除吗？', control: () => {
+                            this.deleteListRiskDuty({ index: index });
+                        }
+                    });
+
                 }
-                
+
             },
-            addListRiskDuty(){
+            addListRiskDuty() {
                 const phoneReg = new RegExp(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/)
+                const fixedTelephone = new RegExp(/^((0\d{2,3}))(\d{7,8})(-(\d{3,}))?$/)
 
-                if(!this.defaultDuty.RiskDutyContactMan){
-                    this.actionToast({toastState:true,toastValue:'请输入联系人'})
+                if (!this.defaultDuty.RiskDutyContactMan) {
+                    this.actionToast({ toastState: true, toastValue: '请输入联系人' })
                     return;
                 }
-                if(!this.defaultDuty.RiskDutyName){
-                    this.actionToast({toastState:true,toastValue:'请输入主体名称'})
+                if (!this.defaultDuty.RiskDutyName) {
+                    this.actionToast({ toastState: true, toastValue: '请输入主体名称' })
                     return;
                 }
 
-                if(!phoneReg.test(this.defaultDuty.RiskDutyContactTel)){
-                    
-                    if(!this.defaultDuty.RiskDutyContactTel){
-                        this.actionToast({toastState:true,toastValue:'请输入主体联系人电话'})
+
+                if (!phoneReg.test(this.defaultDuty.RiskDutyContactTel) && !fixedTelephone.test(this.defaultDuty.RiskDutyContactTel)) {
+
+                    if (!this.defaultDuty.RiskDutyContactTel) {
+                        this.actionToast({ toastState: true, toastValue: '请输入主体联系人电话' })
                         return;
-                    }else{
-                        this.actionToast({toastState:true,toastValue:'请输入正确的主体联系人电话'})
+                    } else {
+                        this.actionToast({ toastState: true, toastValue: '请输入正确的主体联系人电话' })
                         return;
                     }
                 }
-                if(!this.defaultDuty.RiskDutyArea1){
-                    this.actionToast({toastState:true,toastValue:'请选择省市区'})
+                if (!this.defaultDuty.RiskDutyArea1) {
+                    this.actionToast({ toastState: true, toastValue: '请选择省市区' })
                     return;
                 }
-                if(!this.defaultDuty.RiskDutyArea2){
-                    this.actionToast({toastState:true,toastValue:'请选择省市区'})
+                if (!this.defaultDuty.RiskDutyArea2) {
+                    this.actionToast({ toastState: true, toastValue: '请选择省市区' })
                     return;
                 }
-                if(!this.defaultDuty.RiskDutyAddress){
-                    this.actionToast({toastState:true,toastValue:'请输入详细地址'})
+                if (!this.defaultDuty.RiskDutyAddress) {
+                    this.actionToast({ toastState: true, toastValue: '请输入详细地址' })
                     return;
                 }
 
                 const defaultDutyUpData = {
-                    "RiskDutyName":this.defaultDuty.RiskDutyName,
-                    "RiskDutyContactMan":this.defaultDuty.RiskDutyContactMan,
-                    "RiskDutyContactTel":this.defaultDuty.RiskDutyContactTel,
-                    "RiskDutyArea1":this.defaultDuty.RiskDutyArea1,
-                    "RiskDutyArea2":this.defaultDuty.RiskDutyArea2,
-                    "RiskDutyArea3":this.defaultDuty.RiskDutyArea3,
-                    "RiskDutyArea4":this.defaultDuty.RiskDutyArea4,
-                    "RiskDutyArea5":this.defaultDuty.RiskDutyArea5,
+                    "RiskDutyName": this.defaultDuty.RiskDutyName,
+                    "RiskDutyContactMan": this.defaultDuty.RiskDutyContactMan,
+                    "RiskDutyContactTel": this.defaultDuty.RiskDutyContactTel,
+                    "RiskDutyArea1": this.defaultDuty.RiskDutyArea1,
+                    "RiskDutyArea2": this.defaultDuty.RiskDutyArea2,
+                    "RiskDutyArea3": this.defaultDuty.RiskDutyArea3,
+                    "RiskDutyArea4": this.defaultDuty.RiskDutyArea4,
+                    "RiskDutyArea5": this.defaultDuty.RiskDutyArea5,
 
-                    "RiskDutyAreaName1":this.defaultDuty.RiskDutyAreaName1,
-                    "RiskDutyAreaName2":this.defaultDuty.RiskDutyAreaName2,
-                    "RiskDutyAreaName3":this.defaultDuty.RiskDutyAreaName3,
-                    "RiskDutyAreaName4":this.defaultDuty.RiskDutyAreaName4,
-                    "RiskDutyAreaName5":this.defaultDuty.RiskDutyAreaName5,
+                    "RiskDutyAreaName1": this.defaultDuty.RiskDutyAreaName1,
+                    "RiskDutyAreaName2": this.defaultDuty.RiskDutyAreaName2,
+                    "RiskDutyAreaName3": this.defaultDuty.RiskDutyAreaName3,
+                    "RiskDutyAreaName4": this.defaultDuty.RiskDutyAreaName4,
+                    "RiskDutyAreaName5": this.defaultDuty.RiskDutyAreaName5,
 
-                    "RiskDutyAddress":this.defaultDuty.RiskDutyAddress,
+                    "RiskDutyAddress": this.defaultDuty.RiskDutyAddress,
                 }
 
-                if(this.defaultDutyIndex!==''){
+                if (this.defaultDutyIndex !== '') {
                     this.editListRiskDuty({
-                        index:this.defaultDutyIndex,
-                        list:defaultDutyUpData
+                        index: this.defaultDutyIndex,
+                        list: defaultDutyUpData
                     });
                     this.basicInfoCPopup = false;
-                }else{
+                } else {
 
                     this.pushListRiskDuty(defaultDutyUpData);
                     this.clearData();
@@ -259,46 +264,68 @@
             },
         },
     }
+
 </script>
 <style lang="less">
-    .basicInfoC{
-        height:100%;
-        background:#fbf9fe;
+    .basicInfoC {
+        height: 100%;
+        width: 100%;
+        background: #fbf9fe;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         overflow-y: scroll;
-        .next{
+        .next {
             box-sizing: border-box;
-            padding:2rem 15px 15px;
+            padding: 2rem 15px 15px;
         }
-        .weui-label{
+        .weui-label {
             width: 5em!important;
         }
-        .basicInfoCPopup{
+        .basicInfoCPopup {
             width: 100%;
-            height:100%;
-            background:#fff;
+            height: 100%;
+            background: #fff;
         }
-        .vux-cell-primary{
+        .vux-cell-primary {
             overflow: hidden;
         }
-        .vux-popup-picker-value{
+        .vux-popup-picker-value {
             white-space: nowrap;
             text-overflow: ellipsis;
             -o-text-overflow: ellipsis;
             overflow: hidden;
             display: block;
         }
+
+        .weui-cells:before {
+            border-top: 0px !important;
+        }
+        .weui-cells:after {
+            border-bottom: 0px !important;
+        }
+        .add {
+            background: #fbf9fe;
+            padding: 15px 15px;
+            .weui-btn {
+                background: #33CC99 !important;
+                color: white;
+            }
+        }
+        .add_button {
+            color: white;
+            background: #33CC99;
+        }
     }
-    .weui-cells{
+
+    .weui-cells {
         margin-top: 10px!important;
     }
-    .vux-cell-bd.vux-cell-primary{
+
+    .vux-cell-bd.vux-cell-primary {
         white-space: nowrap;
         text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         overflow: hidden;
-        
     }
 </style>

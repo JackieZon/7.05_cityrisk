@@ -1,70 +1,109 @@
 <template>
-  <div id="warning">
-
-    <div class="war-list" v-for="(item,index) in searchList" :key="index">
-
-      <div class="left"></div>
-
+  <div class="riskWarning">
+    <div class="war-list">
+      <div class="left" :style="{background:(color[item.RiskAccidentStatus])}"></div>
       <div class="list-info">
-        <p class="address">
-          <!--<img src="../../assets/icon/address.svg" alt="">预警区 : {{ item.address }}-->
+        <p class="administrators">
+          <Icon :name="'location1'" :style="{'color': color[item.RiskAccidentStatus]}" /> 福田区
         </p>
-
-        <!--<img v-if="item.notice === 1" class="notice" src="../../assets/icon/location-red.svg" alt="">
-        <img v-if="item.notice === 2" class="notice" src="../../assets/icon/location-yellow.svg" alt="">
-        <img v-if="item.notice === 3" class="notice" src="../../assets/icon/location-blue.svg" alt="">-->
-
-        <p class="content">{{ item.noticeType }} : {{ item.content }}</p>
-
+        <div class="dis-flex">
+          <p class="address">
+            发布人:&nbsp;{{item.RiskAccidentAddManName | s_toStr}}
+          </p>
+        </div>
+        <p class="address">
+          事故地址 : {{ item.RiskName }}
+        </p>
+        <p class="address">
+          事故描述 : {{ item.RiskAccidentIntro }}
+        </p>
+        <div class="dis-flex">
+          <p class="date">
+            {{ item.RiskAccidentOccurDate | s_toDate }}
+          </p>
+        </div>
       </div>
-
     </div>
   </div>
 </template>
 <script>
   export default {
-    components:{
+    props: ['item'],
+    data() {
+      return {
+        color: ['#FF0000', '#FF8C00', '#1E90FF', '#33CC99']
+      }
     },
-    data (){
-        return {
-          searchList:[
-            {
-              address: "罗湖区",
-              content: "今日狂风大作,请各位做好最充足的防雷措施",
-              noticeType: "雷电预警",
-              notice:1
-            },
-            {
-              address: "罗湖区",
-              content: "今日狂风大作,请各位做好最充足的防雷措施",
-              noticeType: "雷电预警",
-              notice:1
-            },
-            {
-              address: "宝安区",
-              content: "今日全市进入暴雨状态，请大家做好防雨措施!",
-              noticeType: "暴雨预警",
-              notice:2
-            },
-            {
-              address: "龙华新区",
-              content: "今日全市进入暴雨状态，请大家做好防雨措施!",
-              noticeType: "暴雨预警",
-              notice:3
-            }
-          ]
-        }
+    methods: {
+
+    }
+
+  }
+
+</script>
+<style lang="less" scoped>
+  .riskWarning {
+    padding: 15px 15px 0 15px;
+    img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .war-list {
+      width: 100%;
+      background-color: #FFFFFF;
+      border-radius: 10px;
+    }
+
+    .war-list .left {
+      width: 5px;
+      height: 160px;
+      border-radius: 10px 0 0 10px;
+      float: left;
+    }
+
+    .war-list .list-info {
+      box-sizing: border-box;
+      padding: 10px 15px;
+      height: 160px;
+    }
+
+    .list-info .address {
+      box-sizing: border-box;
+      /* padding: 15px; */
+      line-height: 28px;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .list-info .notice {}
+
+    .list-info .content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .administrators {
+      text-align: center;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dis-flex {
+      display: flex;
+      flex-direction: row-reverse;
+      .date {
+        font-size: 14px;
+      }
     }
   }
-</script>
-<style scoped>
-  img { width: 20px; height: 20px; margin-right: 10px; }
-
-  #warning { padding: 15px; }
-    #warning .war-list { width: 100%; height: 100px; background-color: #FFFFFF; border-radius: 10px; margin-bottom: 20px; }
-      .war-list .left { width: 7px; height: 100px; border-radius: 10px 0 0 10px; background: #33CC99; float: left; }
-      .war-list .list-info { float: left; width: 84%; height: 80px; padding: 10px 15px; }
-        .list-info .address { line-height: 30px; font-size: 16px; display: flex; align-items: center; margin-bottom: 15px; }
-        .list-info .notice { float: left; margin-top: 3px; }
-        .list-info .content { overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp:1; -webkit-box-orient: vertical; }
 </style>

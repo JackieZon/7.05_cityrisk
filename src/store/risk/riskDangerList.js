@@ -1,10 +1,11 @@
-import { getRiskHidden, getRiskHiddenChanged, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall,postUpdateRiskHiddenStatus_Audit, postUpdateRiskHiddenChangedStatus_Recall, postUpdateRiskHiddenChangedStatus_Audit} from './../../servers/api'
+import { getRiskHidden, getRiskHiddenChanged, getRiskHiddenInfo, postRiskHiddenAdd, postRiskHiddenDelete, postUpdateRiskHiddenStatus_Recall,postUpdateRiskHiddenStatus_Audit, postUpdateRiskHiddenChangedStatus_Recall, postUpdateRiskHiddenChangedStatus_Audit, getRiskBaseType} from './../../servers/api'
 import Vue from 'vue';
 const state = {
     defaultDangerListData:{
         RiskID:0,
         RiskChangedStatus:'',
         RiskHiddenStatus:'',
+        RiskChangedMan:'',
         pageIndex: 1,   //必填参数
         pageSize: 10,   //必填参数
         total: 0,       //必填参数
@@ -12,6 +13,7 @@ const state = {
     dangerList:[],
     dangerInfo:{},
     editRiskHiddenAdd:{},
+    hiddenDangerType:[],
 }
 
 const mutations = {
@@ -20,7 +22,6 @@ const mutations = {
     },
     saveDangerList(state, payload){
         state.dangerList = state.dangerList.concat(payload);
-        console.log(state.dangerList);
     },
     saveDangerInfo(state, payload){
         state.dangerInfo = payload;
@@ -31,13 +32,17 @@ const mutations = {
     editRiskHidden(state, payload){
         console.log(`我是编辑的ID${payload.ID}`);
         state.editRiskHiddenAdd = payload;
+    },
+    saveHiddenDangerType(state, payload){
+        state.hiddenDangerType = payload
     }
 }
 
 const actions = {
     getRiskHidden({commit,dispatch,getters,state}){
+        // console.log('我是你要的'+JSON.stringify(state.defaultDangerListData))
+        // return;
         getRiskHidden(state.defaultDangerListData).then((res)=>{
-            console.log(res);
             commit('saveDefaultDangerListData',{total: res.all.total});
             commit('saveDangerList',res.info);
         });
@@ -56,7 +61,11 @@ const actions = {
         })
     },
     postRiskHiddenAdd({commit,dispatch,getters,state},payload){
-        console.log(payload);
+        // console.log(payload);
+
+        // console.log(JSON.stringify(payload.param))
+        // return;
+
         const $router = payload.$router;
         postRiskHiddenAdd(payload.param).then((res)=>{
             console.log(res);
@@ -66,8 +75,8 @@ const actions = {
                     text: (payload.param.RiskHiddenStatus==0?'保存成功':'提交成功'),
                     type: 'success',
                     onHide(){
-
-                        $router.go(-2);
+                        $router.replace({ name: 'riskDangerList' })
+                        // $router.go(-2);
                         
                     }
                 });
@@ -118,7 +127,6 @@ const actions = {
     postUpdateRiskHiddenStatus_Audit({commit,dispatch,getters,state},payload){
 
         const $router = payload.$router;
-
         postUpdateRiskHiddenStatus_Audit(payload.default).then((res)=>{
 
             console.log(`审核返回数据${JSON.stringify(res)}`);
@@ -173,6 +181,22 @@ const actions = {
         })
 
     },
+
+    getHiddenDangerType ({commit,state,dispatch,getter}){
+        getRiskBaseType().then((res) => {
+            let hiddenDangerType = [];
+            for(let i = 0; i < res.info.length; i++){
+                if(res.info[i].ID == 6){
+                    for(let m = 0; m < res.info[i].detail_BaseDataList.length; m++){
+                        hiddenDangerType.push({'key':res.info[i].detail_BaseDataList[m].ID,'value':res.info[i].detail_BaseDataList[m].BaseName})
+                    }
+                }
+            }
+
+            commit('saveHiddenDangerType',hiddenDangerType)
+            // console.log('我是你要的数据啊啊啊啊啊啊=============================='+JSON.stringify(hiddenDangerType))
+        })
+    }
 }
 
 const getters = {}

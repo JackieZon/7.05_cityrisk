@@ -5,10 +5,11 @@ const state = {
     riskList:[],
     defaultData:{
         RiskName: "",
-        RiskStatus: 3,
+        RiskStatus: 0,
         pageIndex: 1 ,
         pageSize: 10,
         total: 0,
+        listType:'',
     },
 }
 
@@ -17,7 +18,6 @@ const actions = {
         commit('getUserInfo', subei_common.getUserInfo());
     },
     getRisk({commit,dispatch,getters,state}){
-
         getRisk(state.defaultData).then((data)=>{
             
             commit('saveDefaultData',{total: data.all.total})
